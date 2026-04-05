@@ -1,0 +1,6 @@
+kind summary
+title BONNIE! full game concept
+edge applies-to blob:e221d113c952e289ba05dbdf365fb7161ad58463
+edge targets-path path:design/gdd/game-concept.md
+
+Big black cat causes chaos to get fed. Polterguy-style chaos threshold. 5 levels (Germantown, Apartment, Vet, K-Mart, Italian Market). Bidirectional social system: charm AND chaos both fill the meter. NPC model: Maniac Mansion depth — personality, routines, relationships, cascade logic. Mini-games discoverable (Yo! Noid model). End-of-level cutscene per level. Nine-lives framing. PC/Steam, Godot 4.6.
