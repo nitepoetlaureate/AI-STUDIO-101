@@ -5,14 +5,16 @@ Each agent owns a specific domain, enforcing separation of concerns and quality.
 
 ## Technology Stack
 
-- **Engine**: [CHOOSE: Godot 4 / Unity / Unreal Engine 5]
-- **Language**: [CHOOSE: GDScript / C# / C++ / Blueprint]
+- **Engine**: Godot 4.6
+- **Language**: GDScript (primary), C++ via GDExtension (performance-critical only)
 - **Version Control**: Git with trunk-based development
-- **Build System**: [SPECIFY after choosing engine]
-- **Asset Pipeline**: [SPECIFY after choosing engine]
+- **Build System**: Godot Export Templates
+- **Asset Pipeline**: Godot Import System + Aseprite + RetroDiffusion
 
-> **Note**: Engine-specialist agents exist for Godot, Unity, and Unreal with
-> dedicated sub-specialists. Use the set matching your engine.
+> **Note**: Use Godot-specialist agents: `godot-specialist`, `godot-gdscript-specialist`,
+> `godot-shader-specialist`, `godot-gdextension-specialist`.
+> Always cross-reference `docs/engine-reference/godot/` before suggesting API calls —
+> Godot 4.4/4.5/4.6 introduced breaking changes beyond LLM training data.
 
 ## Project Structure
 

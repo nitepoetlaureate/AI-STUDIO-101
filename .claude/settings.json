@@ -15,7 +15,22 @@
       "Bash(dir *)",
       "Bash(python -m json.tool*)",
       "Bash(python -m pytest*)",
-      "Bash(py -m pytest*)"
+      "Bash(py -m pytest*)",
+      "Bash(npm run lint*)",
+      "Bash(npm run build*)",
+      "Bash(npm run test*)",
+      "Bash(npm run dev*)",
+      "Bash(npm start*)",
+      "Bash(yarn lint*)",
+      "Bash(yarn build*)",
+      "Bash(yarn test*)",
+      "Bash(cargo check*)",
+      "Bash(cargo build*)",
+      "Bash(cargo test*)",
+      "Bash(dotnet build*)",
+      "Bash(dotnet test*)",
+      "Bash(godot --headless*)",
+      "Bash(unity -batchmode*)"
     ],
     "deny": [
       "Bash(rm -rf *)",
@@ -28,9 +43,17 @@
       "Bash(*>.env*)",
       "Bash(cat *.env*)",
       "Bash(type *.env*)",
-      "Read(**/.env*)"
+      "Read(**/.env*)",
+      "Bash(*rm -f*)",
+      "Bash(*chmod +x*)"
     ]
   },
+  "environment": {
+    "CLAUDE_CODE_GAME_STUDIO": "true",
+    "CLAUDE_CODE_PROJECT_TYPE": "game"
+  },
+  "debug": false,
+  "verbose": true,
   "hooks": {
     "SessionStart": [
       {

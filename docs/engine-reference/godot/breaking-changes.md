@@ -1,6 +1,6 @@
 # Godot — Breaking Changes
 
-Last verified: 2026-02-12
+Last verified: 2026-04-05
 
 Changes between Godot versions, focused on post-LLM-cutoff changes (4.4+).
 
@@ -8,6 +8,10 @@ Changes between Godot versions, focused on post-LLM-cutoff changes (4.4+).
 
 | Subsystem | Change | Details |
 |-----------|--------|---------|
+| **Audio** 🎮⚠️ | **AudioStreamRandomizer pitch now in SEMITONES** | `pitch_min`/`pitch_max` were frequency multipliers (1.0 = original). Now semitone offsets (0.0 = original). **All existing pitch randomization values will sound wrong after upgrade.** Recalibrate before audio work. |
+| **Audio** 🎮⚠️ | **AudioStreamWAV loop/offset now 64-bit integers** | Was 32-bit. Existing WAV resources need re-import. Verify loop points on all looping audio assets. |
+| **Animation** 🎮 | **AnimationPlayer API uses StringName** | Methods like `.play()` now prefer StringName. Use `&"animation_name"` literals. Implicit conversion still works but StringName is faster and preferred. |
+| Animation | AnimationLibrary serialization changed | Avoids internal Dictionary use. Re-save AnimationLibrary resources after upgrade. No data loss. |
 | Physics | Jolt is now the DEFAULT 3D physics engine | New projects use Jolt automatically. Existing projects keep their setting. Some HingeJoint3D properties (like `damp`) only work with GodotPhysics. |
 | Rendering | Glow processes BEFORE tonemapping | Was after tonemapping. Scenes with glow will look different. Adjust intensity/blend in WorldEnvironment. |
 | Rendering | D3D12 default on Windows | Was Vulkan. For better driver compatibility. |

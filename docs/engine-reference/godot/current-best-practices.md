@@ -1,6 +1,6 @@
 # Godot — Current Best Practices
 
-Last verified: 2026-02-12 | Engine: Godot 4.6
+Last verified: 2026-04-05 | Engine: Godot 4.6
 
 Practices that are **new or changed** since the model's training data (~4.3).
 This supplements (not replaces) the agent's built-in knowledge.
@@ -25,6 +25,24 @@ This supplements (not replaces) the agent's built-in knowledge.
   ```
 
 - **Script backtracing**: Detailed call stacks available even in Release builds
+
+## Audio (4.6) 🎮
+
+- **AudioStreamRandomizer pitch in semitones**: Set `pitch_min`/`pitch_max` as semitone
+  offsets from 0.0. Example: ±2 semitones for subtle variation, ±12 for an octave range.
+  Do NOT use frequency multiplier values from tutorials written before 4.6.
+
+- **AnimationPlayer StringName literals**: Use `&"name"` syntax in all animation calls:
+  ```gdscript
+  $AnimationPlayer.play(&"bonnie_run")
+  $AnimationPlayer.queue(&"bonnie_idle")
+  ```
+
+- **Unique Node IDs**: Use `%NodeName` to reference frequently-accessed nodes safely:
+  ```gdscript
+  @onready var sprite := %BonnieSprite  # safer than $Path/To/Sprite
+  ```
+  Run `Project > Tools > Upgrade Project Files` once after project creation.
 
 ## Physics (4.6)
 
