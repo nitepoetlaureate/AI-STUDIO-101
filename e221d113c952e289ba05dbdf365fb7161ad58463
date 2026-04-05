@@ -1,6 +1,5 @@
-kind observation
-title New mechanics surfaced in NPC design session
+kind summary
 edge applies-to blob:e221d113c952e289ba05dbdf365fb7161ad58463
 edge targets-path path:design/gdd/game-concept.md
 
-Pre-emptive environmental manipulation: remove stimuli (phone off hook) to prevent NPC mood events. Hunger stat boost: BONNIE stronger/clumsier past 6hr mark, ambient only (no UI). Levity multiplier: cute-after-chaos has goodwill multiplier effect. comfort_receptivity: drops under high stress, per-NPC floor. VULNERABLE state: low emotional_level, highly receptive to comfort. All to be formalized in npc-personality.md.
+BONNIE! game bible. Approved. Sandbox chaos/puzzle — big black cat engineers chaos to get fed. Philadelphia settings. Bidirectional social system (charm + chaos both fill meter). NPCs speak (SNES text + crunchy vocal samples). 5 levels. MVP = Level 2 apartment, 2 NPCs, momentum traversal, chaos meter. Comparable: Polterguy x Maniac Mansion x Untitled Goose Game.
