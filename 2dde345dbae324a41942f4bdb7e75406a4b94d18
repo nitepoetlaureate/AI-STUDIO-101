@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:2dde345dbae324a41942f4bdb7e75406a4b94d18
+edge targets-path path:design/gdd/camera-system.md
+
+Camera System: state-scaled look-ahead (IDLE 0px → SLIDING 220px, JUMPING/FALLING 120px, CLIMBING 60px vertical, SQUEEZING 0px room-lock, DAZED 0px, LEDGE_PULLUP 60px). BONNIE at y=380 of 540 (lower third). Ledge bias at 80px radius (before parry window at 24px). Recon zoom: analog hold, zoom_max_out=0.33 (reveals ~2160×1620 world space, potentially multi-room), LOD threshold=0.75. zoom_lod_changed signal drives AnimatedSprite2D SpriteFrames swap (_lod suffix). LOD sprites: Vertical Slice scope (T-ART-04).
