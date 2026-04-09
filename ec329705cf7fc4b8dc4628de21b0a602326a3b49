@@ -1,0 +1,4 @@
+kind context
+edge explains commit:ec329705cf7fc4b8dc4628de21b0a602326a3b49
+
+Session 002 final: NEXT.md rewritten with full execution plan, systems-index fixed (4 GDDs now tracked as Approved: systems 2, 4, 6, 9), npc-personality header fixed (Draft→Approved). All housekeeping complete. T-PROTO unblocked. Next session: /prototype bonnie-traversal + Foundation GDDs (input-system, audio-manager) in parallel.
