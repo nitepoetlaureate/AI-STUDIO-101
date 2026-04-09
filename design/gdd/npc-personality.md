@@ -1,6 +1,6 @@
 # System GDD: NPC Personality System
 
-*Status: Draft — Awaiting Review*
+*Status: Approved*
 *Created: 2026-04-05*
 *System #: 9 (Reactive NPC System) + 10 (NPC Behavior/Routine System)*
 *Priority: MVP*

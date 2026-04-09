@@ -33,10 +33,10 @@ gameplay, and can be developed in parallel with design work.
 | 3 | Audio Manager | Core | MVP | Not Started | — | — |
 | 4 | Camera System | Core | MVP | Approved | design/gdd/camera-system.md | BONNIE Traversal (6), Viewport Config (2), Input (1) |
 | 5 | Level Manager | Core | MVP | Not Started | — | Viewport Config (2) |
-| 6 | BONNIE Traversal System | Gameplay | MVP | Not Started | — | Input (1), Viewport (2) |
+| 6 | BONNIE Traversal System | Gameplay | MVP | Approved | design/gdd/bonnie-traversal.md | Input (1), Viewport (2) |
 | 7 | Interactive Object System | Gameplay | MVP | Not Started | — | Viewport (2) |
 | 8 | Environmental Chaos System | Gameplay | Vertical Slice | Not Started | — | Traversal (6), Objects (7) |
-| 9 | Reactive NPC System | Gameplay | MVP | Not Started | — | Traversal (6), Level Manager (5) |
+| 9 | Reactive NPC System | Gameplay | MVP | Approved | design/gdd/npc-personality.md | Traversal (6), Level Manager (5) |
 | 10 | NPC Behavior / Routine System (inferred) | Gameplay | Vertical Slice | Not Started | — | Reactive NPC (9) |
 | 11 | NPC Relationship Graph (inferred) | Gameplay | Vertical Slice | Not Started | — | Reactive NPC (9) |
 | 12 | Bidirectional Social System | Gameplay | MVP | Not Started | — | Traversal (6), NPC (9) |
@@ -209,8 +209,8 @@ after their GDD is written — don't wait until Alpha.
 | Total systems identified | 27 |
 | Design docs started | 0 |
 | Design docs reviewed | 0 |
-| Design docs approved | 2 |
-| MVP systems designed | 2 / 11 |
+| Design docs approved | 4 |
+| MVP systems designed | 4 / 11 |
 | Vertical Slice systems designed | 0 / 7 |
 | Alpha systems designed | 0 / 6 |
 | Full Vision systems designed | 0 / 3 |
