@@ -1,0 +1,4 @@
+kind context
+edge explains commit:1747affcee20cd0e83f0fa2521c576af138cb3fe
+
+Session 002: Viewport Config GDD + Camera System GDD both approved and committed. T-CAM complete — prototype (T-PROTO) now unblocked. New locked decisions: 720×540 is viewport window only (world space unbounded), 60fps unconditional through all view/mode changes, look-ahead table (10 states), recon zoom 0.33 max, LOD sprites as Vertical Slice scope (T-ART-04), zoom_lod_changed signal architecture. Next: /prototype bonnie-traversal (Stream A) + input-system.md + audio-manager.md (Stream B).
