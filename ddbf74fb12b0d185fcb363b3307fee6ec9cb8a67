@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:ddbf74fb12b0d185fcb363b3307fee6ec9cb8a67
+edge targets-path path:design/gdd/viewport-config.md
+
+Viewport Config: 720×540 window (world space unbounded — levels can be any size), nearest-neighbor, pillarbox #000000, viewport+keep stretch, 2× default window (1440×1080). 60fps unconditional lock through ALL view changes (room transitions, mini-game cut-ins, feeding cutscenes). Dropped frame at any transition = bug. INTERNAL_WIDTH/HEIGHT are viewport window dimensions only — not level constraints.
