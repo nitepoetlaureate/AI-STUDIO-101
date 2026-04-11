@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:e14a00ce5c116b28921b9a2c1eb775a974d79f00
+edge targets-path path:design/gdd/audio-manager.md
+
+Audio Manager GDD — APPROVED. Bus hierarchy: Master→Music (OGG)+SFX (WAV). Autoload singleton (infrastructure exception). Full event catalogue: 17 BONNIE traversal SFX, 6 vocal, 8 NPC samples, 4 env, 1 music track. API: play_sfx, play_sfx_loop, stop_sfx_loop, play_music, stop_music, set_volume. Polyphony limits per category. AudioStreamRandomizer pitch in semitones (Godot 4.6 trap — OQ-A01).
