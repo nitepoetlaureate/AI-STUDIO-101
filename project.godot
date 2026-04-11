@@ -1,14 +1,18 @@
 ; Engine configuration file.
 ; It's best edited using the editor UI and not directly,
-; but the project can be opened and run from this file.
-; Generated for Godot 4.6 — BONNIE! prototype
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
 [application]
 
 config/name="BONNIE!"
-config/features=PackedStringArray("4.6", "2D")
+run/main_scene="res://prototypes/bonnie-traversal/TestLevel.tscn"
+config/features=PackedStringArray("4.6")
 config/icon="res://icon.svg"
 
 [display]
@@ -18,12 +22,7 @@ window/size/viewport_height=540
 window/size/initial_position_type=0
 window/size/window_width_override=1440
 window/size/window_height_override=1080
-window/size/resizable=true
-window/size/borderless=false
 window/stretch/mode="viewport"
-window/stretch/aspect="keep"
-window/vsync/vsync_mode=1
-window/per_pixel_transparency/allowed=false
 
 [input]
 
@@ -85,7 +84,7 @@ grab={
 }
 zoom={
 "deadzone": 0.1,
-"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":2,"canceled":false,"doubleclick":false,"script":null)
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":2,"canceled":false,"pressed":false,"double_click":false,"script":null)
 , Object(InputEventJoypadMotion,"resource_local_to_scene":false,"resource_name":"","device":-1,"axis":5,"axis_value":1.0,"script":null)
 ]
 }
@@ -98,19 +97,9 @@ interact={
 
 [physics]
 
-common/physics_ticks_per_second=60
-common/max_physics_steps_per_frame=8
-2d/default_gravity=980.0
-2d/default_gravity_vector=Vector2(0, 1)
 2d/physics_engine="GodotPhysics2D"
 
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
-textures/default_filters/use_nearest_mipmap_filter=false
-anti_aliasing/quality/msaa_2d=0
-anti_aliasing/quality/msaa_3d=0
-anti_aliasing/quality/screen_space_aa=0
-anti_aliasing/quality/use_taa=false
-anti_aliasing/quality/use_debanding=false
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)

@@ -78,3 +78,21 @@ Initial public release of the Claude Code Game Studios template:
   Unreal Engine 5 (GAS + Blueprints + Replication + UMG/CommonUI)
 - Studio hierarchy: 3-tier delegation (Directors → Leads → Specialists)
 - Collaborative protocol: Question → Options → Decision → Draft → Approval
+
+## [Pre-Production 0.3] — 2026-04-11
+
+### Added
+- Input System GDD (`design/gdd/input-system.md`) — 10 actions, buffering rules, analog thresholds
+- Audio Manager GDD (`design/gdd/audio-manager.md`) — full event catalogue, bus hierarchy, playback API
+- Traversal prototype: `project.godot`, `BonnieController.gd` (full 13-state implementation), `BonnieController.tscn`, `TestLevel.tscn` (10 test zones), `README.md`
+
+### Changed
+- `design/gdd/npc-personality.md` — Christen routine fully specified (arrival trigger, phase durations, flee/stress-carry)
+- `design/gdd/bonnie-traversal.md` — CLIMBING exit corrected: IDLE → LEDGE_PULLUP
+- `design/gdd/systems-index.md` — 6/11 MVP systems approved, Audio Manager linked
+
+### Design Decisions Locked
+- AudioStreamRandomizer pitch in semitones (Godot 4.6) — not frequency multipliers
+- Ledge parry = frame-exact, no auto-grab, no buffer. Non-negotiable.
+- skid_friction_multiplier = 0.15 (not 0.85)
+- AudioManager as Autoload (infrastructure exception to singleton rule)

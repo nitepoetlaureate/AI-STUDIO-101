@@ -188,3 +188,27 @@ Reference: *clumsy feline Ryu Hayabusa.*
 - **Music** — first original track (apartment theme); no tooling needed, just start
 
 ---
+
+---
+
+## Session 003 — 2026-04-11
+
+**Focus**: Foundation GDDs complete + Traversal Prototype implemented
+
+### Completed
+- **Input System GDD** (System #1) — Approved. 10 actions, buffering rules (jump buffered, grab frame-exact), analog thresholds, accessibility remapping.
+- **Audio Manager GDD** (System #3) — Approved. Bus hierarchy, full event catalogue (17 traversal SFX, 6 BONNIE vocal, 8 NPC vocal, 4 env, 1 music), playback API, Godot 4.6 semitone trap documented.
+- **T-NPC-FIX** — Christen routine fully specified: arrival trigger (Michael Afternoon→Evening transition), 6 phases with durations, flee behavior with stress carry stacking.
+- **T-PROTO-01/02/03** — `project.godot` (720×540, nearest-neighbor, GodotPhysics2D), input map (10 actions), BonnieController.gd skeleton (13-state enum).
+- **T-PROTO-04 through T-PROTO-09** — Full BonnieController.gd implementation: all 13 state handlers, ledge parry via ShapeCast2D, coyote time, jump buffer, apex-locked double jump, pop-jump from slide/skid.
+- **T-PROTO-11** — TestLevel.tscn: 10 test zones (run corridor, platform steps, hard/soft drop, ledge parry practice, climbable/smooth walls, squeeze gap, collision objects, end wall).
+
+### Systems Index
+- 6/11 MVP systems approved: Input (1), Viewport (2), Audio Manager (3), Camera (4), Traversal (6), NPC (9)
+
+### GATE Status
+- GATE 0: CLEARED
+- GATE 1: PENDING — prototype ready, awaiting playtest
+
+### Next Session Opens With
+Playtest feedback → GATE 1 evaluation → T-CHAOS + T-SOC GDDs (parallel)
