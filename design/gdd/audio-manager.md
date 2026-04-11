@@ -1,6 +1,6 @@
 # System GDD: Audio Manager
 
-> **Status**: In Design
+> **Status**: Approved
 > **Author**: Michael Raftery + Hawaii Zeke
 > **Last Updated**: 2026-04-09
 > **System #**: 3 (Audio Manager)

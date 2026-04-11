@@ -57,6 +57,7 @@ const LOOK_AHEAD_BY_STATE: Dictionary = {
 @export var walk_speed: float = 180.0            # px/s
 @export var run_max_speed: float = 420.0         # px/s
 @export var climb_speed: float = 90.0            # px/s
+@export var squeeze_speed: float = 100.0         # px/s — between sneak and walk
 
 @export_group("Ground Physics")
 @export var ground_acceleration: float = 800.0  # px/s²
@@ -67,8 +68,12 @@ const LOOK_AHEAD_BY_STATE: Dictionary = {
 @export_group("Jump")
 @export var hop_velocity: float = 280.0          # px/s — tap jump
 @export var jump_velocity: float = 480.0         # px/s — full held jump
+@export var jump_hold_force: float = 900.0       # px/s² — additive while held
+@export var jump_hold_window: int = 12           # max frames of additive hold
 @export var double_jump_velocity: float = 380.0  # px/s
+@export var double_jump_redirect_factor: float = 0.45  # lerp factor at double jump
 @export var gravity: float = 980.0              # px/s² — matches Godot 2D default
+@export var fall_velocity_max: float = 900.0    # px/s — terminal velocity clamp
 @export var air_control_force: float = 260.0    # px/s²
 @export var post_double_jump_air_control: float = 30.0  # px/s²
 
@@ -81,15 +86,20 @@ const LOOK_AHEAD_BY_STATE: Dictionary = {
 @export_group("Ledge and Climb")
 @export var parry_detection_radius: float = 24.0  # px — must be near geometry for parry
 @export var wall_jump_velocity: float = 360.0      # px/s perpendicular to surface
+@export var pullup_duration_frames: int = 10       # frames BONNIE is locked during pullup
 
 @export_group("Landing")
+@export var clean_land_threshold: float = 80.0    # px/s — below this = always clean landing
 @export var skid_threshold: float = 180.0         # px/s — speed above which skid fires
 @export var hard_skid_threshold: float = 320.0    # px/s
-@export var skid_friction_multiplier: float = 0.85  # velocity multiplier per frame during skid
+@export var skid_friction_multiplier: float = 0.15  # multiplier on deceleration during skid (very slippery)
+@export var skid_base_duration: float = 0.6       # seconds at run_max_speed (scales with speed)
+@export var hard_skid_base_duration: float = 1.1  # hard skid duration at full speed
 @export var rough_landing_threshold: float = 144.0  # px of fall distance to trigger ROUGH_LANDING
 
 @export_group("Recovery")
 @export var daze_duration: float = 1.0           # seconds
+@export var daze_collision_threshold: float = 280.0  # slide speed at which wall hit dazes BONNIE
 @export var rough_landing_duration: float = 2.5  # seconds
 
 @export_group("Input Thresholds")
@@ -97,6 +107,10 @@ const LOOK_AHEAD_BY_STATE: Dictionary = {
 @export var stick_deadzone: float = 0.2
 @export var sneak_threshold: float = 0.35        # stick magnitude below this = auto-sneak
 @export var trigger_deadzone: float = 0.1        # LT/RT minimum for sneak/zoom
+
+# --- Node References ---------------------------------------------------------
+
+@onready var _parry_cast: ShapeCast2D = $ParryCast
 
 # --- Runtime State -----------------------------------------------------------
 
@@ -117,7 +131,7 @@ var double_jump_window_timer: int = 0
 
 # Landing skid
 var in_skid_window: bool = false
-var skid_timer: float = 0.0
+var skid_timer: float = 0.0  # legacy public — use _skid_timer internally
 
 # Jump hold (duration-based, not pressure-based — see input-system §3.3)
 var jump_hold_timer: float = 0.0
@@ -127,17 +141,29 @@ var is_jump_held: bool = false
 var _daze_timer: float = 0.0
 var _rough_landing_timer: float = 0.0
 
+# --- Private Runtime State ---------------------------------------------------
+
+var _post_double_jumped: bool = false
+var _was_on_floor_last_frame: bool = false
+var _at_apex: bool = false
+var _ledge_pullup_timer: float = 0.0
+var _landing_impact_speed: float = 0.0
+var _jump_hold_timer: int = 0  # frame counter for hold (distinct from legacy float above)
+var _skid_timer: float = 0.0
+var _skid_is_hard: bool = false
+
 # =============================================================================
 # LIFECYCLE
 # =============================================================================
 
 func _ready() -> void:
-	# Ensure gravity is read from project settings if not overridden.
-	# TODO: decide whether to read from ProjectSettings or keep @export default.
 	pass
 
 
 func _physics_process(delta: float) -> void:
+	# Track floor state before movement so coyote logic sees the previous frame.
+	_was_on_floor_last_frame = is_on_floor()
+
 	# --- Tick-down frame counters ---
 	if jump_buffer_timer > 0:
 		jump_buffer_timer -= 1
@@ -231,8 +257,17 @@ func _change_state(new_state: State) -> void:
 		State.JUMPING:
 			is_jump_held = true
 			jump_hold_timer = 0.0
+			_jump_hold_timer = 0
 			double_jump_available = true
 			double_jump_window_timer = 0
+			_at_apex = false
+			_post_double_jumped = false
+		State.LANDING:
+			# _landing_impact_speed set by _on_landed() before _change_state is called.
+			in_skid_window = false  # will be set true in _handle_landing if speed warrants
+		State.LEDGE_PULLUP:
+			_ledge_pullup_timer = pullup_duration_frames / 60.0
+			velocity = Vector2.ZERO
 		State.DAZED:
 			_daze_timer = daze_duration
 		State.ROUGH_LANDING:
@@ -250,127 +285,363 @@ func _change_state(new_state: State) -> void:
 # =============================================================================
 
 func _handle_idle(delta: float) -> void:
-	# TODO: Apply ground deceleration to bleed off any residual velocity.
-	# TODO: Check input vector — transition to SNEAKING, WALKING, or JUMPING.
-	# TODO: Start coyote timer if no longer on floor (walked off ledge).
-	pass
+	# Bleed off any residual velocity.
+	velocity.x = move_toward(velocity.x, 0.0, ground_deceleration * delta)
+
+	# Coyote time — if left ground without a jump, start timer and fall.
+	if not is_on_floor() and _was_on_floor_last_frame:
+		coyote_timer = coyote_time_frames
+		_change_state(State.FALLING)
+		return
+
+	# Jump check (coyote time included — handled in FALLING if coyote active).
+	if (Input.is_action_just_pressed(&"jump") or jump_buffer_timer > 0) and is_on_floor():
+		jump_buffer_timer = 0
+		velocity.y = -hop_velocity
+		_change_state(State.JUMPING)
+		return
+
+	# Input → transitions
+	var input_vec: Vector2 = _get_input_vector()
+	if input_vec.x != 0.0:
+		if _is_auto_sneaking(input_vec) or Input.is_action_pressed(&"sneak"):
+			_change_state(State.SNEAKING)
+		elif Input.is_action_pressed(&"run"):
+			_change_state(State.RUNNING)
+		else:
+			_change_state(State.WALKING)
 
 
 func _handle_sneaking(delta: float) -> void:
-	# TODO: Apply movement up to sneak_max_speed using ground_acceleration.
-	# TODO: Transition to IDLE (no input), WALKING (sneak released + input),
-	#       JUMPING (jump input).
-	# TODO: Stimulus radius is sneak_stimulus_radius — NPCs barely notice.
-	pass
+	var input_vec: Vector2 = _get_input_vector()
+	if input_vec.x != 0.0:
+		facing_direction = sign(input_vec.x)
+	var target_speed: float = input_vec.x * sneak_max_speed
+	velocity.x = move_toward(velocity.x, target_speed, ground_acceleration * delta)
+
+	if not is_on_floor():
+		_change_state(State.FALLING)
+		return
+	if Input.is_action_just_pressed(&"jump") or jump_buffer_timer > 0:
+		jump_buffer_timer = 0
+		velocity.y = -hop_velocity
+		_change_state(State.JUMPING)
+		return
+	if input_vec.x == 0.0:
+		_change_state(State.IDLE)
+		return
+	if not _is_auto_sneaking(input_vec) and not Input.is_action_pressed(&"sneak"):
+		_change_state(State.WALKING)
 
 
 func _handle_walking(delta: float) -> void:
-	# TODO: Apply movement up to walk_speed using ground_acceleration.
-	# TODO: Transition to SNEAKING (_is_auto_sneaking or sneak held),
-	#       RUNNING (run button held), SLIDING (opposing input + speed check),
-	#       JUMPING (jump input or buffered jump), FALLING (left ground).
-	pass
+	var input_vec: Vector2 = _get_input_vector()
+	if input_vec.x != 0.0:
+		facing_direction = sign(input_vec.x)
+
+	var target_speed: float = input_vec.x * walk_speed
+	velocity.x = move_toward(velocity.x, target_speed, ground_acceleration * delta)
+
+	if not is_on_floor():
+		coyote_timer = coyote_time_frames
+		_change_state(State.FALLING)
+		return
+	if Input.is_action_just_pressed(&"jump") or jump_buffer_timer > 0:
+		jump_buffer_timer = 0
+		velocity.y = -hop_velocity
+		_change_state(State.JUMPING)
+		return
+	if _is_auto_sneaking(input_vec) or Input.is_action_pressed(&"sneak"):
+		_change_state(State.SNEAKING)
+		return
+	if Input.is_action_pressed(&"run") and input_vec.x != 0.0:
+		_change_state(State.RUNNING)
+		return
+	if input_vec.x == 0.0:
+		_change_state(State.IDLE)
 
 
 func _handle_running(delta: float) -> void:
-	# TODO: Apply movement up to run_max_speed using ground_acceleration.
-	# TODO: Slide trigger: move_down pressed + speed > slide_trigger_speed → SLIDING.
-	# TODO: Opposing input at high speed → SLIDING.
-	# TODO: Transition to WALKING (run released), JUMPING, FALLING.
-	pass
+	var input_vec: Vector2 = _get_input_vector()
+	if input_vec.x != 0.0:
+		facing_direction = sign(input_vec.x)
+
+	# Slide triggers — opposing input at speed, or explicit move_down at speed.
+	var opposing_input: bool = (
+		input_vec.x != 0.0
+		and sign(input_vec.x) != sign(velocity.x)
+		and abs(velocity.x) > slide_trigger_speed
+	)
+	var explicit_slide: bool = (
+		Input.is_action_pressed(&"move_down")
+		and abs(velocity.x) > slide_trigger_speed
+	)
+
+	if opposing_input or explicit_slide:
+		_change_state(State.SLIDING)
+		return
+
+	var target_speed: float = input_vec.x * run_max_speed
+	velocity.x = move_toward(velocity.x, target_speed, ground_acceleration * delta)
+
+	if not is_on_floor():
+		coyote_timer = coyote_time_frames
+		_change_state(State.FALLING)
+		return
+	if Input.is_action_just_pressed(&"jump") or jump_buffer_timer > 0:
+		jump_buffer_timer = 0
+		velocity.y = -hop_velocity
+		_change_state(State.JUMPING)
+		return
+	if not Input.is_action_pressed(&"run"):
+		_change_state(State.WALKING)
+		return
+	if abs(velocity.x) < walk_speed and input_vec.x == 0.0:
+		_change_state(State.IDLE)
 
 
 func _handle_sliding(delta: float) -> void:
-	# TODO: Apply slide_friction deceleration each frame (constant rate).
-	# TODO: Minimal air steering while sliding.
-	# TODO: Jump input during slide → JUMPING with full horizontal momentum.
-	# TODO: Wall collision at high speed (daze_collision_threshold) → DAZED.
-	# TODO: Transition to IDLE/WALKING when speed falls below slide_trigger_speed.
-	pass
+	var input_vec: Vector2 = _get_input_vector()
+
+	# Constant friction deceleration.
+	velocity.x = move_toward(velocity.x, 0.0, slide_friction * delta)
+
+	# Slight steer — can nudge in direction of travel only, cannot reverse.
+	if input_vec.x != 0.0 and sign(input_vec.x) == sign(velocity.x):
+		velocity.x = move_toward(velocity.x, input_vec.x * run_max_speed, slide_friction * 0.5 * delta)
+
+	# Pop-jump — full momentum carries, velocity.x untouched.
+	if Input.is_action_just_pressed(&"jump") or jump_buffer_timer > 0:
+		jump_buffer_timer = 0
+		velocity.y = -jump_velocity
+		_change_state(State.JUMPING)
+		return
+
+	# Wall daze — slide into wall above threshold.
+	if get_slide_collision_count() > 0:
+		for i: int in get_slide_collision_count():
+			var collision: KinematicCollision2D = get_slide_collision(i)
+			if abs(collision.get_normal().x) > 0.7 and abs(velocity.x) > daze_collision_threshold:
+				velocity.x = 0.0
+				_change_state(State.DAZED)
+				return
+
+	if not is_on_floor():
+		_change_state(State.FALLING)
+		return
+	if abs(velocity.x) < walk_speed:
+		_change_state(State.IDLE)
 
 
 func _handle_jumping(delta: float) -> void:
 	_apply_gravity(delta)
+	# Clamp to terminal velocity (negative = upward, so clamp the upward ceiling separately).
+	velocity.y = max(velocity.y, -fall_velocity_max)
 
-	# Jump hold: extend height if held, commit to hop if tapped.
-	# TODO: measure jump_hold_timer; cap at jump_hold_window frames.
-	# TODO: Double jump: available within double_jump_window_frames after apex.
-	# TODO: Coyote timer: not applicable in JUMPING (only after walking off edge).
-	# TODO: Parry check: _check_ledge_parry() while near geometry.
-	# TODO: Transition to FALLING (apex passed), CLIMBING/LEDGE_PULLUP (parry).
+	# Jump hold — additive upward force while held, capped at jump_velocity.
+	if is_jump_held and Input.is_action_pressed(&"jump"):
+		_jump_hold_timer += 1
+		if _jump_hold_timer <= jump_hold_window:
+			velocity.y -= jump_hold_force * delta
+			velocity.y = max(velocity.y, -jump_velocity)
+		else:
+			is_jump_held = false
+	elif not Input.is_action_pressed(&"jump"):
+		is_jump_held = false
+
+	# Apex detection — velocity.y crosses from negative to zero or positive.
+	if velocity.y >= 0.0 and not _at_apex:
+		_at_apex = true
+		double_jump_window_timer = double_jump_window_frames
+
+	# Double jump — after apex, within window.
+	if _at_apex and double_jump_available and double_jump_window_timer > 0:
+		if Input.is_action_just_pressed(&"jump"):
+			velocity.y = -double_jump_velocity
+			velocity.x = lerpf(velocity.x, _get_input_vector().x * run_max_speed, double_jump_redirect_factor)
+			double_jump_available = false
+			_post_double_jumped = true
+			double_jump_window_timer = 0
+
+	# Air control.
+	var input_vec: Vector2 = _get_input_vector()
+	var air_ctrl: float = post_double_jump_air_control if _post_double_jumped else air_control_force
+	if input_vec.x != 0.0:
+		facing_direction = sign(input_vec.x)
+		velocity.x = move_toward(velocity.x, input_vec.x * run_max_speed, air_ctrl * delta)
 
 	_check_ledge_parry()
+
+	if is_on_floor():
+		_on_landed()
+	elif velocity.y > 0.0 and _at_apex:
+		_change_state(State.FALLING)
 
 
 func _handle_falling(delta: float) -> void:
 	_apply_gravity(delta)
+	velocity.y = min(velocity.y, fall_velocity_max)
 
-	# Track cumulative fall distance for ROUGH_LANDING detection.
 	fall_distance = global_position.y - fall_origin_y
 
-	# TODO: Air control at air_control_force (post-double-jump at lower value).
-	# TODO: Parry check during FALLING.
-	# TODO: On landing (is_on_floor()): check fall_distance vs rough_landing_threshold.
-	#       fall_distance > rough_landing_threshold → ROUGH_LANDING.
-	#       Otherwise → LANDING (check skid_threshold for skid type).
-	# TODO: Buffered jump fires on landing contact (jump_buffer_timer > 0).
+	var input_vec: Vector2 = _get_input_vector()
+	var air_ctrl: float = post_double_jump_air_control if _post_double_jumped else air_control_force
+	if input_vec.x != 0.0:
+		facing_direction = sign(input_vec.x)
+		velocity.x = move_toward(velocity.x, input_vec.x * run_max_speed, air_ctrl * delta)
+
+	# Coyote jump — treat as a normal first jump, not double jump.
+	if coyote_timer > 0 and Input.is_action_just_pressed(&"jump"):
+		coyote_timer = 0
+		jump_buffer_timer = 0
+		velocity.y = -hop_velocity
+		is_jump_held = true
+		_jump_hold_timer = 0
+		_post_double_jumped = false
+		_at_apex = false
+		_change_state(State.JUMPING)
+		return
+
+	# Double jump available while falling (e.g., fell off a ledge, no jump used).
+	if double_jump_available and coyote_timer <= 0 and Input.is_action_just_pressed(&"jump"):
+		velocity.y = -double_jump_velocity
+		velocity.x = lerpf(velocity.x, input_vec.x * run_max_speed, double_jump_redirect_factor)
+		double_jump_available = false
+		_post_double_jumped = true
 
 	_check_ledge_parry()
 
+	if is_on_floor():
+		_on_landed()
+
+
+func _on_landed() -> void:
+	_landing_impact_speed = abs(velocity.x)
+	_post_double_jumped = false
+	_at_apex = false
+
+	if fall_distance >= rough_landing_threshold:
+		_change_state(State.ROUGH_LANDING)
+		fall_distance = 0.0
+		return
+
+	fall_distance = 0.0
+
+	# Jump buffer fires on landing — instant re-launch.
+	if jump_buffer_timer > 0:
+		jump_buffer_timer = 0
+		velocity.y = -hop_velocity
+		_change_state(State.JUMPING)
+		return
+
+	_change_state(State.LANDING)
+
 
 func _handle_landing(delta: float) -> void:
-	# TODO: Determine skid type from landing velocity:
-	#       < skid_threshold → clean landing → IDLE or WALKING.
-	#       >= skid_threshold and < hard_skid_threshold → skid.
-	#       >= hard_skid_threshold → hard skid (more deceleration, longer).
-	# TODO: Apply skid_friction_multiplier per frame during skid window.
-	# TODO: Jump input during skid → JUMPING with full horizontal momentum.
-	# TODO: Transition to IDLE/WALKING when skid velocity drains.
-	pass
+	# Determine skid type from _landing_impact_speed on first entry.
+	if not in_skid_window and _landing_impact_speed > 0.0:
+		if _landing_impact_speed >= hard_skid_threshold:
+			in_skid_window = true
+			_skid_is_hard = true
+			_skid_timer = (_landing_impact_speed / run_max_speed) * hard_skid_base_duration
+		elif _landing_impact_speed >= skid_threshold:
+			in_skid_window = true
+			_skid_is_hard = false
+			_skid_timer = (_landing_impact_speed / run_max_speed) * skid_base_duration
+		_landing_impact_speed = 0.0  # consumed
+
+	if in_skid_window:
+		_skid_timer -= delta
+		velocity.x = move_toward(velocity.x, 0.0, ground_deceleration * skid_friction_multiplier * delta)
+
+		# Pop-jump during skid — velocity.x untouched (full momentum carries).
+		if Input.is_action_just_pressed(&"jump") or jump_buffer_timer > 0:
+			jump_buffer_timer = 0
+			velocity.y = -hop_velocity
+			in_skid_window = false
+			_change_state(State.JUMPING)
+			return
+
+		if _skid_timer <= 0.0 or abs(velocity.x) < walk_speed:
+			in_skid_window = false
+			_change_state(State.IDLE)
+	else:
+		# Clean landing — bleed to stop and hand back control.
+		velocity.x = move_toward(velocity.x, 0.0, ground_deceleration * delta)
+		_change_state(State.IDLE)
 
 
 func _handle_climbing(delta: float) -> void:
-	# TODO: Vertical movement at climb_speed (W = up, S = down).
-	# TODO: Reaching top edge → LEDGE_PULLUP (auto-clamber, no grab input needed).
-	#       Note: bonnie-traversal §3.1 says IDLE here — input-system §3.1 correction:
-	#       reaching top = LEDGE_PULLUP. See open question in input-system.md.
-	# TODO: Reaching bottom edge past surface → FALLING.
-	# TODO: Jump input → wall jump (perpendicular to surface, wall_jump_velocity).
-	# TODO: Double jump resets on successful grab of climbable surface.
-	pass
+	var input_vec: Vector2 = _get_input_vector()
+
+	# Vertical movement only while on surface.
+	velocity.y = 0.0
+	if input_vec.y != 0.0:
+		velocity.y = input_vec.y * climb_speed
+
+	# Horizontal input detaches BONNIE from the surface.
+	if input_vec.x != 0.0:
+		facing_direction = sign(input_vec.x)
+		velocity.x = input_vec.x * walk_speed
+		_change_state(State.FALLING)
+		return
+
+	velocity.x = 0.0
+
+	# Wall jump — perpendicular to surface, resets double jump.
+	if Input.is_action_just_pressed(&"jump"):
+		velocity.x = facing_direction * -1.0 * wall_jump_velocity
+		velocity.y = -wall_jump_velocity
+		double_jump_available = true
+		_post_double_jumped = false
+		_change_state(State.JUMPING)
+		return
+
+	# Auto-clamber at top of surface — prototype approximation via is_on_ceiling().
+	if input_vec.y < 0.0 and is_on_ceiling():
+		_change_state(State.LEDGE_PULLUP)
+		return
+
+	# Drop: move_down held while descending past bottom of surface.
+	if Input.is_action_pressed(&"move_down") and velocity.y > 0.0 and not is_on_floor():
+		_change_state(State.FALLING)
+		return
 
 
 func _handle_squeezing(delta: float) -> void:
-	# TODO: Move at squeeze_speed.
-	# TODO: Camera locks to room center while in this state (no character tracking).
-	#       Camera reads current_state — this is handled camera-side.
-	# TODO: Transition to IDLE/WALKING on exit from squeeze passage.
-	pass
+	var input_vec: Vector2 = _get_input_vector()
+	if input_vec.x != 0.0:
+		facing_direction = sign(input_vec.x)
+	velocity.x = move_toward(velocity.x, input_vec.x * squeeze_speed, ground_acceleration * delta)
+
+	# Prototype exit: no input = passage cleared or BONNIE stopped.
+	if input_vec.x == 0.0:
+		_change_state(State.IDLE)
 
 
 func _handle_dazed(delta: float) -> void:
 	# BONNIE is incapacitated — no movement input accepted.
+	velocity.x = move_toward(velocity.x, 0.0, ground_deceleration * delta)
 	_daze_timer -= delta
-	# TODO: Play daze animation (loop until timer expires).
 	if _daze_timer <= 0.0:
 		_change_state(State.IDLE)
 
 
 func _handle_rough_landing(delta: float) -> void:
 	# BONNIE is down — no movement input accepted.
+	velocity.x = move_toward(velocity.x, 0.0, ground_deceleration * delta)
 	_rough_landing_timer -= delta
-	# TODO: Play rough landing animation (dazed stars, slow recovery).
 	# TODO: Nine Lives system hook fires here (see bonnie-traversal §8 AC-T06c).
 	if _rough_landing_timer <= 0.0:
 		_change_state(State.IDLE)
 
 
 func _handle_ledge_pullup(delta: float) -> void:
-	# TODO: Play LEDGE_PULLUP animation (pullup_duration frames).
-	# TODO: Lock position to ledge anchor point during animation.
-	# TODO: Transition to IDLE on animation complete.
-	# Camera look-ahead: 60px toward the surface (reads current_state = LEDGE_PULLUP).
-	pass
+	# Lock position — no movement during pullup animation.
+	velocity = Vector2.ZERO
+	_ledge_pullup_timer -= delta
+	if _ledge_pullup_timer <= 0.0:
+		_change_state(State.IDLE)
 
 
 # =============================================================================
@@ -385,15 +656,24 @@ func _apply_gravity(delta: float) -> void:
 
 
 func _check_ledge_parry() -> void:
-	# Valid during FALLING or JUMPING only (input-system §5 edge cases).
-	# grab action has NO buffer — frame-exact timing only.
-	# TODO: Raycast/shape-cast within parry_detection_radius.
-	# TODO: If geometry found AND grab pressed this exact frame (just_pressed, not pressed):
-	#       - Climbable surface → CLIMBING (wall parry)
-	#       - Platform edge → LEDGE_PULLUP
-	# TODO: grab outside parry_window_frames = miss, do nothing.
-	# TODO: double_jump_available resets on successful grab of climbable surface.
+	# Valid during FALLING or JUMPING only. grab has NO buffer — frame-exact.
 	if not Input.is_action_just_pressed(&"grab"):
 		return
-	# TODO: implement proximity check and state transition.
-	pass
+
+	if not _parry_cast.is_colliding():
+		return  # Nothing within parry_detection_radius.
+
+	# Check what we hit — Climbable group = CLIMBING, anything else = LEDGE_PULLUP.
+	for i: int in _parry_cast.get_collision_count():
+		var collider: Object = _parry_cast.get_collider(i)
+		if collider == null:
+			continue
+		if collider.is_in_group(&"Climbable"):
+			double_jump_available = true  # reset on climbable contact
+			_post_double_jumped = false
+			_change_state(State.CLIMBING)
+			return
+		else:
+			# Platform edge — lock position and pull up.
+			_change_state(State.LEDGE_PULLUP)
+			return
