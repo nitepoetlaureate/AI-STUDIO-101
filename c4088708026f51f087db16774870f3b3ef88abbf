@@ -1,0 +1,5 @@
+kind constraint
+edge applies-to tree:c4088708026f51f087db16774870f3b3ef88abbf
+edge targets-treepath treepath:.
+
+Performance target: 60fps locked, 720x540 (4:3), nearest-neighbor, ≤50 draw calls, 256MB RAM ceiling, 64MB VRAM. Run on any device that can run a browser. gl_compatibility renderer only.
