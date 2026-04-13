@@ -1,0 +1,5 @@
+kind warning
+edge applies-to blob:c9b1c764feed183b4e641823ea17f1e1db73d129
+edge targets-path path:prototypes/bonnie-traversal/BonnieController.gd
+
+Prototype is throwaway. 5 known shortcuts: (1) CLIMBING clamber uses is_on_ceiling() not proper top-edge detect. (2) LEDGE_PULLUP has no position snap. (3) SQUEEZING exit uses ceiling raycast (prototype approx). (4) No surface detection for footstep audio. (5) ParryCast circle may still detect wrong dirs. Fix in production rewrite in src/, not here.
