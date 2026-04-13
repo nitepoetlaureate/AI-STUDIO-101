@@ -1,0 +1,4 @@
+kind context
+edge explains commit:a343ae9202263ee99ef726454f76c45b4c673611
+
+Session 004: Fixed two critical playtest blockers — (1) BONNIE invisible (black sprite on black background, changed to warm orange), (2) wrong renderer (Forward+ defaulting, switched to gl_compatibility). Also: cached detect-gaps.sh, added renderer guard hook, enhanced validate-commit.sh GDD checks, fixed Session 002 gap in DEVLOG+CHANGELOG, created active.md session state.
