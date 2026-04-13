@@ -1,0 +1,5 @@
+kind warning
+edge applies-to blob:d696782575c9d76a9308cbead7e79f17fa5472a9
+edge targets-path path:design/gdd/npc-personality.md
+
+GDD header says 'System #9+10' but systems-index.md lists Systems 10+11 as Vertical Slice scope, not MVP. NPC GDD conflates Systems 9/10/11. Before NPC implementation: clarify which behaviors are System 9 (MVP) vs deferred. See Session 005 audit.
