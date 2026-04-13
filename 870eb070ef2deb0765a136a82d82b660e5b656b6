@@ -1,0 +1,4 @@
+kind context
+edge explains commit:870eb070ef2deb0765a136a82d82b660e5b656b6
+
+Session 005: First GATE 1 playtest. Found 4 critical prototype bugs (no ground CLIMBING, no SQUEEZING entry, parry_window_frames unused, ParryCast circle hit floor). Fixed all 4. Added debug HUD (CanvasLayer/RichTextLabel). Seeded mycelium with 6 constraint/warning notes. Cleaned docs (removed Unity/Unreal refs from quick-start.md). Infrastructure audit: 60:1 infra-to-game-code ratio is framework bloat, not a bug. GATE 1 status: NEEDS WORK — re-playtest required.
