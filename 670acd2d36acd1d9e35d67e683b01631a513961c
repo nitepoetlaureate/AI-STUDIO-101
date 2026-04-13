@@ -1,0 +1,5 @@
+kind warning
+edge applies-to blob:670acd2d36acd1d9e35d67e683b01631a513961c
+edge targets-path path:prototypes/bonnie-traversal/BonnieController.tscn
+
+PlaceholderSprite color was originally black Color(0,0,0,1) — invisible against black default_clear_color background. Changed to warm orange Color(1,0.4,0.2,1) for playtesting. Replace with actual sprite art when available.
