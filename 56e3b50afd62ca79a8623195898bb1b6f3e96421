@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:56e3b50afd62ca79a8623195898bb1b6f3e96421
+edge targets-path path:.claude/hooks/post-tool-use-mycelium.sh
+
+PostToolUse hook for Write|Edit. Appends repo-relative file paths to production/session-state/.mycelium-touched. Used by session-stop departure reminder. Gitignored tracking file.
