@@ -1,0 +1,5 @@
+kind warning
+edge applies-to blob:664a80e5a2278a946118199388dc0364dad20688
+edge targets-path path:prototypes/bonnie-traversal/BonnieController.tscn
+
+SqueezeShape CollisionShape2D MUST have position=(0,14) — NOT (0,0). The +14px offset aligns the squeeze capsule bottom with the normal capsule bottom so BONNIE stays on the floor when shapes swap. Removing this offset causes BONNIE to float 14px, triggering a FALLING→land→SQUEEZING→FALLING cycle.
