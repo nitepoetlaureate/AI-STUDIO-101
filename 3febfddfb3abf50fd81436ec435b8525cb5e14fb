@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:3febfddfb3abf50fd81436ec435b8525cb5e14fb
+edge targets-path path:design/gdd/interactive-object-system.md
+
+Interactive Object System GDD (System #7). 5 weight classes (Light/Medium/Heavy/Glass/Liquid). slide_force = abs(bonnie_velocity.x) * slide_force_multiplier * object_mass_factor. receive_impact(force: Vector2) is the sole entry point. Liquid: two-signal pattern (knock → spill delay). object_displaced + object_displaced_stimulus signals.
