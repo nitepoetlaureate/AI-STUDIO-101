@@ -1,0 +1,4 @@
+kind context
+edge explains commit:84fb24a4e8d9fadf752ce12a45ef0f4f30b4254b
+
+Session 006: GATE 1 prototype sprint. Squeezing fully fixed (SqueezeShape position offset +14px for floor alignment, Area2D flag-based trigger replacing CeilingCast polling, approach ramps removed). Mid-air climbing grab (JUMPING+FALLING+E), E-scramble burst climbing, directional LEDGE_PULLUP pop, claw brake in SLIDING all implemented. Level Manager GDD + Interactive Object System GDD written and approved (8/11 MVP GDDs done). bonnie-traversal.md amended with DI-001 (pullup pop) and DI-003 (claw brake). input-system.md updated for E key context map. audio-manager.md updated with mood music variants.
