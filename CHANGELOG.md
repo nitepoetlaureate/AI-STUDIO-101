@@ -5,6 +5,44 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Pre-Production 0.6] — 2026-04-15
+
+### Fixed — Prototype (Session 006)
+- B02 (regression/incomplete): SQUEEZING fully fixed — three-layer fix:
+  (1) `groups=["SqueezeTrigger"]` moved to node header (was silently ignored as body property)
+  (2) SqueezeApproachLeft/Right removed (tops at y=468 = zero clearance, physically blocked entry)
+  (3) `CollisionShape2D` position `Vector2(0,0)` → `Vector2(0,14)` — squeeze shape now floor-aligned; eliminates float→fall→squeeze cycle
+- B07: F5 macOS shortcut — documented workaround: use Play button (▶️) or Cmd+B in Godot editor
+- B08: LEDGE_PULLUP redesigned — replaced auto-fire with two-phase directional pop system (DI-001)
+
+### Added — Prototype (Session 006)
+- DI-001: LEDGE_PULLUP directional pop — Phase 1 cling reads directional input; Phase 2 resolves as momentum-carry launch or stationary pullup
+- DI-003: Claw brake during SLIDING — E key removes `abs(velocity.x) * claw_brake_multiplier` per tap; ~3 taps from full speed to stop
+- Mid-air climbing: E-press during JUMPING/FALLING while touching Climbable → instant CLIMBING entry
+- E-scramble burst: pressing E during CLIMBING fires `climb_claw_impulse` for `climb_claw_burst_frames` — more cat-like than smooth surface slide
+- Auto-clamber: CLIMBING state exits to JUMPING without player UP input when `is_on_ceiling()` or slide normal y > 0.5
+- `_squeeze_zone_active` flag-based SQUEEZING trigger — safe from physics flushing errors; replaces CeilingCast-based entry
+
+### Added — GDDs (Session 006)
+- `design/gdd/level-manager.md` — Level Manager GDD approved (System #5): 7-room apartment topology, BFS cascade attenuation, mood-based music transitions, post-win contract
+- `design/gdd/interactive-object-system.md` — Interactive Object System GDD approved (System #7): 5 weight classes, `receive_impact()` contract, liquid two-signal pattern, object_displaced stimulus
+
+### Changed — GDDs (Session 006)
+- `design/gdd/bonnie-traversal.md` — DI-001 + DI-003 amendments: LEDGE_PULLUP two-phase redesign, SLIDING claw brake formula, 4 new tuning knobs, 2 new ACs (AC-T06c2, AC-T06f)
+- `design/gdd/input-system.md` — E key `grab` action expanded: context-sensitive across FALLING/JUMPING (ledge parry), SLIDING (claw brake); CLIMBING excluded from claw brake
+- `design/gdd/audio-manager.md` — Level 2 apartment music: single track → 4 mood variants (calm/chaotic/dangerous/other)
+- `design/gdd/systems-index.md` — Systems 5 and 7 status → Approved; progress 6/11 → 8/11 MVP
+
+### Added — Infrastructure (Session 006)
+- `.claude/hooks/pre-tool-use-mycelium.sh` — runs `context-workflow.sh` before Write/Edit; guards uncommitted files via `git rev-parse --verify`
+- `.claude/hooks/post-tool-use-mycelium.sh` — tracks touched file paths to `.mycelium-touched` for departure reminder
+- `.claude/settings.json` — PreToolUse `Write|Edit` → mycelium hook; PostToolUse `Write|Edit` → mycelium hook
+
+### GATE Status
+- GATE 1: **CONDITIONALLY NEAR-PASS** — 5 ACs passing. Slide rhythm + camera lead remain before final call.
+
+---
+
 ## [Pre-Production 0.5] — 2026-04-13
 
 ### Fixed — Prototype Bugs

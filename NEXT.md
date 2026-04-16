@@ -1,37 +1,43 @@
 # BONNIE! — Next Steps Handoff
 
-**For**: Session 006
-**Written by**: Hawaii Zeke (Claude) on 2026-04-13
-**Context**: Session 005 complete. GATE 1 playtest conducted. Prototype bugs fixed. Infrastructure cleaned. GATE 1 NOT YET CLEARED — prototype needs a second playtest after fixes.
-**Immediate priority**: Open Godot → playtest the fixed prototype → evaluate GATE 1 → if cleared, begin Phase 3 GDDs
+**For**: Session 007
+**Written by**: Hawaii Zeke (Claude) on 2026-04-15
+**Context**: Session 006 complete. GATE 1 CONDITIONALLY NEAR-PASS. DI-001 + DI-003 implemented and confirmed. T-FOUND-04 + T-FOUND-05 approved (8/11 MVP GDDs). Mycelium pre/post-tool-use hooks wired. Godot CLI MCP to be integrated this session.
+**Immediate priority**: Godot MCP integration → slide rhythm tuning re-test → GATE 1 final call → T-CHAOS + T-SOC GDDs
 
 Read this file first. Then read the locked decisions section before touching anything.
 
 ---
 
-## Session 005 Summary
+## Session 006 Summary
 
-### Playtest Results
-Conducted first GATE 1 playtest. **GATE 1 NEEDS WORK** — prototype had 3 critical bugs preventing full evaluation:
+### What Was Done
 
-1. **B01**: No ground-based CLIMBING entry — fixed
-2. **B02**: SQUEEZING state unreachable — fixed  
-3. **B03**: `parry_window_frames` export existed but wasn't used — fixed (temporal window now implemented)
-4. **B04**: ParryCast circle detected floor geometry — fixed (directional filter added)
-5. **Debug HUD added** — shows state, velocity, speed thresholds, timer states, fall distance
+| Area | Result |
+|------|--------|
+| Squeezing (B02) | FULLY FIXED — 3-layer fix (groups syntax, ramp removal, shape position offset) |
+| Ledge pullup | REDESIGNED — DI-001 directional pop, confirmed working |
+| Claw brake | IMPLEMENTED — DI-003 E-during-SLIDING, confirmed working |
+| Mid-air climbing | IMPLEMENTED — E during JUMPING/FALLING near Climbable |
+| Auto-clamber | IMPLEMENTED — wall top exits CLIMBING without UP input |
+| T-FOUND-04 | APPROVED — `design/gdd/level-manager.md` |
+| T-FOUND-05 | APPROVED — `design/gdd/interactive-object-system.md` |
+| Mycelium hooks | WIRED — pre/post tool-use hooks for Write/Edit |
+| Systems approved | **8/11 MVP** |
 
-### Infrastructure Cleanup
-- Mycelium seeded with 6 live notes (5 constraints, 1 warning)
-- quick-start.md updated to remove Unity/Unreal references
-- npc-personality.md: scope clarification added (Systems 9 vs 10/11)
-- input-system.md: stale cross-ref note resolved
+### GATE 1 Status — CONDITIONALLY NEAR-PASS
 
-### Pending (your action needed)
-Run these commands to complete the cleanup:
-```bash
-! rm -rf docs/engine-reference/unity docs/engine-reference/unreal
-! rm .claude/agents/unity-specialist.md .claude/agents/unity-addressables-specialist.md .claude/agents/unity-dots-specialist.md .claude/agents/unity-shader-specialist.md .claude/agents/unity-ui-specialist.md .claude/agents/unreal-specialist.md .claude/agents/ue-blueprint-specialist.md .claude/agents/ue-gas-specialist.md .claude/agents/ue-replication-specialist.md .claude/agents/ue-umg-specialist.md .claude/agents/community-manager.md .claude/agents/live-ops-designer.md .claude/agents/localization-lead.md
-```
+**5 ACs passing:**
+- AC-T06 Rough landing ✅
+- AC-T06c Directional pop ✅
+- AC-T06e Climbing (ground + mid-air) ✅
+- AC-T06f Claw brake ✅
+- AC-T07 Squeezing ✅
+
+**Remaining before GATE 1 PASS:**
+1. **Slide rhythm** — claw brake works; slide → brake → stop → pivot cycle needs one targeted re-test
+2. **Camera leads movement** — AC-T08 not yet testable (camera system not yet in prototype)
+3. **Stealth radius** — sneaking stimulus reduction not explicitly verified
 
 ---
 
@@ -42,26 +48,26 @@ Run these commands to complete the cleanup:
 | File | Status | Notes |
 |------|--------|-------|
 | `design/gdd/game-concept.md` | Approved | Do not redesign. |
-| `design/gdd/systems-index.md` | Approved | 6/11 MVP approved. |
-| `design/gdd/input-system.md` | Approved | Stale cross-ref note fixed Session 005. |
+| `design/gdd/systems-index.md` | Approved | 8/11 MVP approved. |
+| `design/gdd/input-system.md` | Approved | E key updated for DI-003 context-sensitivity. |
 | `design/gdd/viewport-config.md` | Approved | 720x540, nearest-neighbor, 60fps. |
-| `design/gdd/audio-manager.md` | Approved | Full event catalogue, bus hierarchy, playback API. |
+| `design/gdd/audio-manager.md` | Approved | 4 apartment mood variants added Session 006. |
 | `design/gdd/camera-system.md` | Approved | Look-ahead, ledge bias, recon zoom. |
-| `design/gdd/bonnie-traversal.md` | Approved | Full movement vocabulary. |
-| `design/gdd/npc-personality.md` | Approved | Scope note added Session 005 (Systems 9 vs 10/11). |
+| `design/gdd/bonnie-traversal.md` | Approved | DI-001 + DI-003 amendments applied. |
+| `design/gdd/npc-personality.md` | Approved | Systems 9 vs 10/11 scope note. |
+| `design/gdd/level-manager.md` | Approved | System #5 — 7-room apartment, BFS attenuation. |
+| `design/gdd/interactive-object-system.md` | Approved | System #7 — 5 weight classes, receive_impact contract. |
 | `project.godot` | Configured | 720x540, input map, GodotPhysics2D, nearest-neighbor, gl_compatibility. |
-| `prototypes/bonnie-traversal/BonnieController.gd` | Fixed | B01+B02+B03+B04 fixed. Debug HUD added. |
-| `prototypes/bonnie-traversal/BonnieController.tscn` | Updated | CeilingCast + DebugHUD nodes added. |
-| `prototypes/bonnie-traversal/TestLevel.tscn` | Exists | 10 test zones. |
-| `prototypes/bonnie-traversal/PLAYTEST-001.md` | Written | Session 005 playtest report. GATE 1 NEEDS WORK. |
+| `prototypes/bonnie-traversal/BonnieController.gd` | Fixed | DI-001, DI-003, mid-air climb, auto-clamber, squeeze flag-based. |
+| `prototypes/bonnie-traversal/BonnieController.tscn` | Updated | SqueezeShape position=(0,14). |
+| `prototypes/bonnie-traversal/TestLevel.tscn` | Updated | SqueezeTrigger groups header fixed, ramp geometry removed. |
+| `prototypes/bonnie-traversal/PLAYTEST-002.md` | Written | Session 006 report. GATE 1 NEAR-PASS. |
 
 ### What Does NOT Exist Yet
 
 - Chaos Meter GDD — **BLOCKED on GATE 1**
 - Bidirectional Social System GDD — **BLOCKED on GATE 1**
-- Level Manager GDD — MVP, not started (no gate dependency)
-- Interactive Object System GDD — MVP, not started
-- Chaos Meter UI GDD — MVP, not started
+- Chaos Meter UI GDD — **BLOCKED on T-CHAOS**
 - Sprint 1 plan — **BLOCKED on GATE 2**
 - Any production code in `src/`
 - Any art assets in `assets/`
@@ -70,31 +76,36 @@ Run these commands to complete the cleanup:
 
 ## Locked Decisions — Do Not Re-Litigate
 
-All decisions from Sessions 001-004 still apply. Session 005 additions:
+All decisions from Sessions 001-005 still apply. Session 006 additions:
 
-### Prototype fixes (Session 005)
-- Ground climbing entry: grab button + near Climbable → CLIMBING from IDLE/WALK/RUN/SNEAK
-- Slide auto-climb: SLIDING collision with Climbable auto-grabs (no input needed)
-- SQUEEZING: CeilingCast RayCast2D triggers entry; clears when ceiling gone
-- Parry: temporal window opened on proximity zone entry, directional floor filter applied
-- Debug HUD: CanvasLayer/RichTextLabel, layer 128, shows all tuning-relevant state
+### DI-001 — LEDGE_PULLUP Directional Pop (LOCKED)
+- Phase 1 (cling): `pullup_window_frames` (default 10) — reads directional input
+- Phase 2 (pop): directional input → `pullup_pop_velocity` launch + `pullup_pop_vertical` arc; no input → stationary clean pullup
+- This is a skill-expression layer, not a QoL auto-feature. Keep the timing window honest.
 
-### Design doc fixes (Session 005)
-- Systems 10+11 are Vertical Slice scope (NOT MVP). System 9 only for MVP NPC work.
-- NpcState circular dependency note added to mycelium.
+### DI-003 — E Claw Brake during SLIDING (LOCKED, rhythm TBD)
+- E during SLIDING removes `abs(velocity.x) * claw_brake_multiplier` per tap
+- Default multiplier: 0.30. ~3 taps from full speed to stop. Tunable.
+- The "staccato rhythm" at high speed is a design aspiration — Session 007 determines if `claw_brake_multiplier` alone achieves it or if adaptive timing is needed.
+
+### Zone 8 SQUEEZING (LOCKED implementation)
+- SqueezeShape position=(0,14) MUST NOT change — this offset is load-bearing
+- SqueezeTrigger groups=["SqueezeTrigger"] is in node header — do not move to body
+- _squeeze_zone_active flag replaces CeilingCast for entry/exit — do not revert
 
 ---
 
 ## Critical Path
 
 ```
-GATE 1 (re-playtest with fixed prototype) ← YOU ARE HERE
+Session 007 Priority A: Godot MCP integration (new this session)
+Session 007 Priority B: Slide rhythm re-test → GATE 1 final call
      |
-T-CHAOS + T-SOC  ← parallel GDDs, immediately after GATE 1
+T-CHAOS + T-SOC  ← parallel GDDs, immediately after GATE 1 PASS
      |
-T-FOUND-04/05/06 ← Level Manager, Interactive Objects, Chaos Meter UI (anytime)
+T-FOUND-06 (Chaos Meter UI — after T-CHAOS skeleton)
      |
-GATE 2 (all 11 MVP GDDs approved — currently 6/11)
+GATE 2 (all 11 MVP GDDs approved — currently 8/11)
      |
 T-SPRINT-01 (Sprint 1 plan)
      |
@@ -103,86 +114,83 @@ T-IMPL (Sprint 1 Implementation)
 
 ---
 
-## Session 006 Opening Protocol
+## Session 007 Opening Protocol
 
-### Step 0: Pre-Flight
-1. Run any pending cleanup commands from this file's "Pending" section (if not done)
-2. Open Godot 4.6 → TestLevel.tscn
+### Priority 0: Godot CLI MCP Integration
 
-### Step 1: Re-Playtest the Fixed Prototype
-The debug HUD now shows:
-- Current state name (color-coded)
-- Velocity (vx/vy) and speed
-- Speed thresholds (slide triggers when speed > slide_trigger_speed)
-- All timer countdowns (coyote, jump buffer, parry window)
-- Fall distance vs rough landing threshold
-- Parry proximity and ceiling detection status
+The user will be setting up a Godot CLI MCP this session. All agents will have access to
+the Godot CLI from within Claude Code tool calls. Steps:
 
-**How to trigger the previously-broken mechanics:**
-- **Climbing (ground):** Stand near the brown climbable wall (Zone 6), press E (grab)
-- **Squeezing:** Walk into Zone 8 (32px gap) — CeilingCast triggers auto-SQUEEZING
-- **Kaneda Slide:** Hold Shift + run right until speed > 300, then press S or reverse direction. Watch the debug HUD speed counter.
-- **Coyote time:** Watch the "coyote: X/5" counter in the HUD after walking off a ledge
-- **Parry window:** Watch "parry_w: X/6" — it opens when near geometry, closes after 6 frames
+1. User installs / configures MCP (on their end)
+2. Create `.claude/skills/godot-mcp.md` — Godot MCP skill reference for the team
+3. Update hooks as needed for MCP-aware workflows
+4. Verify: any agent can call `godot --headless` or the MCP equivalent to run builds/checks
 
-**Re-answer the four feel questions:**
-1. Does the parry window feel like cat reflexes, or an invisible wall?
-2. Is post-double-jump commitment readable as physics, or input failure?
-3. Does the Kaneda slide feel like a consequence, or a punishment?
-4. Is the rough landing threshold right at 144px, or does it trigger too often/rarely?
+### Priority 1: Slide Rhythm Re-Test
 
-### Step 2: GATE 1 Evaluation
-If all ACs pass on re-playtest → GATE 1 CLEARED → begin Phase 3 immediately.
+Reopen `prototypes/bonnie-traversal/TestLevel.tscn` (Play button / Cmd+B, NOT F5 on macOS).
 
-### Step 3: Controller Verification
-Gamepad bindings exist in project.godot for all 10 actions. Plug in controller before launching, verify Godot recognizes it in Input Map settings.
+**How to trigger the Kaneda slide:**
+1. Hold Shift (run) in any direction
+2. Run until speed > 300 px/s (debug HUD speed counter confirms this)
+3. Then: press S (down) OR press the opposite direction key
+4. SLIDING state fires
 
----
+**What to evaluate:**
+- Does pressing E during SLIDING feel like a handbrake or a full-stop?
+- Can you execute: run → slide → 2-3 E taps → controlled stop → immediate pivot?
+- Does the rhythm feel "cat-like" or "mechanical"?
+- Try tuning `claw_brake_multiplier` in the Inspector (default 0.30): lower = softer stops
 
-## Known Issues in Prototype (Updated Session 005)
+**Report back:** slide feel verdict → GATE 1 final call
 
-Remaining prototype shortcuts (do NOT fix in `prototypes/` — address in production rewrite):
+### Priority 2: GATE 1 Final Evaluation
 
-1. **CLIMBING → LEDGE_PULLUP**: `is_on_ceiling()` approximation. Production needs proper top-edge detect via Area2D or raycast.
-2. **Ledge parry position snap**: LEDGE_PULLUP fires without snapping to ledge top. Prototype only.
-3. **SQUEEZING exit**: CeilingCast-based (improved from Session 004 "no input" placeholder, but still approximate).
-4. **Surface detection for footsteps**: Not implemented.
-5. **Parry directional filter**: Uses contact-point Y offset heuristic. Production needs proper raycasts.
+Once slide feel is confirmed:
+- Review AC table in PLAYTEST-002.md
+- Determine: camera and stealth — are these blockers or deferrable?
+- Call GATE 1: PASS or still NEEDS WORK
 
-B01, B02, B03, B04 are now fixed. Items 1-5 above are known intentional shortcuts.
-
----
-
-## Parallel Subagent Opportunities (After GATE 1)
-
-### Set B — Launch Together (immediately after GATE 1 clears)
+### Priority 3 (Post-GATE 1): T-CHAOS + T-SOC
 
 **Agent 1** → `game-designer` + `economy-designer`: `/design-system chaos-meter`
-Key: pure chaos plateaus below feeding threshold; charm MUST be mathematically required
+Key constraints:
+- Pure chaos plateaus below the feeding threshold — charm MUST be mathematically required
+- No HP/death. Chaos Meter is social/environmental pressure, not a kill condition.
+- Max chaos level should feel like REACTING-on-all-NPCs, not game-over warning
 
 **Agent 2** → `game-designer` + `ux-designer`: `/design-system bidirectional-social-system`
-Key: read `npc-personality.md` Section 3 first; define NpcState write contract
-
-### Set C — Launch Anytime (no gate dependency)
-
-**Agent 1** → `/design-system level-manager`
-**Agent 2** → `/design-system interactive-object-system`
-**Agent 3** → `/design-system chaos-meter-ui` (after T-CHAOS has a draft)
+Key constraints:
+- Read `npc-personality.md` Section 3 first — define NpcState write contract carefully
+- Social axis must be visually legible without a UI (NPC body language, reactions)
+- NPC↔Social circular dependency is resolved via NpcState shared object (mycelium constraint)
 
 ---
 
-## Warnings for Session 006
+## Known Prototype Shortcuts (Do NOT Fix in `prototypes/`)
 
-1. **Debug HUD is for playtesting only** — do not persist in production code
-2. **GL Compatibility renderer** — `gl_compatibility` only. Session-start.sh guards.
-3. **AudioStreamRandomizer pitch in semitones** — Godot 4.6. NOT frequency multipliers.
-4. **Prototype is throwaway** — BonnieController.gd is not production code. Rewrite in src/.
-5. **Systems 10+11 are Vertical Slice** — design and implement System 9 only for MVP.
-6. **Both T-CHAOS + T-SOC must be designed before implementing either NPC or Social System.**
-7. **BONNIE never dies.** Non-negotiable.
-8. **No auto-grab on ledges.** Pure parry only. Non-negotiable.
-9. **Commit identity**: `Co-Authored-By: Hawaii Zeke <(302) 319-3895>`
-10. **Prototype known issues 1-5 above** — do not fix in `prototypes/`, address in production rewrite.
+Address in production rewrite in `src/` only:
+
+1. **CLIMBING top-edge detect**: `is_on_ceiling()` approximation. Production needs Area2D or raycast top-edge detect.
+2. **LEDGE_PULLUP position snap**: no ledge-top snap in prototype. Production needs snap.
+3. **SQUEEZING exit**: `_squeeze_zone_active` flag (improved but still approximate). Production needs proper overlap test.
+4. **Surface detection for footsteps**: not implemented.
+5. **Parry directional filter**: contact-point Y offset heuristic. Production needs proper raycasts.
+
+---
+
+## Warnings for Session 007
+
+1. **F5 does NOT launch on macOS** — use Play button (▶️) or Cmd+B in Godot editor
+2. **SqueezeShape position=(0,14) is load-bearing** — changing it causes BONNIE to float and state-cycle
+3. **GL Compatibility renderer** — `gl_compatibility` only. Session-start.sh guards.
+4. **AudioStreamRandomizer pitch in semitones** — Godot 4.6. NOT frequency multipliers.
+5. **Prototype is throwaway** — BonnieController.gd is not production code. Rewrite in src/.
+6. **Systems 10+11 are Vertical Slice** — System 9 only for MVP NPC work.
+7. **Both T-CHAOS + T-SOC must be designed before implementing either NPC or Social System.**
+8. **BONNIE never dies.** Non-negotiable.
+9. **No auto-grab on ledges.** Pure parry only. Non-negotiable.
+10. **Commit identity**: `Co-Authored-By: Hawaii Zeke <(302) 319-3895>`
 
 ---
 
@@ -190,13 +198,25 @@ Key: read `npc-personality.md` Section 3 first; define NpcState write contract
 
 | Gate | Condition | Status | Unlocks |
 |------|-----------|--------|---------|
-| GATE 0 | Camera + Viewport GDDs approved | CLEARED | Streams A+B+C |
-| GATE 1 | Prototype playtested, ACs pass, tuning locked | **NEEDS WORK — re-playtest Session 006** | Phase 3 GDDs |
-| GATE 2 | All 11 MVP GDDs approved (6/11 done) | Pending | Sprint 1 plan |
+| GATE 0 | Camera + Viewport GDDs approved | CLEARED ✅ | Streams A+B+C |
+| GATE 1 | Prototype playtested, ACs pass, tuning locked | **NEAR-PASS** — slide + camera remain | Phase 3 GDDs |
+| GATE 2 | All 11 MVP GDDs approved (8/11 done) | Pending | Sprint 1 plan |
 | GATE 3 | Sprint 1 plan approved | Pending | Implementation |
 
 ---
 
-*Hawaii Zeke — Session 005 complete. Prototype fixed. Infrastructure leaner.
-Playtest the fixed prototype with the debug HUD — you'll finally be able to see what's happening.
-Come back with GATE 1 pass/fail and tuning notes.*
+## DI-002 — Deferred Design Idea (Post-GATE 1)
+
+**Underside Platform Clinging (HANGING state)**
+
+Tester vision: BONNIE can cling to the underside of platforms, shelves, counters.
+Stealth mechanic — dodge the aftermath of her own chaos. "Dodge the aftermath of
+her own chaos" is the design image.
+
+Deferred scope: GATE 2+. Natural fit with NPC perception system (System 9).
+Flag when NPC GDD enters implementation phase.
+
+---
+
+*Hawaii Zeke — Session 006 complete. Traversal identity confirmed. 8/11 MVP GDDs done.
+GATE 1 near. MCP next. Let's finish the slide and call it.*

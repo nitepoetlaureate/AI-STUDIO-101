@@ -236,6 +236,99 @@ Playtest feedback → GATE 1 evaluation → T-CHAOS + T-SOC GDDs (parallel)
 
 ---
 
+## [2026-04-15] Session 006 — GATE 1 Re-Playtest + Prototype Sprint + GDD Sprint
+
+**Developer**: m. raftery
+**Focus**: GATE 1 re-playtest → prototype fixes → DI-001/DI-003 design + implementation → T-FOUND-04/05 GDDs → infrastructure (Mycelium hooks)
+
+---
+
+### Playtest Results
+
+Conducted Session 006 GATE 1 re-playtest (targeted, ~15–20 min). Four bugs from Session 005 carried over or emerged:
+
+- **B02 (SQUEEZING)** — fully broken; traced to three compounding causes: wrong groups syntax in .tscn, approach ramp geometry blocking entry, and shape-swap floating causing rapid SQUEEZING↔FALLING state cycle. All three fixed this session.
+- **B07 (F5 on macOS)** — system shortcut capture; workaround documented (Cmd+B or Play button)
+- **B08 (LEDGE_PULLUP)** — auto-fire with no position snap didn't match player expectation; triggered DI-001 design proposal and full redesign
+
+**Feel signals confirmed:**
+- Climbing pop-up at wall top: "That worked great!" — target feel, GATE 1 AC pass
+- Run + double jump + parry combo: "It really does feel very feline" — traversal identity confirmed
+- Rough landing: confirmed working, calibration deferred to art pass
+- Post-double-jump: "needs more dynamism" — likely a sprite/audio gap, not physics
+
+**GATE 1 result: CONDITIONALLY NEAR-PASS** — see `prototypes/bonnie-traversal/PLAYTEST-002.md`
+
+---
+
+### Design Ideas Approved and Implemented
+
+**DI-001 — LEDGE_PULLUP Directional Pop**
+
+Tester vision: after cling, a brief input window. If directional input → BONNIE pops up and carries momentum. If no input → clean stationary pullup.
+
+- GDD amended: `bonnie-traversal.md §3.5` rewritten as two-phase state
+- Prototype implemented: `_pullup_direction` captured during cling phase; `_handle_ledge_pullup()` resolves momentum launch vs. stationary pop at window end
+- Confirmed working on Session 006 re-test
+- New tuning knobs: `pullup_window_frames` (10f), `pullup_pop_velocity` (260 px/s), `pullup_pop_vertical` (200 px/s)
+
+**DI-003 — Claw Brake During SLIDING**
+
+Tester vision: E key as context-sensitive "claw" button — handbrake during SLIDING that allows skill-based deceleration.
+
+- GDD amended: `bonnie-traversal.md` SLIDING section, formula: `claw_brake_force = abs(velocity.x) * claw_brake_multiplier`
+- `input-system.md` updated: E grab action expanded as context-sensitive across FALLING/JUMPING/SLIDING states
+- Prototype implemented: E-during-SLIDING removes `abs(velocity.x) * 0.30` per tap (~3 taps from full speed)
+- Confirmed working; rhythm tuning deferred to Session 007
+
+---
+
+### Additional Prototype Improvements
+
+- **Mid-air climbing**: E-press while touching Climbable during JUMPING/FALLING → immediate CLIMBING entry. Player can hit the wall at full speed and climb from the moment of contact.
+- **E-scramble burst**: Pressing E during CLIMBING fires a velocity impulse for `climb_claw_burst_frames` (default 4). More cat-like than smooth surface ascent.
+- **Auto-clamber**: CLIMBING auto-exits to JUMPING at wall top via `is_on_ceiling()` — no UP input required. Confirmed delivering the "pop over the edge with momentum" feel.
+
+---
+
+### GDD Sprint — T-FOUND-04 and T-FOUND-05
+
+**T-FOUND-04: Level Manager GDD** — `design/gdd/level-manager.md` — Approved
+
+System #5. 7-room apartment topology: entryway → living_room/bedroom → kitchen/bathroom → studio/back_stairs. Key decisions:
+- BFS cascade attenuation: 4 tiers (0–3), stimulus attenuated ×0.5 per tier crossing, floor at tier 3
+- Music: starts `level_02_calm`; Chaos Meter drives `level_02_chaotic`/`dangerous` transitions
+- Post-win signal: `level_complete(fed_by_npc_id: StringName)` → Feeding Cutscene System (19)
+- Room deactivation: rooms outside radius 1 from BONNIE deactivate (physics + visibility)
+
+**T-FOUND-05: Interactive Object System GDD** — `design/gdd/interactive-object-system.md` — Approved
+
+System #7. Five weight classes (Light/Medium/Heavy/Glass/Liquid Container). Key decisions:
+- Slide force formula: `slide_force = abs(bonnie_velocity.x) * slide_force_multiplier * object_mass_factor`
+- Liquid: two-signal pattern (knock → spill delay → displaced stimulus with 2× weight)
+- `receive_impact(force: Vector2)` — the only entry point into the system from BONNIE
+- `object_displaced` + `object_displaced_stimulus` signals
+
+**systems-index.md** updated: Systems 5 and 7 → Approved. Progress: **8/11 MVP GDDs approved**.
+
+---
+
+### Infrastructure — Mycelium Pre/Post Tool-Use Hooks
+
+Identified critical gap: `Write` and `Edit` tool calls were not triggering Mycelium context-workflow or departure tracking. Two hooks created:
+
+- **`.claude/hooks/pre-tool-use-mycelium.sh`** — fires before any Write/Edit; runs `context-workflow.sh` for file-specific notes. Guards: `git rev-parse --verify HEAD:<path>` exits cleanly for uncommitted files (avoids exit 128 on new files).
+- **`.claude/hooks/post-tool-use-mycelium.sh`** — appends file paths to `.mycelium-touched` for session-stop departure reminder.
+- **`.claude/settings.json`** — PreToolUse and PostToolUse matchers for `Write|Edit` wired to both new hooks.
+
+---
+
+### GATE Status
+- GATE 0: CLEARED
+- GATE 1: **CONDITIONALLY NEAR-PASS** — 5/12 ACs pass, traversal identity confirmed; slide rhythm + camera/stealth remain before final PASS call
+
+---
+
 ## [2026-04-13] Session 005 — GATE 1 Playtest + Prototype Fixes + Infrastructure Cleanup
 
 **Developer**: m. raftery

@@ -148,9 +148,18 @@ Triggered when:
 - **Pop jump**: jump input during SLIDING launches BONNIE at current slide velocity
   + full `jump_velocity`. This is the high-skill move: slide → pop → airborne with
   full horizontal momentum.
-- Exits to: WALKING/IDLE (velocity decays to `walk_speed`), JUMPING (pop jump),
-  DAZED (slide into wall at speed above `daze_collision_threshold`), CLIMBING
-  (slide into climbable surface — BONNIE grabs it)
+- **Claw brake** (E / grab input during SLIDING): BONNIE jams her claws down.
+  Applies a speed-dependent friction spike instead of gradual decay.
+  `claw_brake_force = abs(velocity.x) * claw_brake_multiplier`
+  At full slide speed this is a hard arrest. At lower speed it's a sharp decel.
+  The player can staccato-tap E at rhythm to scrub speed in chunks — skilled players
+  use this to stop, pivot, and re-accelerate cleanly. Unskilled players who hold E
+  will just stop. This is the handbrake, not an ejector seat.
+  The E key's behavior is fully context-sensitive — see Input System §3 for the
+  full E-key context map (climb near Climbable; claw brake during SLIDING; parry airborne).
+- Exits to: WALKING/IDLE (velocity decays to `walk_speed` OR claw brake arrest),
+  JUMPING (pop jump), DAZED (slide into wall at speed above `daze_collision_threshold`),
+  CLIMBING (slide into climbable surface — BONNIE grabs it)
 
 ---
 
@@ -273,13 +282,24 @@ botched landing, minor fall, getting trapped.
 ---
 
 #### LEDGE_PULLUP
-Brief recovery state after a successful LEDGE PARRY on a platform edge.
+Two-phase state after a successful LEDGE PARRY on a platform edge.
 
-- Duration: `pullup_duration` frames (short — 6–12 frames)
-- BONNIE's position snaps to the top of the platform edge
-- Brief animation: BONNIE scrambles up, lands on top
-- No input during pullup animation — she's committing to the surface
-- Exits to: IDLE (pullup complete, full control restored)
+**Phase 1 — Cling** (`pullup_window_frames`, default 10 frames):
+- BONNIE digs claws into the ledge face. She is hanging, not yet on top.
+- Directional input is read during this window. This is the momentum-choice moment.
+- Visual: claws-out scramble sprite, Coyote-Time echo of her approach velocity
+- Audio: claw-scratch SFX
+
+**Phase 2 — Pop** (resolves based on Phase 1 input):
+- **With directional input** (left or right): BONNIE launches in that direction with
+  `pullup_pop_velocity` horizontal + `pullup_pop_vertical` vertical. Momentum from
+  the approach carries — a running approach into a parry into a timed forward press
+  becomes one continuous feline flow. The pop is a cartoon scramble-and-launch,
+  not a teleport. Coyote-Time energy: she was already going that way.
+- **With no directional input**: BONNIE pulls cleanly up onto the surface, landing
+  stationary at the platform edge. Safe. Competent. Not flashy.
+- Duration: `pullup_duration` frames to complete the chosen animation
+- Exits to: IDLE (no-input pullup), RUNNING/JUMPING (directional pop, inherits pop velocity)
 
 ---
 
@@ -685,7 +705,11 @@ not a specification.
 | `post_double_jump_air_control` | `30 px/s²` | `0–80` | Air control after double jump — near zero, BONNIE is committed |
 | `parry_detection_radius` | `24 px` | `16–40` | How close BONNIE must be to geometry for parry to be available |
 | `parry_window_frames` | `6 frames` | `4–12` | Tight timing window for successful parry |
-| `pullup_duration` | `10 frames` | `6–14` | LEDGE_PULLUP animation length |
+| `pullup_duration` | `10 frames` | `6–14` | LEDGE_PULLUP pop/pullup animation length |
+| `pullup_window_frames` | `10 frames` | `6–18` | Phase 1 cling window — how long directional input is read before pop resolves |
+| `pullup_pop_velocity` | `260 px/s` | `180–360` | Horizontal speed of directional pop-up (momentum carry) |
+| `pullup_pop_vertical` | `200 px/s` | `120–280` | Vertical component of directional pop-up |
+| `claw_brake_multiplier` | `0.55` | `0.3–0.85` | Fraction of current slide speed removed per E tap (higher = harder brake) |
 | `wall_jump_velocity` | `360 px/s` | `260–460` | Speed of wall jump (perpendicular to surface) |
 
 ### Jump
@@ -782,16 +806,26 @@ are built on top of BONNIE's movement.
 - [ ] BONNIE falls past a ledge with grab input OUTSIDE `parry_window_frames`:
       she falls, no grab (missed window)
 - [ ] BONNIE falls past a ledge with grab input WITHIN `parry_window_frames`:
-      transitions to LEDGE_PULLUP (platform edge) or CLIMBING (climbable wall)
+      transitions to LEDGE_PULLUP Phase 1 cling (platform edge) or CLIMBING (climbable wall)
 - [ ] No visual prompt or highlighted ledge telegraphs the parry window
 - [ ] Failed parry that results in ROUGH_LANDING: Nine Lives trigger fires
+
+**AC-T06c2: LEDGE_PULLUP directional pop resolves correctly**
+- [ ] Parry → LEDGE_PULLUP cling, NO directional input within `pullup_window_frames`:
+      BONNIE pulls up clean, lands stationary on platform
+- [ ] Parry → LEDGE_PULLUP cling, directional input within `pullup_window_frames`:
+      BONNIE pops in that direction with `pullup_pop_velocity` horizontal + `pullup_pop_vertical`
+- [ ] High-speed approach (RUNNING → parry → directional pop, same direction):
+      BONNIE's pop velocity is additive with approach momentum — fluid continuous motion
+- [ ] Pop into open air (directional pop toward empty space):
+      BONNIE launches cleanly, transitions to JUMPING/FALLING with pop velocity
 
 **AC-T06d: Double jump + parry combo is executable**
 - [ ] Run → jump → at apex → double jump: BONNIE twists, air control significantly reduced
 - [ ] Post-double-jump: player cannot meaningfully redirect arc laterally
 - [ ] At the committed approach, grab input within parry window succeeds
-- [ ] Full combo (run → jump → double jump → parry → pullup) is completable
-      in a single fluid sequence without breaking to a menu or state error
+- [ ] Full combo (run → jump → double jump → parry → directional pop → continue running)
+      is completable in a single fluid sequence without breaking to a menu or state error
 
 **AC-T06e: Wall jump on climbable surfaces**
 - [ ] Climbable wall (carpet/fabric): BONNIE can grab via LEDGE PARRY → CLIMBING → wall jump
@@ -799,6 +833,15 @@ are built on top of BONNIE's movement.
       fails — BONNIE cannot grab it, falls
 - [ ] Wall jump from CLIMBING: BONNIE launches perpendicular to surface with `wall_jump_velocity`
 - [ ] Double jump resets on successful wall grab (touching climbable surface restores it)
+
+**AC-T06f: Claw brake (E during SLIDING) functions as speed-dependent handbrake**
+- [ ] E press during SLIDING: velocity drops by `abs(velocity.x) * claw_brake_multiplier`
+      instantly — not gradual, a spike
+- [ ] Rapid staccato E taps during SLIDING: each tap removes a fraction of remaining
+      speed — player can scrub to a stop in rhythm
+- [ ] Holding E during SLIDING at high speed: arrests to near-stop within 2-3 frames
+- [ ] Claw brake does NOT trigger DAZED — it's a controlled deceleration, not a collision
+- [ ] After claw brake arrest (velocity near zero): transitions to IDLE without slide recovery
 
 **AC-T07: Stealth mechanics function**
 - [ ] NPC in range during SNEAKING: NPC does NOT enter AWARE

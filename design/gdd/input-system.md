@@ -44,7 +44,7 @@ All 10 actions are fully remappable. No system polls hardware directly — all i
 | `run` | Digital (hold) | Left Shift | X / □ | Hold to run; release returns to WALKING. Tap has no effect. |
 | `jump` | Digital (tap + hold) | Space | A / × | Tap = hop; hold = full arc. Pre-land buffer active (see §3.2). During CLIMBING: wall jump. |
 | `sneak` | Analog (hold) | Left Ctrl | LT | Any press above deadzone activates sneak. Also triggers via stick magnitude — see §3.3. |
-| `grab` | Digital (instant) | E | RB | **Ledge Parry only.** Valid during FALLING or JUMPING near geometry. NO buffer. Frame-exact. Clamber-up from CLIMBING is automatic — `grab` is not used. |
+| `grab` | Digital (instant) | E | RB | **Context-sensitive claw action.** (1) FALLING/JUMPING near geometry → Ledge Parry. NO buffer. Frame-exact. (2) SLIDING → Claw Brake (speed-dependent friction spike; staccato for rhythm control). (3) CLIMBING → not used; clamber-up is automatic. Outside these three contexts, input is consumed and ignored. |
 | `zoom` | Digital (hold) | RMB | RT | Any press = zoom active. Analog magnitude unused — on/off. Available in all movement states. |
 | `interact` | Digital (press) | F | Y / △ | *Provisional.* Reserved for Social System (rub, headbutt, sit near). Trigger conditions defined in `bidirectional-social-system.md`. |
 
@@ -172,7 +172,8 @@ Returns `true` when the player is moving (above deadzone) but moving slowly (bel
 
 | Scenario | Expected Behavior | Rationale |
 |----------|------------------|-----------|
-| `grab` pressed during CLIMBING, RUNNING, IDLE, or any non-airborne state | Input is consumed and ignored. No action fires. | `grab` is valid only during FALLING/JUMPING within `parry_detection_radius`. Outside that context, pressing it has no effect — it is not buffered for later use. |
+| `grab` pressed during CLIMBING, IDLE, WALKING, or RUNNING (not SLIDING) | Input is consumed and ignored. No action fires. | `grab` is only valid during FALLING/JUMPING (parry) and SLIDING (claw brake). Outside those two contexts it has no effect. |
+| `grab` pressed during SLIDING | Applies claw brake: `claw_brake_force = abs(velocity.x) * claw_brake_multiplier`. Single tap = one friction spike. Staccato taps = progressive speed scrubbing. This is intentionally no-buffer — a held E during SLIDING is a single application, not continuous force. | The claw brake is a skill-expressive deceleration mechanic, not a mash-to-stop button. Staccato rhythm gives skilled players fine speed control. See `bonnie-traversal.md §3.1 SLIDING`. |
 | `run` and `sneak` held simultaneously | `sneak` wins. BONNIE sneaks. | Conflicting intent resolves in favor of the quieter state. Run cannot override a deliberate sneak hold. |
 | Analog stick below `sneak_threshold` AND dedicated sneak button held | Both paths produce the same result — BONNIE sneaks. No conflict. | Two paths to the same state; redundant inputs are harmless. |
 | `move_down` pressed while RUNNING above `slide_trigger_speed` | Triggers SLIDING. | Intentional slide. This is the explicit slide input path. |

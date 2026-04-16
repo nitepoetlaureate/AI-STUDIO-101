@@ -87,6 +87,11 @@ const LOOK_AHEAD_BY_STATE: Dictionary = {
 @export var parry_detection_radius: float = 24.0  # px — must be near geometry for parry
 @export var wall_jump_velocity: float = 360.0      # px/s perpendicular to surface
 @export var pullup_duration_frames: int = 10       # frames BONNIE is locked during pullup
+@export var climb_claw_impulse: float = 180.0      # px/s — burst speed per E press while climbing
+@export var climb_claw_burst_frames: int = 4       # frames the burst lasts
+@export var claw_brake_multiplier: float = 0.30    # fraction of slide speed removed per E tap (0.30 = ~3 taps to stop)
+@export var pullup_pop_velocity: float = 260.0     # px/s horizontal on directional pop
+@export var pullup_pop_vertical: float = 200.0     # px/s upward on directional pop
 
 @export_group("Landing")
 @export var clean_land_threshold: float = 80.0    # px/s — below this = always clean landing
@@ -112,7 +117,10 @@ const LOOK_AHEAD_BY_STATE: Dictionary = {
 
 @onready var _parry_cast: ShapeCast2D = $ParryCast
 @onready var _ceiling_cast: RayCast2D = $CeilingCast
-@onready var _debug_label: Label = $DebugHUD/DebugLabel
+@onready var _debug_label: RichTextLabel = $DebugHUD/DebugLabel
+@onready var _main_shape: CollisionShape2D = $CollisionShape2D
+@onready var _squeeze_shape: CollisionShape2D = $SqueezeShape
+@onready var _sprite: ColorRect = $PlaceholderSprite
 
 # --- Runtime State -----------------------------------------------------------
 
@@ -155,13 +163,19 @@ var _skid_timer: float = 0.0
 var _skid_is_hard: bool = false
 var _parry_window_timer: int = 0  # countdown: frames remaining in parry window
 var _parry_cast_was_colliding: bool = false  # track new proximity entries
+var _claw_burst_timer: int = 0      # frames remaining in E-press climbing burst
+var _pullup_direction: float = 0.0  # directional input captured during LEDGE_PULLUP window
+var _squeeze_zone_active: bool = false  # true while BONNIE is inside SqueezeTrigger Area2D
 
 # =============================================================================
 # LIFECYCLE
 # =============================================================================
 
 func _ready() -> void:
-	pass
+	var squeeze_trigger: Node = get_tree().get_first_node_in_group(&"SqueezeTrigger")
+	if squeeze_trigger:
+		squeeze_trigger.body_entered.connect(_on_squeeze_trigger_entered)
+		squeeze_trigger.body_exited.connect(_on_squeeze_trigger_exited)
 
 
 func _physics_process(delta: float) -> void:
@@ -261,11 +275,29 @@ func _change_state(new_state: State) -> void:
 			fall_origin_y = 0.0
 		State.SLIDING:
 			in_skid_window = false
+		State.SQUEEZING:
+			# Restore full collision shape and sprite when leaving SQUEEZING.
+			_squeeze_shape.disabled = true
+			_main_shape.disabled = false
+			_sprite.offset_left = -8.0
+			_sprite.offset_right = 8.0
+			_sprite.offset_top = -16.0
+			_sprite.offset_bottom = 16.0
 		_:
 			pass
 
 	# --- Entry logic for new state ---
 	match new_state:
+		State.SQUEEZING:
+			# Swap to smaller collision shape (20px) and reshape sprite to crawling-cat silhouette:
+			# wide and flat (24px wide × 8px tall) vs normal upright (16px wide × 32px tall).
+			# Shape offset is +14px down so bottom stays floor-aligned (no floating on swap).
+			_main_shape.disabled = true
+			_squeeze_shape.disabled = false
+			_sprite.offset_left = -12.0
+			_sprite.offset_right = 12.0
+			_sprite.offset_top = -4.0
+			_sprite.offset_bottom = 4.0
 		State.FALLING:
 			# Begin tracking fall distance for ROUGH_LANDING detection.
 			fall_origin_y = global_position.y
@@ -282,6 +314,7 @@ func _change_state(new_state: State) -> void:
 			in_skid_window = false  # will be set true in _handle_landing if speed warrants
 		State.LEDGE_PULLUP:
 			_ledge_pullup_timer = pullup_duration_frames / 60.0
+			_pullup_direction = 0.0
 			velocity = Vector2.ZERO
 		State.DAZED:
 			_daze_timer = daze_duration
@@ -445,6 +478,12 @@ func _handle_sliding(delta: float) -> void:
 	if input_vec.x != 0.0 and sign(input_vec.x) == sign(velocity.x):
 		velocity.x = move_toward(velocity.x, input_vec.x * run_max_speed, slide_friction * 0.5 * delta)
 
+	# Claw brake — E tap during slide: speed-dependent friction spike.
+	# Staccato tapping scrubs speed in chunks; holding applies once per press.
+	if Input.is_action_just_pressed(&"grab"):
+		var brake: float = abs(velocity.x) * claw_brake_multiplier
+		velocity.x = move_toward(velocity.x, 0.0, brake)
+
 	# Pop-jump — full momentum carries, velocity.x untouched.
 	if Input.is_action_just_pressed(&"jump") or jump_buffer_timer > 0:
 		jump_buffer_timer = 0
@@ -509,6 +548,19 @@ func _handle_jumping(delta: float) -> void:
 		facing_direction = sign(input_vec.x)
 		velocity.x = move_toward(velocity.x, input_vec.x * run_max_speed, air_ctrl * delta)
 
+	# Mid-air grab onto Climbable — hold E while pressing into wall to start climbing.
+	# More forgiving than the parry: no timing window, just contact + grab held.
+	if Input.is_action_pressed(&"grab"):
+		for i: int in get_slide_collision_count():
+			var col: KinematicCollision2D = get_slide_collision(i)
+			var collider: Object = col.get_collider()
+			if collider and collider.is_in_group(&"Climbable"):
+				double_jump_available = true
+				_post_double_jumped = false
+				velocity.x = 0.0
+				_change_state(State.CLIMBING)
+				return
+
 	_check_ledge_parry()
 
 	if is_on_floor():
@@ -547,6 +599,18 @@ func _handle_falling(delta: float) -> void:
 		velocity.x = lerpf(velocity.x, input_vec.x * run_max_speed, double_jump_redirect_factor)
 		double_jump_available = false
 		_post_double_jumped = true
+
+	# Mid-air grab onto Climbable — hold E while pressing into wall to start climbing.
+	if Input.is_action_pressed(&"grab"):
+		for i: int in get_slide_collision_count():
+			var col: KinematicCollision2D = get_slide_collision(i)
+			var collider: Object = col.get_collider()
+			if collider and collider.is_in_group(&"Climbable"):
+				double_jump_available = true
+				_post_double_jumped = false
+				velocity.x = 0.0
+				_change_state(State.CLIMBING)
+				return
 
 	_check_ledge_parry()
 
@@ -610,13 +674,21 @@ func _handle_landing(delta: float) -> void:
 		_change_state(State.IDLE)
 
 
-func _handle_climbing(delta: float) -> void:
+func _handle_climbing(_delta: float) -> void:
 	var input_vec: Vector2 = _get_input_vector()
 
-	# Vertical movement only while on surface.
-	velocity.y = 0.0
-	if input_vec.y != 0.0:
-		velocity.y = input_vec.y * climb_speed
+	# E-grab: cat scramble burst — each press launches BONNIE upward with a velocity spike.
+	if Input.is_action_just_pressed(&"grab"):
+		_claw_burst_timer = climb_claw_burst_frames
+
+	# Vertical movement: claw burst overrides normal climb speed for tactile scramble feel.
+	if _claw_burst_timer > 0:
+		_claw_burst_timer -= 1
+		velocity.y = -climb_claw_impulse
+	else:
+		velocity.y = 0.0
+		if input_vec.y != 0.0:
+			velocity.y = input_vec.y * climb_speed
 
 	# Horizontal input detaches BONNIE from the surface.
 	if input_vec.x != 0.0:
@@ -636,8 +708,16 @@ func _handle_climbing(delta: float) -> void:
 		_change_state(State.JUMPING)
 		return
 
-	# Auto-clamber at top of surface — prototype approximation via is_on_ceiling().
-	if input_vec.y < 0.0 and is_on_ceiling():
+	# Auto-clamber at top — BONNIE pops over when she reaches the top of the surface.
+	# is_on_ceiling() handles it normally; slide-normal fallback catches geometry edge cases.
+	var at_top: bool = is_on_ceiling()
+	if not at_top:
+		for i: int in get_slide_collision_count():
+			var col: KinematicCollision2D = get_slide_collision(i)
+			if col.get_normal().y > 0.5:  # hit something from below (ceiling-like)
+				at_top = true
+				break
+	if at_top:
 		_change_state(State.LEDGE_PULLUP)
 		return
 
@@ -653,8 +733,8 @@ func _handle_squeezing(delta: float) -> void:
 		facing_direction = sign(input_vec.x)
 	velocity.x = move_toward(velocity.x, input_vec.x * squeeze_speed, ground_acceleration * delta)
 
-	# Exit when ceiling clears — BONNIE can stand up again.
-	if not _ceiling_cast.is_colliding():
+	# Exit when BONNIE leaves the squeeze zone (trigger body_exited cleared the flag).
+	if not _squeeze_zone_active:
 		_change_state(State.IDLE)
 		return
 
@@ -680,10 +760,27 @@ func _handle_rough_landing(delta: float) -> void:
 
 
 func _handle_ledge_pullup(delta: float) -> void:
-	# Lock position — no movement during pullup animation.
+	# Phase 1 — cling window: BONNIE hangs on the ledge, reads directional input.
+	# Last held direction during the window becomes the pop direction.
 	velocity = Vector2.ZERO
+	var input_vec: Vector2 = _get_input_vector()
+	if input_vec.x != 0.0:
+		_pullup_direction = sign(input_vec.x)
+
 	_ledge_pullup_timer -= delta
-	if _ledge_pullup_timer <= 0.0:
+	if _ledge_pullup_timer > 0.0:
+		return
+
+	# Phase 2 — resolve: directional pop or clean stationary pullup.
+	if _pullup_direction != 0.0:
+		# Momentum-carry pop: launch in chosen direction with approach energy.
+		facing_direction = _pullup_direction
+		velocity.x = _pullup_direction * pullup_pop_velocity
+		velocity.y = -pullup_pop_vertical
+		_post_double_jumped = false
+		_change_state(State.JUMPING)
+	else:
+		# Clean pullup: land stationary on top of surface.
 		_change_state(State.IDLE)
 
 
@@ -696,17 +793,24 @@ func _handle_ledge_pullup(delta: float) -> void:
 # =============================================================================
 
 func _try_ground_climb() -> bool:
-	# Enter CLIMBING from ground states when grab is pressed near a Climbable surface.
-	# Uses the existing ParryCast but filters for Climbable group only.
-	if not Input.is_action_just_pressed(&"grab"):
+	# Enter CLIMBING from ground states when grab is held near a Climbable surface.
+	# Checks ParryCast first; falls back to slide collision (catches running-into-wall case).
+	if not Input.is_action_pressed(&"grab"):
 		return false
-	if not _parry_cast.is_colliding():
-		return false
-	for i: int in _parry_cast.get_collision_count():
-		var collider: Object = _parry_cast.get_collider(i)
-		if collider == null:
-			continue
-		if collider.is_in_group(&"Climbable"):
+	# ParryCast path — proximity detection.
+	if _parry_cast.is_colliding():
+		for i: int in _parry_cast.get_collision_count():
+			var collider: Object = _parry_cast.get_collider(i)
+			if collider and collider.is_in_group(&"Climbable"):
+				double_jump_available = true
+				_post_double_jumped = false
+				_change_state(State.CLIMBING)
+				return true
+	# Slide collision fallback — catches running directly into wall with grab held.
+	for i: int in get_slide_collision_count():
+		var collision: KinematicCollision2D = get_slide_collision(i)
+		var collider: Object = collision.get_collider()
+		if collider and collider.is_in_group(&"Climbable"):
 			double_jump_available = true
 			_post_double_jumped = false
 			_change_state(State.CLIMBING)
@@ -729,8 +833,9 @@ func _try_slide_auto_climb() -> bool:
 
 
 func _check_squeeze_entry() -> bool:
-	# Auto-enter SQUEEZING when ceiling is close above BONNIE on the ground.
-	if _ceiling_cast.is_colliding():
+	# Enter SQUEEZING when BONNIE is inside the SqueezeTrigger Area2D and on the ground.
+	# Flag is set/cleared by body_entered / body_exited signals from the trigger.
+	if _squeeze_zone_active and is_on_floor():
 		_change_state(State.SQUEEZING)
 		return true
 	return false
@@ -843,3 +948,20 @@ func _update_debug_hud() -> void:
 		"[SLIDE: run+S or run+reverse dir]",
 	]
 	_debug_label.text = "\n".join(lines)
+
+
+# =============================================================================
+# SIGNAL CALLBACKS
+# =============================================================================
+
+func _on_squeeze_trigger_entered(body: Node) -> void:
+	# Just set the flag — safe from a physics signal (no shape mutation here).
+	# _check_squeeze_entry() reads the flag each frame and calls _change_state()
+	# from within _physics_process, where shape changes are allowed.
+	if body == self:
+		_squeeze_zone_active = true
+
+
+func _on_squeeze_trigger_exited(body: Node) -> void:
+	if body == self:
+		_squeeze_zone_active = false

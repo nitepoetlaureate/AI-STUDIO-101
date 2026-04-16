@@ -53,8 +53,8 @@ size = Vector2(300, 20)
 [sub_resource type="RectangleShape2D" id="Shape_RigidBox"]
 size = Vector2(20, 20)
 
-[sub_resource type="RectangleShape2D" id="Shape_PlatApproach"]
-size = Vector2(100, 16)
+[sub_resource type="RectangleShape2D" id="Shape_SqueezeTrigger"]
+size = Vector2(500, 30)
 
 ; =============================================================================
 ; ROOT
@@ -359,19 +359,8 @@ color = Color(0.3, 0.4, 0.5, 1.0)
 ; Dark gray to signal enclosed/dangerous passage
 ; =============================================================================
 
-[node name="SqueezeApproachLeft" type="StaticBody2D" parent="."]
-position = Vector2(3190, 476)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SqueezeApproachLeft"]
-shape = SubResource("Shape_PlatApproach")
-
-[node name="ColorRect" type="ColorRect" parent="SqueezeApproachLeft"]
-offset_left = -50.0
-offset_top = -8.0
-offset_right = 50.0
-offset_bottom = 8.0
-color = Color(0.3, 0.3, 0.3, 1.0)
-
+; SqueezeCeiling — the ceiling slab. Ground at y=500, ceiling bottom at y=468 = 32px passage.
+; BONNIE normal shape (48px) can't fit. Squeeze shape (20px) fits with 12px clearance.
 [node name="SqueezeCeiling" type="StaticBody2D" parent="."]
 position = Vector2(3300, 434)
 
@@ -385,18 +374,17 @@ offset_right = 100.0
 offset_bottom = 34.0
 color = Color(0.3, 0.3, 0.3, 1.0)
 
-[node name="SqueezeApproachRight" type="StaticBody2D" parent="."]
-position = Vector2(3410, 476)
+; SqueezeTrigger — covers full approach + passage + exit (x=3050 to x=3550).
+; body_entered → _squeeze_zone_active = true → enter SQUEEZING (20px shape, sprite shrinks).
+; body_exited  → _squeeze_zone_active = false → exit SQUEEZING (48px shape restored).
+; CollisionLayer=0 (no physics presence), CollisionMask=1 (detects BONNIE layer 1).
+[node name="SqueezeTrigger" type="Area2D" parent="." groups=["SqueezeTrigger"]]
+position = Vector2(3300, 485)
+collision_layer = 0
+collision_mask = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SqueezeApproachRight"]
-shape = SubResource("Shape_PlatApproach")
-
-[node name="ColorRect" type="ColorRect" parent="SqueezeApproachRight"]
-offset_left = -50.0
-offset_top = -8.0
-offset_right = 50.0
-offset_bottom = 8.0
-color = Color(0.3, 0.3, 0.3, 1.0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SqueezeTrigger"]
+shape = SubResource("Shape_SqueezeTrigger")
 
 ; =============================================================================
 ; ZONE 9: COLLISION OBJECTS (RigidBody2D)

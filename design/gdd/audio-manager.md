@@ -135,7 +135,10 @@ All event IDs are snake_case. All gameplay systems call `AudioManager.play_sfx(&
 
 | Event ID | Loop | Format | Notes |
 |----------|------|--------|-------|
-| `level_02_apartment` | Yes | OGG | Level 2 apartment theme — cozy, chiptune original score |
+| `level_02_calm` | Yes | OGG | Level 2 — apartment at rest. Cozy, chiptune. Initial state on level load. |
+| `level_02_chaotic` | Yes | OGG | Level 2 — chaos building. Energetic. Triggered by Chaos Meter (System 13) crossing first threshold. |
+| `level_02_dangerous` | Yes | OGG | Level 2 — chaos near peak. Urgent, tense. Triggered by Chaos Meter crossing second threshold. |
+| `level_02_other` | Yes | OGG | Level 2 — reserved for additional mood states. TBD. |
 
 *(Additional level tracks added as levels are built. Level 1 street theme is not MVP.)*
 
@@ -364,7 +367,7 @@ All knobs are exported constants on the AudioManager Autoload script, editable i
 | AC-A01 | AudioManager Autoload registered | Project Settings → AutoLoad lists `AudioManager`. All scenes can call `AudioManager.play_sfx()` without errors. |
 | AC-A02 | Bus hierarchy configured | Godot Audio panel shows: Master → Music, Master → SFX. No other top-level buses. |
 | AC-A03 | `play_sfx` routes to SFX bus | Call `AudioManager.play_sfx(&"bonnie_jump")` — audio plays, visible on SFX bus VU meter, not Music bus. |
-| AC-A04 | `play_music` routes to Music bus | Call `AudioManager.play_music(&"level_02_apartment")` — audio streams, visible on Music bus VU meter. |
+| AC-A04 | `play_music` routes to Music bus | Call `AudioManager.play_music(&"level_02_calm")` — audio streams, visible on Music bus VU meter. |
 | AC-A05 | Unknown event ID is safe | Call `AudioManager.play_sfx(&"nonexistent_event")` — error logged to console, no crash, no audio. |
 | AC-A06 | Volume persists across sessions | Set music volume to 50%, quit game, relaunch — music volume loads at 50%. |
 | AC-A07 | Mute preserves stored volume | Set SFX to 80%, mute SFX bus, unmute — volume returns to 80%, not 0%. |
@@ -383,4 +386,4 @@ All knobs are exported constants on the AudioManager Autoload script, editable i
 | OQ-A01 | What is the exact Godot 4.6 property name for `AudioStreamRandomizer` pitch variation in semitones? (`random_pitch`? `pitch_scale`?) Verify against `docs/engine-reference/godot/breaking-changes.md` before implementation — this is a known post-4.3 API change. | godot-specialist | Open |
 | OQ-A02 | How does the surface type detection work at the tilemap level? Which physics layer or tile metadata property signals "hardwood" vs "carpet"? Needs coordination with Level Manager (5) tilemap setup. | gameplay-programmer | Open |
 | OQ-A03 | What is the production method for NPC vocal samples? Original voice recordings processed through a bitcrusher/sample-rate reducer, or created with a chiptune tool? The answer affects asset pipeline (recording sessions vs. tool workflow). | audio-director (Michael) | Open |
-| OQ-A04 | Who is composing `level_02_apartment`? When is the OGG asset expected? The audio pipeline can be validated with a placeholder track, but the final mix depends on the actual composition. | audio-director (Michael) | Open |
+| OQ-A04 | Who is composing the Level 2 mood tracks (`level_02_calm`, `level_02_chaotic`, `level_02_dangerous`, `level_02_other`)? Mood thresholds are defined in Chaos Meter GDD (T-CHAOS, pending). Audio pipeline can be validated with placeholder tracks. | audio-director (Michael) | Open |

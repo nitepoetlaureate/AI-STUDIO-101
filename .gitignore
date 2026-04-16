@@ -15,6 +15,7 @@ Desktop.ini
 CLAUDE.local.md
 production/session-logs/
 production/session-state/*.md
+production/session-state/.mycelium-touched
 
 # === Internal Planning (not for public) ===
 docs/IMPROVEMENTS-PROPOSAL.md
