@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:ddf5403dac56a25a5c6c133708fca49838810367
+edge targets-path path:prototypes/bonnie-traversal/BonnieController.gd
+
+Session 006 state: DI-001 implemented (_pullup_direction captured during cling phase, resolves as momentum launch or stationary pullup). DI-003 implemented (E during SLIDING removes abs(vx)*claw_brake_multiplier per tap). Mid-air climbing: E during JUMPING/FALLING near Climbable → CLIMBING. Auto-clamber at wall top via is_on_ceiling() or slide normal y>0.5. SQUEEZING: _squeeze_zone_active flag from body_entered/body_exited — no CeilingCast.
