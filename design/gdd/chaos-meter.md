@@ -1,6 +1,6 @@
 # System GDD: Chaos Meter
 
-> **Status**: Draft
+> **Status**: Approved
 > **Created**: 2026-04-17
 > **System #**: 13
 > **Priority**: MVP

@@ -1,6 +1,6 @@
 # System GDD: Bidirectional Social System
 
-> **Status**: Draft
+> **Status**: Approved
 > **Author**: game-designer
 > **Created**: 2026-04-17
 > **Last Updated**: 2026-04-17
