@@ -1,9 +1,9 @@
 # BONNIE! — Next Steps Handoff
 
-**For**: Session 008
-**Written by**: Hawaii Zeke (Claude) on 2026-04-15
-**Context**: Session 007 complete. Comprehensive audit executed (URGENTPLAN.md). Phase 0 triage done (6 tasks). Mycelium fully integrated (sync-init, git hooks, enhanced Claude Code hooks). GATE 1 disposition pending user decision on deferrals.
-**Immediate priority**: GATE 1 final call (slide re-test + deferral decisions) → T-CHAOS + T-SOC GDDs
+**For**: Session 009
+**Written by**: Hawaii Zeke (Claude) on 2026-04-16
+**Context**: Session 008 complete. GATE 1 CONDITIONAL PASS. T-CHAOS (System 13) and T-SOC (System 12) GDDs drafted, design-reviewed, and revision-fixed. 10/11 MVP GDDs designed. Only Chaos Meter UI (System 23) remains before GATE 2.
+**Immediate priority**: Approve T-CHAOS + T-SOC GDDs → Author T-FOUND-06 (Chaos Meter UI) → GATE 2
 
 Read this file first. Then read the locked decisions section before touching anything.
 
@@ -68,9 +68,9 @@ Read this file first. Then read the locked decisions section before touching any
 
 ### What Does NOT Exist Yet
 
-- Chaos Meter GDD — **BLOCKED on GATE 1**
-- Bidirectional Social System GDD — **BLOCKED on GATE 1**
-- Chaos Meter UI GDD — **BLOCKED on T-CHAOS**
+- Chaos Meter GDD — **DRAFTED, REVIEW-PASSED** — `design/gdd/chaos-meter.md` (pending user approval)
+- Bidirectional Social System GDD — **DRAFTED, REVIEW-PASSED** — `design/gdd/bidirectional-social-system.md` (pending user approval)
+- Chaos Meter UI GDD — **UNBLOCKED** — last MVP GDD before GATE 2
 - Sprint 1 plan — **BLOCKED on GATE 2**
 - Any production code in `src/`
 - Any art assets in `assets/`
@@ -101,13 +101,11 @@ All decisions from Sessions 001-005 still apply. Session 006 additions:
 ## Critical Path
 
 ```
-Session 008 Priority A: GATE 1 final call (slide re-test + deferral decisions)
+Session 009 Priority A: Approve T-CHAOS + T-SOC GDDs (review-passed, pending approval)
      |
-T-CHAOS + T-SOC  ← parallel GDDs, immediately after GATE 1 PASS
+T-FOUND-06 (Chaos Meter UI — System 23, last MVP GDD)
      |
-T-FOUND-06 (Chaos Meter UI — after T-CHAOS skeleton)
-     |
-GATE 2 (all 11 MVP GDDs approved — currently 8/11)
+GATE 2 (all 11 MVP GDDs approved — currently 10/11 designed)
      |
 T-SPRINT-01 (Sprint 1 plan)
      |
@@ -116,45 +114,54 @@ T-IMPL (Sprint 1 Implementation)
 
 ---
 
-## Session 008 Opening Protocol
+## Session 009 Opening Protocol
 
-### Priority 0: GATE 1 Final Call
+### Priority 0: Approve T-CHAOS + T-SOC GDDs
 
-**Remaining items:**
-1. **Slide rhythm re-test** — launch prototype, execute Kaneda slide → claw brake → stop → pivot cycle
-2. **Camera (AC-T08)** — recommend defer to GATE 2 (polish, not traversal-feel)
-3. **Stealth radius** — recommend defer to post-T-SOC (no NPCs exist yet)
+Both GDDs have passed design review with all required revisions applied.
 
-**How to trigger the Kaneda slide:**
-1. Hold Shift (run) in any direction
-2. Run until speed > 300 px/s (debug HUD speed counter confirms this)
-3. Then: press S (down) OR press the opposite direction key
-4. SLIDING state fires
+**`design/gdd/chaos-meter.md`** (System 13):
+- Composite meter: chaos_fill (cap 0.55) + social_fill (weight 0.45, additive across NPCs)
+- Per-level chaos baseline; full reset between levels
+- Chaos overwhelm FED path (per-NPC, Michael 8 / Christen 7 / hostile NPCs disabled)
+- `chaos_event_count` owned by Chaos Meter
+- All 5 original open questions resolved
 
-**What to evaluate:**
-- Does pressing E during SLIDING feel like a handbrake or a full-stop?
-- Can you execute: run → slide → 2-3 E taps → controlled stop → immediate pivot?
-- Does the rhythm feel "cat-like" or "mechanical"?
-- Try tuning `claw_brake_multiplier` in the Inspector (default 0.30): lower = softer stops
+**`design/gdd/bidirectional-social-system.md`** (System 12):
+- 5-interaction charm catalog (Proximity, Rub, Lap Sit, Purr, Meow)
+- 4-tier visual goodwill legibility (COLD/NEUTRAL/SOFTENED/WARM)
+- RECOVERING extended levity + comfort acceleration mechanic
+- Passive play formally validated as acceptable aesthetic choice
+- NpcState extensions: `last_interaction_timestamp` + `recovering_comfort_stacks`
+- 4 of 5 original open questions resolved; 1 remaining (Chaos Meter signal format)
 
-### Priority 1 (Post-GATE 1): T-CHAOS + T-SOC
+**Review outcome**: Both NEEDS REVISION → all required changes applied.
+**Action**: Read both GDDs, approve or request further changes.
 
-**Agent 1** → `game-designer` + `economy-designer`: `/design-system chaos-meter`
-Key constraints:
-- Pure chaos plateaus below the feeding threshold — charm MUST be mathematically required
-- No HP/death. Chaos Meter is social/environmental pressure, not a kill condition.
-- Max chaos level should feel like REACTING-on-all-NPCs, not game-over warning
+### Priority 1: T-FOUND-06 (Chaos Meter UI, System 23)
 
-**Agent 2** → `game-designer` + `ux-designer`: `/design-system bidirectional-social-system`
-Key constraints:
-- Read `npc-personality.md` Section 3 first — define NpcState write contract carefully
-- Social axis must be visually legible without a UI (NPC body language, reactions)
-- NPC↔Social circular dependency is resolved via NpcState shared object (mycelium constraint)
+Last MVP GDD. Depends on T-CHAOS (now designed). Author via `game-designer` + `ux-designer`.
 
-### Priority 2: Stale Mycelium Notes
+### Priority 2: GATE 2 Evaluation
+
+Once all 11 MVP GDDs are approved, trigger GATE 2 to unlock Sprint 1 planning.
+
+### Priority 3: Stale Mycelium Notes
 
 21 stale notes on old blob versions. Run `! mycelium/scripts/compost-workflow.sh` interactively
 to renew valid notes and compost outdated ones.
+
+### Priority 4: Infrastructure Health Triage (deferred from Session 008)
+
+- **browser-server MCP**: FAILED. Diagnose — is it fixable or redundant with `playwright`?
+- **gdcli skill reference**: May be stale vs. gdcli v0.2.3 command surface. Validate and update `godot-mcp/SKILL.md`.
+- **CallMcpTool gdcli re-test**: Check if Cursor update resolved the transport hang. Single test at session start.
+
+### Priority 5: Opportunistic Art via pixel-plugin (if bandwidth permits)
+
+- Replace `icon.svg` placeholder with real BONNIE pixel icon (32×32)
+- Replace `PlaceholderSprite` ColorRect with actual sprite frames
+- Prerequisite: Aseprite installed and `/pixel-setup` run. If not configured, skip entirely.
 
 ---
 
@@ -170,7 +177,7 @@ Address in production rewrite in `src/` only:
 
 ---
 
-## Warnings for Session 007
+## Warnings for Session 009
 
 1. **F5 does NOT launch on macOS** — use Play button (▶️) or Cmd+B in Godot editor
 2. **SqueezeShape position=(0,14) is load-bearing** — changing it causes BONNIE to float and state-cycle
@@ -190,9 +197,18 @@ Address in production rewrite in `src/` only:
 | Gate | Condition | Status | Unlocks |
 |------|-----------|--------|---------|
 | GATE 0 | Camera + Viewport GDDs approved | CLEARED ✅ | Streams A+B+C |
-| GATE 1 | Prototype playtested, ACs pass, tuning locked | **NEAR-PASS** — slide + camera remain | Phase 3 GDDs |
-| GATE 2 | All 11 MVP GDDs approved (8/11 done) | Pending | Sprint 1 plan |
+| GATE 1 | Prototype playtested, ACs pass, tuning locked | **CONDITIONAL PASS** ✅ — Session 008 | Phase 3 GDDs |
+| GATE 2 | All 11 MVP GDDs approved (10/11 designed, 8 approved, 2 pending approval) | Pending | Sprint 1 plan |
 | GATE 3 | Sprint 1 plan approved | Pending | Implementation |
+
+### GATE 1 Closure (Session 008)
+- **Verdict**: CONDITIONAL PASS
+- **Date**: 2026-04-16
+- **5 ACs PASS**: T06, T06c, T06e, T06f, T07
+- **1 AC CODE VERIFIED**: T03 (slide rhythm — mechanically correct)
+- **2 ACs DEFERRED**: T08 (camera → GATE 2), Stealth (→ post-T-SOC)
+- **Conditions**: Feel tuning of slide rhythm during early production; PARTIAL ACs require sprites/audio
+- **Unlocks**: T-CHAOS (System 13) + T-SOC (System 12) GDD authoring
 
 ---
 
@@ -209,5 +225,4 @@ Flag when NPC GDD enters implementation phase.
 
 ---
 
-*Hawaii Zeke — Session 007 complete. Audit executed. Phase 0 triage done. Mycelium fully integrated.
-Infrastructure solid. GATE 1 awaiting slide re-test and deferral decisions. Let's close it.*
+*Hawaii Zeke — Session 008 complete. GATE 1 CONDITIONAL PASS. T-CHAOS + T-SOC GDDs drafted, design-reviewed, and revision-fixed. 10/11 MVP GDDs designed. One GDD to go before GATE 2.*

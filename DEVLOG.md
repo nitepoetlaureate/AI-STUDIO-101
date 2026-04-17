@@ -404,3 +404,130 @@ Three areas addressed following comprehensive infrastructure audit:
 
 ### Next Session Opens With
 Delete `.godot/shader_cache/` → Open Godot → Playtest → Answer feel questions → GATE 1 evaluation
+
+---
+
+---
+
+## [2026-04-16] Session 008 — GATE 1 Closure
+
+**Developer**: m. raftery
+**Focus**: GATE 1 final assessment — slide re-test, deferral decisions, formal closure
+
+---
+
+### Pre-Flight Validation
+
+All green:
+- `gdcli doctor` — environment OK
+- `gdcli project info` — project.godot valid
+- `gdcli project scene-list` — all scenes enumerated
+- `gdcli script lint` — BonnieController.gd clean (0 errors)
+- `gdcli scene validate` × 2 — BonnieController.tscn + TestLevel.tscn valid
+- `gdcli project uid-fix` — no UID issues
+
+---
+
+### gdcli MCP Issue
+
+`CallMcpTool` (Cursor transport layer) hangs when invoking gdcli MCP tools. Diagnosed as a Cursor-side transport issue, not a gdcli problem. All gdcli operations routed via Shell (`npx -y gdcli-godot ...`) — works perfectly. `mcp.json` env override reverted since Shell fallback is reliable.
+
+---
+
+### PLAYTEST-003 Produced
+
+Code analysis + headless validation of Kaneda slide rhythm (AC-T03). Findings:
+- Slide trigger: correct (speed > 300 px/s + opposing input or S key)
+- Claw brake formula: `abs(velocity.x) * 0.30` per E tap — mathematically verified (~3 taps from full speed)
+- Slide → brake → stop → pivot cycle: code-complete, all exit paths correct
+- Linting: 0 errors. Scene validation: 0 issues. Headless run: no crashes.
+
+**Result**: AC-T03 upgraded from PARTIAL to CODE VERIFIED.
+
+---
+
+### GATE 1 Assessment
+
+Formal assessment produced: `prototypes/bonnie-traversal/GATE-1-AC-ASSESSMENT.md`
+
+| Category | Count |
+|----------|-------|
+| PASS | 5 (T06, T06c, T06e, T06f, T07) |
+| CODE VERIFIED | 1 (T03) |
+| PARTIAL | 4 (T02, T04, T06b, T06d — asset-dependent) |
+| UNTESTABLE | 2 (T01, T05 — need production tooling) |
+| DEFERRED | 2 (T08 → GATE 2, Stealth → post-T-SOC) |
+
+**User deferrals:**
+- AC-T08 (camera leads movement) → GATE 2 — polish concern, not traversal-feel
+- Stealth radius → post-T-SOC — no NPCs exist yet
+
+**Verdict**: **CONDITIONAL PASS** — traversal feel validated sufficiently to proceed to T-CHAOS + T-SOC GDD authoring. Conditions: feel tuning of slide rhythm during early production; PARTIAL ACs require sprites/audio (production polish, not design gaps).
+
+---
+
+### GATE Status
+- GATE 0: CLEARED
+- GATE 1: **CONDITIONAL PASS** ✅ — Session 008
+- GATE 2: Pending (8/11 MVP GDDs approved; T-CHAOS + T-SOC now unblocked)
+
+---
+
+### T-CHAOS + T-SOC GDD Authoring (continued, same session)
+
+Both GDDs authored in parallel via game-designer + economy-designer (T-CHAOS) and game-designer + ux-designer (T-SOC) subagents.
+
+**T-CHAOS (Chaos Meter, System 13):**
+- Composite meter: `chaos_fill` (cap 0.55) + `social_fill` (weight 0.45)
+- Additive social_fill model across all active NPCs (user decision)
+- Per-level `level_chaos_baseline` with full reset between levels
+- Chaos overwhelm FED path: per-NPC thresholds (Michael 8, Christen 7, hostile -1)
+- `chaos_event_count` owned by Chaos Meter (resolved ownership ambiguity)
+- Economy proof: neither pure chaos nor pure charm can reach FED alone
+- All 5 open questions resolved with user
+
+**T-SOC (Bidirectional Social System, System 12):**
+- 5-interaction charm catalog: Proximity, Rub, Lap Sit, Purr, Meow
+- 4-tier visual goodwill legibility without UI (COLD/NEUTRAL/SOFTENED/WARM)
+- RECOVERING extended levity + comfort acceleration mechanic (layered design)
+- Passive play formally documented as valid aesthetic choice with equilibrium analysis
+- NpcState extensions: `last_interaction_timestamp` + `recovering_comfort_stacks`
+- 4 of 5 open questions resolved; 1 remaining (Chaos Meter signal format)
+
+**NpcState Contract Mediation (Opus-tier):**
+Both GDDs' NpcState assumptions verified compatible. T-SOC adds `last_interaction_timestamp`
+and `recovering_comfort_stacks`; T-CHAOS is a pure reader. No conflicts.
+
+---
+
+### Design Review
+
+Formal design-review dispatched for both GDDs in parallel. Results:
+
+**T-CHAOS**: NEEDS REVISION — 6 required changes:
+1. Removed stale "best-of-N" paragraph contradicting additive decision
+2. Fixed dead §4.2.1 reference → §4.4 + §5 Christen edge case
+3. Corrected normalization language re: Christen-arrival dip
+4. Explicit level-transition reset target (`level_chaos_baseline`, not zero)
+5. Resolved `chaos_event_count` ownership (Chaos Meter owns it)
+6. Fixed arithmetic error in Sources table (0.028 → 0.026)
+Plus: added division-by-zero guard, unified variable naming
+
+**T-SOC**: NEEDS REVISION — 4 required changes:
+1. Corrected §4.1 expected output ranges (math didn't match equilibrium analysis)
+2. Defined `recovering_comfort_stacks` data channel in NpcState
+3. Enforced `recovering_comfort_acceleration_cap` in pseudocode
+4. Added LEDGE_PULLUP and LANDING to BONNIE Movement State Gates
+Plus: added passive_accumulator initialization spec, fixed systems-index.md typo (System 13→12 in circular deps)
+
+All required changes applied. Both GDDs now pass review criteria.
+
+---
+
+### GATE Status
+- GATE 0: CLEARED
+- GATE 1: **CONDITIONAL PASS** ✅ — Session 008
+- GATE 2: Pending (10/11 MVP GDDs designed; 8 approved, 2 pending user approval; Chaos Meter UI remaining)
+
+### Next Session Opens With
+Approve T-CHAOS + T-SOC GDDs → Author Chaos Meter UI (System 23) → GATE 2 evaluation.

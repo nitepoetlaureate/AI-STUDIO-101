@@ -104,3 +104,14 @@ interact={
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)
+
+[autoload]
+
+InputSystem="*res://src/core/input/InputSystem.gd"
+AudioManager="*res://src/core/audio/AudioManager.gd"
+LevelManager="*res://src/core/level/LevelManager.gd"
+ChaosEventBus="*res://src/gameplay/chaos/ChaosEventBus.gd"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gut/plugin.cfg")

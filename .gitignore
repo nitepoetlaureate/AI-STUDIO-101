@@ -36,6 +36,7 @@ dist/
 
 # === Engine: Godot ===
 .godot/
+.gdcli/
 *.translation
 export_presets.cfg
 # Uncomment if using Godot:

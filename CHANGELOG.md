@@ -5,6 +5,30 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Pre-Production 0.7] — 2026-04-16
+
+### Added — Session 008
+- `design/gdd/chaos-meter.md` — Chaos Meter GDD (System 13), draft, review-passed
+- `design/gdd/bidirectional-social-system.md` — Bidirectional Social System GDD (System 12), draft, review-passed
+- `prototypes/bonnie-traversal/PLAYTEST-003.md` — Kaneda slide rhythm re-test (code analysis + headless validation)
+- `prototypes/bonnie-traversal/GATE-1-AC-ASSESSMENT.md` — formal GATE 1 closure document
+
+### Changed — Session 008
+- GATE 1 status: **NEAR-PASS** → **CONDITIONAL PASS** ✅ — traversal feel validated for dependent system GDD authoring
+- `systems-index.md`: Systems 12 + 13 status updated to "Draft (review-passed)"; progress tracker 8→10 started/reviewed; fixed circular dependency typo (13→12)
+- `NEXT.md`: Updated for Session 009 handoff — T-CHAOS/T-SOC pending approval, Chaos Meter UI unblocked
+- `mcp.json` reverted to remove env override (gdcli routed via Shell)
+
+### Fixed — Session 008
+- gdcli MCP connectivity — diagnosed as Cursor transport layer issue (`CallMcpTool` hangs); all gdcli operations now use Shell fallback (`npx -y gdcli-godot ...`)
+- Design review findings: stale best-of-N paragraph, dead §4.2.1 ref, arithmetic error in Sources table, missing cap enforcement in comfort acceleration, missing BONNIE states in interaction matrix, unclear reset target, ambiguous counter ownership
+
+### GATE Status
+- GATE 1: **CONDITIONAL PASS** ✅ — 5 ACs PASS, 1 CODE VERIFIED, 2 DEFERRED (user decision), 4 PARTIAL (asset-dependent)
+- GATE 2: Pending — 10/11 MVP GDDs designed (8 approved + 2 review-passed pending approval; Chaos Meter UI remaining)
+
+---
+
 ## [Pre-Production 0.6] — 2026-04-15
 
 ### Fixed — Prototype (Session 006)
