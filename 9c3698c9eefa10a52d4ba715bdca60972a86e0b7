@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:9c3698c9eefa10a52d4ba715bdca60972a86e0b7
+edge targets-path path:src/core/input/InputSystem.gd
+
+Autoload: viewport validate then load InputSystemConfig; get_move_vector + auto-sneak helper; InputMap guard.
