@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="InputSystemConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/core/input/InputSystemConfig.gd" id="1_input_cfg"]
+
+[resource]
+script = ExtResource("1_input_cfg")
+stick_deadzone = 0.2
+sneak_threshold = 0.35
+trigger_deadzone = 0.1

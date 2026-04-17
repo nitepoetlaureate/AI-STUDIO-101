@@ -20,6 +20,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Notes — Session 010
 - First-time / CI headless GUT: run `godot --headless --import --path .` before `gut_cmdln.gd` (global class registration).
 
+### Added — Session 010 (viewport + input follow-up)
+- `assets/data/input_system_config.tres` — `InputSystemConfig` defaults for autoload
+- `tests/unit/test_viewport_config.gd`, `test_input_system_config.gd`, `test_input_system.gd`
+
+### Changed — Session 010 (viewport + input follow-up)
+- `ViewportConfig.gd`: project-setting validation + `Engine.max_fps = 60` on boot (invoked from `InputSystem`)
+- `InputSystem.gd`: loads config, `get_move_vector()`, `should_auto_sneak_from_analog()`, InputMap presence checks
+- `project.godot`: `window/stretch/aspect="keep"`; `default_texture_filter=1` (Godot 4.6 `TEXTURE_FILTER_NEAREST`, not legacy `0`)
+
 ### GATE Status
 - Unchanged from 0.8 (GATE 1 CONDITIONAL PASS, GATE 2/3 PASS)
 

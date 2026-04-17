@@ -637,3 +637,24 @@ Sprint 1 implementation: S1-01 (src/ scaffold) → S1-02 (ADR-001) → parallel 
 ### Next Session Opens With
 
 Merge `feat/s1-01-scaffold` after review → **S1-03** Viewport (`ViewportConfig.gd` boot validation) → **S1-04** Input System.
+
+---
+
+## [2026-04-17] Session 010 (continued) — S1-03 Viewport + S1-04 Input
+
+**Developer**: m. raftery  
+**Branch**: `feat/s1-03-s1-04-viewport-input`
+
+### S1-03
+
+- `ViewportConfig` refactored to `RefCounted` with `validate_project_settings()` (720×540, `viewport` + `keep` stretch, GL Compatibility, nearest canvas filter, `Engine.max_fps = 60`).
+- `project.godot`: `window/stretch/aspect=keep`; `default_texture_filter=1` (Godot 4.6 nearest enum).
+
+### S1-04
+
+- `InputSystem` loads `assets/data/input_system_config.tres`; public `get_move_vector()`, accessors, `should_auto_sneak_from_analog()`, InputMap guard for all 10 GDD actions.
+- GUT: viewport validate, config defaults, move vector idle, auto-sneak threshold behavior.
+
+### Next
+
+Merge `feat/s1-01-scaffold` + `feat/s1-03-s1-04-viewport-input` → **S1-05** Audio Manager.

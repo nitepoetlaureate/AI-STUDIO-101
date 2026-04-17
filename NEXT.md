@@ -2,8 +2,8 @@
 
 **For**: Session 011
 **Written by**: Hawaii Zeke (Claude) on 2026-04-17
-**Context**: Session 010 landed S1-01 (`src/` scaffold, four autoloads, GUT 9.6.0) and S1-02 (ADR-001). `run/main_scene` still points at prototype `TestLevel.tscn` until S1-17. Branch: `feat/s1-01-scaffold` (merge to `main` when reviewed).
-**Immediate priority**: Sprint 1 **S1-03** (Viewport / System 2) then **S1-04** (Input / System 1) per `production/sprints/sprint-1.md` dependencies.
+**Context**: S1-01/S1-02 on `feat/s1-01-scaffold`; S1-03 + S1-04 landed on `feat/s1-03-s1-04-viewport-input` (viewport validation, `InputSystem` + `assets/data/input_system_config.tres`, GUT). `run/main_scene` still prototype `TestLevel.tscn` until S1-17.
+**Immediate priority**: Merge viewport/input branch, then **S1-05** Audio Manager (depends on S1-03).
 
 Read this file first. Then read the locked decisions section before touching anything.
 
@@ -99,9 +99,10 @@ Sprint 1 plan is approved with 30 pre-sprint decisions locked. See `production/s
 
 **Completed Session 010:** S1-01 scaffold + GUT 9.6; S1-02 ADR-001.
 
+**Completed (branch `feat/s1-03-s1-04-viewport-input`):** S1-03 ViewportConfig project validation + stretch `keep` + NEAREST filter fix; S1-04 `InputSystem.get_move_vector()` + config `.tres` + GUT.
+
 **Next tasks** (sequential):
-1. **S1-03**: Viewport / rendering boot (`ViewportConfig.gd`)
-2. **S1-04**: Input System (`InputSystem.gd`, actions, config resource)
+1. **S1-05**: Audio Manager (four buses, API stubs filled in)
 
 **Then parallel streams open**:
 - Stream A (Core): S1-03 Viewport → S1-04 Input → S1-05 Audio → S1-06 NpcState → S1-07 Level Manager → S1-08 Config

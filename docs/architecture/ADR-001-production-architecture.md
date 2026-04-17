@@ -73,6 +73,14 @@ The prototype script `prototypes/bonnie-traversal/BonnieController.gd` already r
 
 Until **S1-17** delivers the production test apartment scene, **`run/main_scene`** stays on the prototype `TestLevel.tscn` so Play in editor remains a valid traversal sandbox.
 
+## Decision: viewport bootstrap (S1-03)
+
+`ViewportConfig` is a **`RefCounted`** library type (not an additional autoload). **`InputSystem`** autoload calls `ViewportConfig.validate_project_settings()` in `_ready()` before loading input config, so the four-autoload rule stays intact while viewport invariants still fail fast at boot.
+
+**Godot 4.6 note:** `ProjectSettings` `rendering/textures/canvas_textures/default_texture_filter` must be **`CanvasItem.TEXTURE_FILTER_NEAREST` (integer 1)**. The legacy `0` value is not nearest-neighbor in 4.x.
+
+`display/window/stretch/aspect` is **`keep`** for 4:3 pillarboxing alongside `stretch/mode=viewport` (viewport-config GDD §3).
+
 ## Consequences
 
 - Positive: clear merge boundaries for feature branches (`feat/s1-XX-*`), contract-first work on **S1-06** before parallel gameplay streams.
