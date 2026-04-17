@@ -531,3 +531,109 @@ All required changes applied. Both GDDs now pass review criteria.
 
 ### Next Session Opens With
 Approve T-CHAOS + T-SOC GDDs → Author Chaos Meter UI (System 23) → GATE 2 evaluation.
+
+---
+
+## [2026-04-17] Session 009 — Design Phase Closure
+
+**Developer**: m. raftery
+**Focus**: Close design phase — approve final GDDs, pass GATE 2, draft and approve Sprint 1 plan
+
+---
+
+### Mission: Close the Design Phase
+
+Session 009 operational directive: clear all remaining design work, evaluate GATE 2, produce Sprint 1 plan. Executed as Studio Director/Orchestrator with 8 working groups (A–H).
+
+---
+
+### GDD Approvals
+
+**T-CHAOS (Chaos Meter, System 13)**: Approved. Composite meter with chaos_fill (cap 0.55) + social_fill (weight 0.45). Per-level baseline. Chaos overwhelm FED path.
+
+**T-SOC (Bidirectional Social System, System 12)**: Approved. 5-interaction charm catalog, 4-tier visual goodwill legibility, RECOVERING comfort acceleration, passive play validated.
+
+**T-FOUND-06 (Chaos Meter UI, System 23)**: Authored, design-reviewed (NEEDS REVISION — 7 issues), revised, approved. Cat food bowl metaphor with dual fill layers. HUD corner bowl for MVP, diegetic world bowls post-MVP. HOT plateau UX solved via accelerated noise + pulse rhythm.
+
+---
+
+### GATE 2 Evaluation
+
+**Verdict**: PASS ✅
+
+All 11 MVP GDDs approved:
+| System | Status |
+|--------|--------|
+| 1 (Input), 2 (Viewport), 3 (Audio), 4 (Camera), 5 (Level Manager) | Approved (Sessions 001–006) |
+| 6 (Traversal), 7 (Interactive Objects), 9 (NPC Personality) | Approved (Sessions 004–007) |
+| 12 (Social), 13 (Chaos Meter) | Approved (Session 009) |
+| 23 (Chaos Meter UI) | Approved (Session 009) |
+
+Cross-system consistency verified: NpcState contract (System 9 writes, Systems 12/13 read, System 23 displays), signal flow, boundary definitions.
+
+---
+
+### Sprint 1 Plan
+
+Drafted by lead-programmer subagent, then refined through comprehensive pre-sprint Q&A with user. 30 decisions locked covering process (branching, commits, testing), gameplay (NPC routines, physics, audio), and architecture (NpcState as RefCounted, Custom Resources + .cfg overrides, TileMap surface detection).
+
+**Key architecture decisions**:
+- `src/` structure: `core/`, `gameplay/`, `ui/`, `shared/` with one-way dependency
+- 4 autoloads: InputSystem, AudioManager, LevelManager, ChaosEventBus
+- Interface/contract tests first, implementation second, unit tests third
+- Feature branches per system, orchestrator reviews and commits
+- Full RigidBody2D physics for interactive objects (not stubs)
+- 3-room test level (kitchen, living room, bedroom) with TileMap surface metadata
+
+**Scope**: 18 Must Have tasks (~35 agent-sessions), 6 Should Have, 3 Nice to Have.
+
+---
+
+### Infrastructure
+
+- `godot-mcp/SKILL.md` rewritten: placeholder → full gdcli v0.2.3 command reference
+- `CallMcpTool` transport hang: confirmed persists (Cursor-side issue)
+- `.gitignore` updated: added `.gdcli/`
+
+---
+
+### GATE Status
+- GATE 0: CLEARED ✅
+- GATE 1: CONDITIONAL PASS ✅ — Session 008
+- GATE 2: **PASS** ✅ — Session 009
+- GATE 3: **PASS** ✅ — Session 009
+
+### Next Session Opens With
+Sprint 1 implementation: S1-01 (src/ scaffold) → S1-02 (ADR-001) → parallel system streams.
+
+---
+
+## [2026-04-17] Session 010 — Sprint 1 scaffold + ADR-001
+
+**Developer**: m. raftery  
+**Focus**: S1-01 infrastructure scaffold, GUT install, autoload wiring; S1-02 production architecture ADR; NEXT handoff corrections
+
+---
+
+### S1-01
+
+- Created full `src/` tree per `production/sprints/sprint-1.md` (stub scripts only; `NpcState` / `enums.gd` shells for S1-06).
+- Registered four autoloads in `project.godot`. Left `run/main_scene` on prototype `TestLevel.tscn` (user decision 1A).
+- Installed **GUT 9.6.0** under `addons/gut/` (Godot 4.6.x; sprint “GUT 7.x” wording superseded — 7.x is Godot 3.x line).
+- Added `tests/unit/test_sanity.gd`; headless run: `godot --headless --import --path .` then `gut_cmdln.gd` with `-gdir=res://tests/unit -gexit` — all tests passed.
+- `npx -y gdcli-godot script lint` — 0 errors.
+- Production `BonnieController.gd` intentionally **without** `class_name` until prototype archived (ADR-001).
+
+### S1-02
+
+- Authored `docs/architecture/ADR-001-production-architecture.md` (layout, autoloads, NpcState, ChaosEventBus seam, GUT 9.x + import prerequisite, `class_name` conflict note).
+
+### Handoff docs
+
+- `NEXT.md`: Session 011 header; Stream A order S1-03 Viewport → S1-04 Input; condensed stale Session 007 GATE block.
+- `CHANGELOG.md`: Pre-Production 0.9 entry.
+- Git branch: `feat/s1-01-scaffold`.
+
+### Next Session Opens With
+
+Merge `feat/s1-01-scaffold` after review → **S1-03** Viewport (`ViewportConfig.gd` boot validation) → **S1-04** Input System.

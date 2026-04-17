@@ -5,6 +5,54 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Pre-Production 0.9] — 2026-04-17
+
+### Added — Session 010
+- `src/` production scaffold (`core/`, `gameplay/`, `ui/`, `shared/`) per Sprint 1 architecture tree
+- Autoloads: `InputSystem`, `AudioManager`, `LevelManager`, `ChaosEventBus`
+- `addons/gut/` — GUT **9.6.0** (bitwes/Gut) for Godot 4.6.x; `tests/unit/test_sanity.gd`
+- `docs/architecture/ADR-001-production-architecture.md` — production architecture ADR
+
+### Changed — Session 010
+- `project.godot`: autoload section + Gut editor plugin enabled
+- `NEXT.md`: Session 007 block replaced with Session 008 GATE 1 pointer; Stream A order matches sprint (Viewport → Input)
+
+### Notes — Session 010
+- First-time / CI headless GUT: run `godot --headless --import --path .` before `gut_cmdln.gd` (global class registration).
+
+### GATE Status
+- Unchanged from 0.8 (GATE 1 CONDITIONAL PASS, GATE 2/3 PASS)
+
+---
+
+## [Pre-Production 0.8] — 2026-04-17
+
+### Added — Session 009
+- `design/gdd/chaos-meter-ui.md` — Chaos Meter UI GDD (System 23), approved
+- `production/sprints/sprint-1.md` — Sprint 1 plan with 30 pre-sprint decisions locked
+- `.claude/skills/godot-mcp/SKILL.md` — rewritten to match gdcli v0.2.3 command surface
+
+### Changed — Session 009
+- GATE 2 status: **Pending** → **PASS** ✅ — all 11 MVP GDDs approved
+- GATE 3 status: **Pending** → **PASS** ✅ — Sprint 1 plan approved
+- Systems 12, 13 status: "Draft (review-passed)" → **Approved**
+- System 23 added and moved through Draft → Draft (review-passed) → **Approved**
+- `systems-index.md`: progress tracker 10→11/11 designed, 8→11/11 approved
+- `NEXT.md`: rewritten for Session 010 handoff (implementation phase)
+- `.gitignore`: added `.gdcli/`
+
+### Fixed — Session 009
+- Chaos Meter UI GDD design review: 7 issues (1 critical, 4 moderate, 2 minor) — HOT/CONVERGING visual triggers re-architected, diegetic bowl scope expanded
+- gdcli SKILL.md: replaced placeholder content with verified command inventory
+
+### GATE Status
+- GATE 0: CLEARED ✅
+- GATE 1: **CONDITIONAL PASS** ✅ — Session 008
+- GATE 2: **PASS** ✅ — Session 009 (11/11 MVP GDDs approved)
+- GATE 3: **PASS** ✅ — Session 009 (Sprint 1 plan approved)
+
+---
+
 ## [Pre-Production 0.7] — 2026-04-16
 
 ### Added — Session 008

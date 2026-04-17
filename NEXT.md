@@ -1,45 +1,17 @@
 # BONNIE! — Next Steps Handoff
 
-**For**: Session 009
-**Written by**: Hawaii Zeke (Claude) on 2026-04-16
-**Context**: Session 008 complete. GATE 1 CONDITIONAL PASS. T-CHAOS (System 13) and T-SOC (System 12) GDDs drafted, design-reviewed, and revision-fixed. 10/11 MVP GDDs designed. Only Chaos Meter UI (System 23) remains before GATE 2.
-**Immediate priority**: Approve T-CHAOS + T-SOC GDDs → Author T-FOUND-06 (Chaos Meter UI) → GATE 2
+**For**: Session 011
+**Written by**: Hawaii Zeke (Claude) on 2026-04-17
+**Context**: Session 010 landed S1-01 (`src/` scaffold, four autoloads, GUT 9.6.0) and S1-02 (ADR-001). `run/main_scene` still points at prototype `TestLevel.tscn` until S1-17. Branch: `feat/s1-01-scaffold` (merge to `main` when reviewed).
+**Immediate priority**: Sprint 1 **S1-03** (Viewport / System 2) then **S1-04** (Input / System 1) per `production/sprints/sprint-1.md` dependencies.
 
 Read this file first. Then read the locked decisions section before touching anything.
 
 ---
 
-## Session 007 Summary
+## Session 007 snapshot (historical)
 
-### What Was Done
-
-| Area | Result |
-|------|--------|
-| Mycelium audit | CONFIRMED WORKING — audit CRITICAL-01 was wrong; 51 notes, 4 slots |
-| Mycelium sync-init | DONE — notes now travel with `git push`/`git fetch` |
-| Mycelium git hooks | INSTALLED — post-commit (doctor), post-checkout (awareness), pre-push (gitleaks), reference-transaction (export gating) |
-| Git config cleanup | DONE — deduplicated 4x refspecs, 2x displayref, 2x branch sections |
-| Session hooks enhanced | session-start shows stale count; session-stop runs departure protocol |
-| P0-02: soft_landing | DONE — `_on_landed()` now checks floor group, Zone 4 works as documented |
-| P0-03: icon.svg | DONE — placeholder cat silhouette eliminates editor warning |
-| P0-04: dead variables | DONE — removed legacy `skid_timer` and `jump_hold_timer` |
-| P0-05: _try_airborne_climb | DONE — extracted from duplicate blocks, placed under PHYSICS HELPERS |
-| P0-06: .gdignore files | DONE — mycelium/, production/, docs/, .claude/, .github/ |
-| P0-07: progress tracker | DONE — systems-index.md updated from 0/0 to 8/8 started/reviewed |
-
-### GATE 1 Status — CONDITIONALLY NEAR-PASS (unchanged)
-
-**5 ACs passing:**
-- AC-T06 Rough landing ✅
-- AC-T06c Directional pop ✅
-- AC-T06e Climbing (ground + mid-air) ✅
-- AC-T06f Claw brake ✅
-- AC-T07 Squeezing ✅
-
-**Remaining before GATE 1 PASS:**
-1. **Slide rhythm** — claw brake works; slide → brake → stop → pivot cycle needs one targeted re-test
-2. **Camera leads movement (AC-T08)** — audit recommends defer to GATE 2 (polish, not traversal-feel)
-3. **Stealth radius** — audit recommends defer to post-T-SOC (no NPCs to perceive BONNIE)
+Session 007 infrastructure work (Mycelium sync-init, hooks, prototype P0 fixes, `icon.svg`, `.gdignore`, systems-index tracker) is complete. **GATE 1** was later closed **CONDITIONAL PASS** in Session 008 — see `prototypes/bonnie-traversal/GATE-1-AC-ASSESSMENT.md` and `PLAYTEST-003.md`; deferrals (AC-T08 camera polish, stealth post–T-SOC) remain as documented there.
 
 ---
 
@@ -50,7 +22,7 @@ Read this file first. Then read the locked decisions section before touching any
 | File | Status | Notes |
 |------|--------|-------|
 | `design/gdd/game-concept.md` | Approved | Do not redesign. |
-| `design/gdd/systems-index.md` | Approved | 8/11 MVP approved. Progress tracker fixed Session 007. |
+| `design/gdd/systems-index.md` | Approved | 11/11 MVP designed; tracker updated through Session 009. |
 | `design/gdd/input-system.md` | Approved | E key updated for DI-003 context-sensitivity. |
 | `design/gdd/viewport-config.md` | Approved | 720x540, nearest-neighbor, 60fps. |
 | `design/gdd/audio-manager.md` | Approved | 4 apartment mood variants added Session 006. |
@@ -63,17 +35,17 @@ Read this file first. Then read the locked decisions section before touching any
 | `prototypes/bonnie-traversal/BonnieController.gd` | Updated S007 | soft_landing, dead vars removed, _try_airborne_climb extracted. |
 | `prototypes/bonnie-traversal/BonnieController.tscn` | Updated | SqueezeShape position=(0,14). |
 | `prototypes/bonnie-traversal/TestLevel.tscn` | Updated | SqueezeTrigger groups header fixed, ramp geometry removed. |
-| `prototypes/bonnie-traversal/PLAYTEST-002.md` | Written | Session 006 report. GATE 1 NEAR-PASS. |
+| `prototypes/bonnie-traversal/PLAYTEST-002.md` | Written | Session 006 report (superseded for GATE 1 by PLAYTEST-003 + GATE-1-AC-ASSESSMENT). |
 | `icon.svg` | Created S007 | Placeholder cat silhouette. Eliminates editor warning. |
 
 ### What Does NOT Exist Yet
 
-- Chaos Meter GDD — **DRAFTED, REVIEW-PASSED** — `design/gdd/chaos-meter.md` (pending user approval)
-- Bidirectional Social System GDD — **DRAFTED, REVIEW-PASSED** — `design/gdd/bidirectional-social-system.md` (pending user approval)
-- Chaos Meter UI GDD — **UNBLOCKED** — last MVP GDD before GATE 2
-- Sprint 1 plan — **BLOCKED on GATE 2**
-- Any production code in `src/`
-- Any art assets in `assets/`
+- Chaos Meter GDD — **APPROVED** — `design/gdd/chaos-meter.md`
+- Bidirectional Social System GDD — **APPROVED** — `design/gdd/bidirectional-social-system.md`
+- Chaos Meter UI GDD — **APPROVED** — `design/gdd/chaos-meter-ui.md`
+- Sprint 1 plan — **APPROVED** — `production/sprints/sprint-1.md` (30 pre-sprint decisions locked)
+- Production gameplay in `src/` — **S1-01 scaffold + autoloads landed**; systems implemented per Sprint 1 tasks S1-03+.
+- Any art assets in `assets/` — **Placeholder pixel art via pixel-plugin**
 
 ---
 
@@ -101,67 +73,50 @@ All decisions from Sessions 001-005 still apply. Session 006 additions:
 ## Critical Path
 
 ```
-Session 009 Priority A: Approve T-CHAOS + T-SOC GDDs (review-passed, pending approval)
+Sprint 1 Implementation — Session 010+
      |
-T-FOUND-06 (Chaos Meter UI — System 23, last MVP GDD)
+S1-01: src/ scaffold + autoloads + scene architecture   ← START HERE
+S1-02: ADR-001 (architecture decisions document)
      |
-GATE 2 (all 11 MVP GDDs approved — currently 10/11 designed)
+S1-03 through S1-08: Core systems (Viewport, Input, Audio, NpcState, Level Manager, Config) — order per `production/sprints/sprint-1.md`
      |
-T-SPRINT-01 (Sprint 1 plan)
+S1-09 through S1-16: Gameplay systems (Traversal, Camera, NPC, Social, Objects, Chaos, UI)
      |
-T-IMPL (Sprint 1 Implementation)
+S1-17: Test Apartment level assembly (TileMap + 3 rooms)
+     |
+S1-18: Core Loop Playtest → GATE 3
 ```
 
 ---
 
-## Session 009 Opening Protocol
+## Session 010 Opening Protocol
 
-### Priority 0: Approve T-CHAOS + T-SOC GDDs
+**Operational directive for new agents:** `./SESSION-010-PROMPT.md`
 
-Both GDDs have passed design review with all required revisions applied.
+### Priority 0: Sprint 1 Implementation Begins
 
-**`design/gdd/chaos-meter.md`** (System 13):
-- Composite meter: chaos_fill (cap 0.55) + social_fill (weight 0.45, additive across NPCs)
-- Per-level chaos baseline; full reset between levels
-- Chaos overwhelm FED path (per-NPC, Michael 8 / Christen 7 / hostile NPCs disabled)
-- `chaos_event_count` owned by Chaos Meter
-- All 5 original open questions resolved
+Sprint 1 plan is approved with 30 pre-sprint decisions locked. See `production/sprints/sprint-1.md`.
 
-**`design/gdd/bidirectional-social-system.md`** (System 12):
-- 5-interaction charm catalog (Proximity, Rub, Lap Sit, Purr, Meow)
-- 4-tier visual goodwill legibility (COLD/NEUTRAL/SOFTENED/WARM)
-- RECOVERING extended levity + comfort acceleration mechanic
-- Passive play formally validated as acceptable aesthetic choice
-- NpcState extensions: `last_interaction_timestamp` + `recovering_comfort_stacks`
-- 4 of 5 original open questions resolved; 1 remaining (Chaos Meter signal format)
+**Completed Session 010:** S1-01 scaffold + GUT 9.6; S1-02 ADR-001.
 
-**Review outcome**: Both NEEDS REVISION → all required changes applied.
-**Action**: Read both GDDs, approve or request further changes.
+**Next tasks** (sequential):
+1. **S1-03**: Viewport / rendering boot (`ViewportConfig.gd`)
+2. **S1-04**: Input System (`InputSystem.gd`, actions, config resource)
 
-### Priority 1: T-FOUND-06 (Chaos Meter UI, System 23)
+**Then parallel streams open**:
+- Stream A (Core): S1-03 Viewport → S1-04 Input → S1-05 Audio → S1-06 NpcState → S1-07 Level Manager → S1-08 Config
+- Stream B (Gameplay, after S1-06): S1-09 Traversal → S1-10 Camera → S1-11 NPC → S1-12 Social → S1-13 Objects → S1-14 Stubs → S1-15 Chaos → S1-16 UI
+- Stream C (Level, after all): S1-17 Test Apartment → S1-18 Playtest
 
-Last MVP GDD. Depends on T-CHAOS (now designed). Author via `game-designer` + `ux-designer`.
+### Priority 1: Stale Mycelium Notes (deferred from Session 009)
 
-### Priority 2: GATE 2 Evaluation
+21 stale notes on old blob versions. Run `mycelium/scripts/compost-workflow.sh` interactively.
 
-Once all 11 MVP GDDs are approved, trigger GATE 2 to unlock Sprint 1 planning.
-
-### Priority 3: Stale Mycelium Notes
-
-21 stale notes on old blob versions. Run `! mycelium/scripts/compost-workflow.sh` interactively
-to renew valid notes and compost outdated ones.
-
-### Priority 4: Infrastructure Health Triage (deferred from Session 008)
-
-- **browser-server MCP**: FAILED. Diagnose — is it fixable or redundant with `playwright`?
-- **gdcli skill reference**: May be stale vs. gdcli v0.2.3 command surface. Validate and update `godot-mcp/SKILL.md`.
-- **CallMcpTool gdcli re-test**: Check if Cursor update resolved the transport hang. Single test at session start.
-
-### Priority 5: Opportunistic Art via pixel-plugin (if bandwidth permits)
+### Priority 2: Opportunistic Art via pixel-plugin (if bandwidth permits)
 
 - Replace `icon.svg` placeholder with real BONNIE pixel icon (32×32)
-- Replace `PlaceholderSprite` ColorRect with actual sprite frames
-- Prerequisite: Aseprite installed and `/pixel-setup` run. If not configured, skip entirely.
+- Create minimal placeholder sprites for BONNIE (16×16 color-coded blobs per decision B7)
+- Prerequisite: Aseprite installed and `/pixel-setup` run.
 
 ---
 
@@ -198,8 +153,8 @@ Address in production rewrite in `src/` only:
 |------|-----------|--------|---------|
 | GATE 0 | Camera + Viewport GDDs approved | CLEARED ✅ | Streams A+B+C |
 | GATE 1 | Prototype playtested, ACs pass, tuning locked | **CONDITIONAL PASS** ✅ — Session 008 | Phase 3 GDDs |
-| GATE 2 | All 11 MVP GDDs approved (10/11 designed, 8 approved, 2 pending approval) | Pending | Sprint 1 plan |
-| GATE 3 | Sprint 1 plan approved | Pending | Implementation |
+| GATE 2 | All 11 MVP GDDs approved (11/11) | **PASS** ✅ — Session 009 | Sprint 1 plan |
+| GATE 3 | Sprint 1 plan approved | **PASS** ✅ — Session 009 | Implementation |
 
 ### GATE 1 Closure (Session 008)
 - **Verdict**: CONDITIONAL PASS
@@ -225,4 +180,19 @@ Flag when NPC GDD enters implementation phase.
 
 ---
 
-*Hawaii Zeke — Session 008 complete. GATE 1 CONDITIONAL PASS. T-CHAOS + T-SOC GDDs drafted, design-reviewed, and revision-fixed. 10/11 MVP GDDs designed. One GDD to go before GATE 2.*
+### GATE 2 Closure (Session 009)
+- **Verdict**: PASS
+- **Date**: 2026-04-17
+- **11/11 MVP GDDs approved**: Systems 1–7, 9, 12, 13, 23
+- **Unlocks**: Sprint 1 plan
+
+### GATE 3 Closure (Session 009)
+- **Verdict**: PASS
+- **Date**: 2026-04-17
+- **Sprint 1 plan approved**: `production/sprints/sprint-1.md`
+- **30 pre-sprint decisions locked**: See Sprint 1 "Pre-Sprint Decisions" section
+- **Unlocks**: Sprint 1 implementation
+
+---
+
+*Hawaii Zeke — Session 009 complete. Design phase CLOSED. GATE 2 PASS (11/11 MVP GDDs approved). GATE 3 PASS (Sprint 1 plan approved, 30 decisions locked). Implementation begins Session 010.*
