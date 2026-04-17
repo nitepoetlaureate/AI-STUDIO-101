@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:153dec02a9e6f39d50ef4025f3d9757862a2ae76
+edge targets-path path:project.godot
+
+Autoloads: InputSystem, AudioManager, LevelManager, ChaosEventBus. Gut plugin enabled. main_scene still prototype TestLevel.
