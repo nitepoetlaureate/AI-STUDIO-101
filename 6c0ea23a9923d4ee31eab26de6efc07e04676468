@@ -1,0 +1,4 @@
+kind context
+edge explains commit:6c0ea23a9923d4ee31eab26de6efc07e04676468
+
+Session 010: S1-01 src/ scaffold, four autoloads, GUT 9.6.0 (addons/gut), tests/unit sanity. S1-02 ADR-001 production architecture. NEXT aligned with sprint S1-03/S1-04 order. run/main_scene unchanged until S1-17. Branch feat/s1-01-scaffold.
