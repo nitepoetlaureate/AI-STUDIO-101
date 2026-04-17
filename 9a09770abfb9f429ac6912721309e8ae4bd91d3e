@@ -1,0 +1,4 @@
+kind context
+edge explains commit:9a09770abfb9f429ac6912721309e8ae4bd91d3e
+
+S1-03+S1-04: ViewportConfig validates project settings from InputSystem boot; stretch aspect keep; canvas filter NEAREST (enum 1). InputSystem loads input_system_config.tres, get_move_vector, sneak helpers. Branch feat/s1-03-s1-04-viewport-input.
