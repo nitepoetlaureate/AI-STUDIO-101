@@ -107,6 +107,11 @@ const LOOK_AHEAD_BY_STATE: Dictionary = {
 @export var daze_collision_threshold: float = 280.0  # slide speed at which wall hit dazes BONNIE
 @export var rough_landing_duration: float = 2.5  # seconds
 
+@export_group("Squeeze (geometry)")
+## Low ceiling detected by [member _ceiling_cast] — standing profile does not fit; crawl (squeeze) does.
+## Legacy [code]SqueezeTrigger[/code] Area2D still participates as an optional author hint.
+@export var squeeze_use_ceiling_ray: bool = true
+
 @export_group("Input Thresholds")
 # From design/gdd/input-system.md §3.3 and §7.
 @export var stick_deadzone: float = 0.2
@@ -475,6 +480,10 @@ func _handle_sliding(delta: float) -> void:
 	if input_vec.x != 0.0 and sign(input_vec.x) == sign(velocity.x):
 		velocity.x = move_toward(velocity.x, input_vec.x * run_max_speed, slide_friction * 0.5 * delta)
 
+	# Slide under low clearance (shelf / furniture) — preserve horizontal speed into crawl.
+	if is_on_floor() and _check_squeeze_entry():
+		return
+
 	# Claw brake — E tap during slide: speed-dependent friction spike.
 	# Staccato tapping scrubs speed in chunks; holding applies once per press.
 	if Input.is_action_just_pressed(&"grab"):
@@ -626,6 +635,10 @@ func _on_landed() -> void:
 
 
 func _handle_landing(delta: float) -> void:
+	# Skid under a low shelf — carry landing speed straight into squeeze crawl.
+	if is_on_floor() and _check_squeeze_entry():
+		return
+
 	# Determine skid type from _landing_impact_speed on first entry.
 	if not in_skid_window and _landing_impact_speed > 0.0:
 		if _landing_impact_speed >= hard_skid_threshold:
@@ -716,15 +729,20 @@ func _handle_squeezing(delta: float) -> void:
 	var input_vec: Vector2 = _get_input_vector()
 	if input_vec.x != 0.0:
 		facing_direction = sign(input_vec.x)
-	velocity.x = move_toward(velocity.x, input_vec.x * squeeze_speed, ground_acceleration * delta)
-
-	# Exit when BONNIE leaves the squeeze zone (trigger body_exited cleared the flag).
-	if not _squeeze_zone_active:
-		_change_state(State.IDLE)
-		return
+	# Preserve slide/run momentum through squeeze gaps (cap at run_max for control).
+	if input_vec.x != 0.0:
+		var target_x: float = input_vec.x * run_max_speed
+		velocity.x = move_toward(velocity.x, target_x, ground_acceleration * delta)
+	else:
+		velocity.x = move_toward(velocity.x, 0.0, slide_friction * delta)
 
 	if not is_on_floor():
 		_change_state(State.FALLING)
+		return
+
+	# Exit when standing headroom returns (ceiling ray clears), or legacy trigger released.
+	if not _squeeze_must_remain_crawling():
+		_change_state(State.IDLE)
 
 
 func _handle_dazed(delta: float) -> void:
@@ -834,13 +852,29 @@ func _try_slide_auto_climb() -> bool:
 	return false
 
 
+func _squeeze_must_remain_crawling() -> bool:
+	## When [member squeeze_use_ceiling_ray] is on, low ceiling alone keeps crawl; clearing the ray
+	## pops BONNIE up even inside an oversized legacy [code]SqueezeTrigger[/code].
+	## When the ray is off, fall back to trigger-only (author-marked volumes).
+	_ceiling_cast.force_raycast_update()
+	if squeeze_use_ceiling_ray:
+		if _ceiling_cast.is_colliding():
+			return true
+		return false
+	return _squeeze_zone_active
+
+
 func _check_squeeze_entry() -> bool:
-	# Enter SQUEEZING when BONNIE is inside the SqueezeTrigger Area2D and on the ground.
-	# Flag is set/cleared by body_entered / body_exited signals from the trigger.
-	if _squeeze_zone_active and is_on_floor():
-		_change_state(State.SQUEEZING)
-		return true
-	return false
+	# Enter SQUEEZING on floor when standing profile hits a low ceiling (any shelf / platform),
+	# or when inside an optional level-author SqueezeTrigger Area2D (back-compat).
+	if not is_on_floor():
+		return false
+	_ceiling_cast.force_raycast_update()
+	var want_squeeze: bool = (squeeze_use_ceiling_ray and _ceiling_cast.is_colliding()) or _squeeze_zone_active
+	if not want_squeeze:
+		return false
+	_change_state(State.SQUEEZING)
+	return true
 
 
 func _has_wall_or_ledge_collision() -> bool:
@@ -948,6 +982,7 @@ func _update_debug_hud() -> void:
 		],
 		"[GRAB=E  SNEAK=Ctrl  RUN=Shift]",
 		"[SLIDE: run+S or run+reverse dir]",
+		"[SQUEEZE: low ceiling ray or SqueezeTrigger]",
 	]
 	_debug_label.text = "\n".join(lines)
 

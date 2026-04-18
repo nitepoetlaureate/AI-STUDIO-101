@@ -1,27 +1,6 @@
-; TestLevel.tscn — BONNIE Traversal Prototype Test Level
-; Godot 4.6 | prototypes/bonnie-traversal/
-; Reference: design/gdd/bonnie-traversal.md §3 and §7
-;
-; Layout (left to right, ground at y=500):
-;   Zone 1: Flat Run Corridor        x=0–2200
-;   Zone 2: Platform Steps (hop/jump/double-jump heights)
-;   Zone 3: Hard Drop Zone           x=950–1250  (284px drop → ROUGH_LANDING)
-;   Zone 4: Soft Drop Zone           x=1350–1650 (same height, soft_landing group)
-;   Zone 5: Ledge Parry Practice     x=1750–2500
-;   Zone 6: Climbable Wall           x=2600–2900 (Climbable group, brown)
-;   Zone 7: Smooth Wall              x=3000–3200 (NOT Climbable, blue-gray)
-;   Zone 8: Squeeze Gap              x=3250–3550 (32px passage)
-;   Zone 9: Collision Objects        x=400–800   (RigidBody2D boxes in run corridor)
-;   Zone 10: End Wall                x=3800      (DAZED test — slide into at speed)
-;
-; BONNIE spawn: (100, 476) — standing on main ground, start of run corridor
-; Total level: 4000×800px (wider and taller than 720×540 viewport)
-
-[gd_scene load_steps=12 format=3 uid="uid://test_level_traversal"]
+[gd_scene format=3 uid="uid://cusf0xdp3xu5u"]
 
 [ext_resource type="PackedScene" path="res://prototypes/bonnie-traversal/BonnieController.tscn" id="1_bonnie"]
-
-; --- Collision Shapes (one sub_resource per unique size) ---
 
 [sub_resource type="RectangleShape2D" id="Shape_Ground"]
 size = Vector2(4000, 40)
@@ -31,6 +10,9 @@ size = Vector2(200, 16)
 
 [sub_resource type="RectangleShape2D" id="Shape_PlatWide"]
 size = Vector2(300, 16)
+
+[sub_resource type="RectangleShape2D" id="Shape_SoftPad"]
+size = Vector2(300, 20)
 
 [sub_resource type="RectangleShape2D" id="Shape_PlatNarrow"]
 size = Vector2(150, 16)
@@ -44,419 +26,272 @@ size = Vector2(32, 250)
 [sub_resource type="RectangleShape2D" id="Shape_SqueezeCeil"]
 size = Vector2(200, 68)
 
-[sub_resource type="RectangleShape2D" id="Shape_EndWall"]
-size = Vector2(40, 600)
-
-[sub_resource type="RectangleShape2D" id="Shape_SoftPad"]
-size = Vector2(300, 20)
+[sub_resource type="RectangleShape2D" id="Shape_SqueezeTrigger"]
+size = Vector2(200, 30)
 
 [sub_resource type="RectangleShape2D" id="Shape_RigidBox"]
 size = Vector2(20, 20)
 
-[sub_resource type="RectangleShape2D" id="Shape_SqueezeTrigger"]
-size = Vector2(500, 30)
+[sub_resource type="RectangleShape2D" id="Shape_EndWall"]
+size = Vector2(40, 600)
 
-; =============================================================================
-; ROOT
-; =============================================================================
+[node name="TestLevel" type="Node2D" unique_id=2110911181]
 
-[node name="TestLevel" type="Node2D"]
-
-; =============================================================================
-; BONNIE — spawn at start of run corridor, standing on ground
-; BONNIE capsule: total height 48px, center is 24px above ground surface
-; Ground surface at y=500, so BONNIE center at y=476
-; =============================================================================
-
-[node name="BonnieController" parent="." instance=ExtResource("1_bonnie")]
+[node name="BonnieController" parent="." unique_id=1601096601 instance=ExtResource("1_bonnie")]
 position = Vector2(100, 476)
 
-; Camera2D as child of BonnieController — follows BONNIE automatically
-; Placeholder: will be replaced by full camera system (T-CAM)
-[node name="Camera2D" type="Camera2D" parent="BonnieController"]
-position = Vector2(0, 0)
-zoom = Vector2(1, 1)
+[node name="Camera2D" type="Camera2D" parent="BonnieController" unique_id=716343174]
 
-; =============================================================================
-; ZONE 1: FLAT RUN CORRIDOR
-; Long flat surface (x=0 to x=4000) for RUNNING → SLIDING → pop-jump testing
-; Ground center: (2000, 520) — surface top at y=500, slab 40px thick
-; =============================================================================
-
-[node name="Ground" type="StaticBody2D" parent="."]
+[node name="Ground" type="StaticBody2D" parent="." unique_id=1220869112]
 position = Vector2(2000, 520)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Ground" unique_id=1550045719]
 shape = SubResource("Shape_Ground")
 
-[node name="ColorRect" type="ColorRect" parent="Ground"]
+[node name="ColorRect" type="ColorRect" parent="Ground" unique_id=1739196108]
 offset_left = -2000.0
 offset_top = -20.0
 offset_right = 2000.0
 offset_bottom = 20.0
-color = Color(0.4, 0.4, 0.4, 1.0)
+color = Color(0.4, 0.4, 0.4, 1)
 
-; =============================================================================
-; ZONE 2: PLATFORM STEPS
-; Tests hop height, full jump height, double jump requirement
-;
-; Measurements (g=980 px/s²):
-;   hop_velocity=280  → max height = v²/(2g) ≈ 40px above launch point
-;   jump_velocity=480 → max height ≈ 118px above launch point
-;   double_jump adds ≈ 74px from apex of first jump
-;
-; Platform A: top at y=460 (40px above ground y=500) — hop barely clears
-; Platform B: top at y=410 (90px above ground)      — full jump required
-; Platform C: top at y=300 (200px above ground)     — double jump required
-;
-; Each platform: 200px wide × 16px thick
-; Horizontal positions spread for easy approach: A@x=400, B@x=650, C@x=900
-; StaticBody2D positioned at slab center: (x, top+8)
-; =============================================================================
-
-[node name="PlatformA" type="StaticBody2D" parent="."]
+[node name="PlatformA" type="StaticBody2D" parent="." unique_id=1550849976]
 position = Vector2(400, 468)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformA"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformA" unique_id=1761374855]
 shape = SubResource("Shape_PlatStd")
 
-[node name="ColorRect" type="ColorRect" parent="PlatformA"]
+[node name="ColorRect" type="ColorRect" parent="PlatformA" unique_id=821087691]
 offset_left = -100.0
 offset_top = -8.0
 offset_right = 100.0
 offset_bottom = 8.0
-color = Color(0.4, 0.4, 0.4, 1.0)
+color = Color(0.4, 0.4, 0.4, 1)
 
-[node name="PlatformB" type="StaticBody2D" parent="."]
+[node name="PlatformB" type="StaticBody2D" parent="." unique_id=658273925]
 position = Vector2(650, 418)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformB"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformB" unique_id=727090022]
 shape = SubResource("Shape_PlatStd")
 
-[node name="ColorRect" type="ColorRect" parent="PlatformB"]
+[node name="ColorRect" type="ColorRect" parent="PlatformB" unique_id=1149174151]
 offset_left = -100.0
 offset_top = -8.0
 offset_right = 100.0
 offset_bottom = 8.0
-color = Color(0.4, 0.4, 0.4, 1.0)
+color = Color(0.4, 0.4, 0.4, 1)
 
-[node name="PlatformC" type="StaticBody2D" parent="."]
+[node name="PlatformC" type="StaticBody2D" parent="." unique_id=1906826560]
 position = Vector2(900, 308)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformC"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlatformC" unique_id=435265292]
 shape = SubResource("Shape_PlatStd")
 
-[node name="ColorRect" type="ColorRect" parent="PlatformC"]
+[node name="ColorRect" type="ColorRect" parent="PlatformC" unique_id=1717760292]
 offset_left = -100.0
 offset_top = -8.0
 offset_right = 100.0
 offset_bottom = 8.0
-color = Color(0.4, 0.4, 0.4, 1.0)
+color = Color(0.4, 0.4, 0.4, 1)
 
-; =============================================================================
-; ZONE 3: HARD DROP ZONE
-; Platform at y=200 (top), ground at y=500 → 284px drop
-; rough_landing_threshold=144px → ROUGH_LANDING must trigger
-; Platform: 300px wide, centered at x=1100
-; StaticBody2D center: (1100, 208)
-; =============================================================================
-
-[node name="HardDropPlatform" type="StaticBody2D" parent="."]
+[node name="HardDropPlatform" type="StaticBody2D" parent="." unique_id=1745586849]
 position = Vector2(1100, 208)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="HardDropPlatform"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HardDropPlatform" unique_id=1673145391]
 shape = SubResource("Shape_PlatWide")
 
-[node name="ColorRect" type="ColorRect" parent="HardDropPlatform"]
+[node name="ColorRect" type="ColorRect" parent="HardDropPlatform" unique_id=1483124602]
 offset_left = -150.0
 offset_top = -8.0
 offset_right = 150.0
 offset_bottom = 8.0
-color = Color(0.4, 0.4, 0.4, 1.0)
+color = Color(0.4, 0.4, 0.4, 1)
 
-; =============================================================================
-; ZONE 4: SOFT DROP ZONE
-; Identical platform height as Zone 3 (y=200 top) but landing surface is
-; in group "soft_landing" — fall distance reset → LANDING not ROUGH_LANDING
-; Platform: centered at x=1500
-; Soft landing pad: 300px wide × 20px, sits ON TOP of main ground (y=490 center)
-; Green color for visual distinction
-; =============================================================================
-
-[node name="SoftDropPlatform" type="StaticBody2D" parent="."]
+[node name="SoftDropPlatform" type="StaticBody2D" parent="." unique_id=1683466253]
 position = Vector2(1500, 208)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SoftDropPlatform"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SoftDropPlatform" unique_id=709450723]
 shape = SubResource("Shape_PlatWide")
 
-[node name="ColorRect" type="ColorRect" parent="SoftDropPlatform"]
+[node name="ColorRect" type="ColorRect" parent="SoftDropPlatform" unique_id=461904520]
 offset_left = -150.0
 offset_top = -8.0
 offset_right = 150.0
 offset_bottom = 8.0
-color = Color(0.4, 0.4, 0.4, 1.0)
+color = Color(0.4, 0.4, 0.4, 1)
 
-[node name="SoftLandingPad" type="StaticBody2D" parent="." groups=["soft_landing"]]
+[node name="SoftLandingPad" type="StaticBody2D" parent="." unique_id=2101839009 groups=["soft_landing"]]
 position = Vector2(1500, 490)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SoftLandingPad"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SoftLandingPad" unique_id=1927463057]
 shape = SubResource("Shape_SoftPad")
 
-[node name="ColorRect" type="ColorRect" parent="SoftLandingPad"]
+[node name="ColorRect" type="ColorRect" parent="SoftLandingPad" unique_id=518968022]
 offset_left = -150.0
 offset_top = -10.0
 offset_right = 150.0
 offset_bottom = 10.0
-color = Color(0.3, 0.6, 0.3, 1.0)
+color = Color(0.3, 0.6, 0.3, 1)
 
-; =============================================================================
-; ZONE 5: LEDGE PARRY PRACTICE
-; 4 platforms with clear exposed edges at varied heights and gaps
-; No "Climbable" group — platform edges only → LEDGE_PULLUP (not CLIMBING)
-; Gap between platforms forces airborne approach for parry timing practice
-;
-; LP1: 150px wide, top y=400, x=1900 — low approach
-; LP2: 150px wide, top y=320, x=2100 — gap: 50px horizontal, 80px height diff
-; LP3: 150px wide, top y=380, x=2300 — slight drop, 50px gap
-; LP4: 150px wide, top y=300, x=2480 — highest, 30px gap, sharpest edge
-; StaticBody2D centers at (x, top+8) for each
-; =============================================================================
-
-[node name="LedgeParry1" type="StaticBody2D" parent="."]
+[node name="LedgeParry1" type="StaticBody2D" parent="." unique_id=669207998]
 position = Vector2(1900, 408)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LedgeParry1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LedgeParry1" unique_id=918738896]
 shape = SubResource("Shape_PlatNarrow")
 
-[node name="ColorRect" type="ColorRect" parent="LedgeParry1"]
+[node name="ColorRect" type="ColorRect" parent="LedgeParry1" unique_id=1723054622]
 offset_left = -75.0
 offset_top = -8.0
 offset_right = 75.0
 offset_bottom = 8.0
-color = Color(0.4, 0.4, 0.4, 1.0)
+color = Color(0.4, 0.4, 0.4, 1)
 
-[node name="LedgeParry2" type="StaticBody2D" parent="."]
+[node name="LedgeParry2" type="StaticBody2D" parent="." unique_id=1085728651]
 position = Vector2(2100, 328)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LedgeParry2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LedgeParry2" unique_id=1723626475]
 shape = SubResource("Shape_PlatNarrow")
 
-[node name="ColorRect" type="ColorRect" parent="LedgeParry2"]
+[node name="ColorRect" type="ColorRect" parent="LedgeParry2" unique_id=1243243927]
 offset_left = -75.0
 offset_top = -8.0
 offset_right = 75.0
 offset_bottom = 8.0
-color = Color(0.4, 0.4, 0.4, 1.0)
+color = Color(0.4, 0.4, 0.4, 1)
 
-[node name="LedgeParry3" type="StaticBody2D" parent="."]
+[node name="LedgeParry3" type="StaticBody2D" parent="." unique_id=1753508578]
 position = Vector2(2300, 388)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LedgeParry3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LedgeParry3" unique_id=1193422501]
 shape = SubResource("Shape_PlatNarrow")
 
-[node name="ColorRect" type="ColorRect" parent="LedgeParry3"]
+[node name="ColorRect" type="ColorRect" parent="LedgeParry3" unique_id=2064953442]
 offset_left = -75.0
 offset_top = -8.0
 offset_right = 75.0
 offset_bottom = 8.0
-color = Color(0.4, 0.4, 0.4, 1.0)
+color = Color(0.4, 0.4, 0.4, 1)
 
-[node name="LedgeParry4" type="StaticBody2D" parent="."]
+[node name="LedgeParry4" type="StaticBody2D" parent="." unique_id=153118377]
 position = Vector2(2480, 308)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="LedgeParry4"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LedgeParry4" unique_id=18675266]
 shape = SubResource("Shape_PlatNarrow")
 
-[node name="ColorRect" type="ColorRect" parent="LedgeParry4"]
+[node name="ColorRect" type="ColorRect" parent="LedgeParry4" unique_id=19179788]
 offset_left = -75.0
 offset_top = -8.0
 offset_right = 75.0
 offset_bottom = 8.0
-color = Color(0.4, 0.4, 0.4, 1.0)
+color = Color(0.4, 0.4, 0.4, 1)
 
-; =============================================================================
-; ZONE 6: CLIMBABLE WALL SECTION
-; Vertical wall in group "Climbable" — carpet/fabric visual hint (brown)
-; Wall: 32px wide × 300px tall
-;   Left edge at x=2620, right edge at x=2652
-;   Wall top at y=200, bottom at y=500 (reaches main ground)
-;   StaticBody2D center: (2636, 350)
-;
-; ClimbableWallTop: platform above wall so BONNIE has somewhere to land after
-;   LEDGE_PULLUP. 200px wide, top at y=200. Center: (2736, 208)
-;   (extends to the right of the wall so BONNIE can pull up onto it)
-; =============================================================================
-
-[node name="ClimbableWall" type="StaticBody2D" parent="." groups=["Climbable"]]
+[node name="ClimbableWall" type="StaticBody2D" parent="." unique_id=1237078132 groups=["Climbable"]]
 position = Vector2(2636, 350)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ClimbableWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClimbableWall" unique_id=760683617]
 shape = SubResource("Shape_ClimbWall")
 
-[node name="ColorRect" type="ColorRect" parent="ClimbableWall"]
+[node name="ColorRect" type="ColorRect" parent="ClimbableWall" unique_id=461893756]
 offset_left = -16.0
 offset_top = -150.0
 offset_right = 16.0
 offset_bottom = 150.0
-color = Color(0.6, 0.4, 0.2, 1.0)
+color = Color(0.6, 0.4, 0.2, 1)
 
-[node name="ClimbableWallTop" type="StaticBody2D" parent="."]
+[node name="ClimbableWallTop" type="StaticBody2D" parent="." unique_id=759485160]
 position = Vector2(2736, 208)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ClimbableWallTop"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClimbableWallTop" unique_id=1038051800]
 shape = SubResource("Shape_PlatStd")
 
-[node name="ColorRect" type="ColorRect" parent="ClimbableWallTop"]
+[node name="ColorRect" type="ColorRect" parent="ClimbableWallTop" unique_id=786379665]
 offset_left = -100.0
 offset_top = -8.0
 offset_right = 100.0
 offset_bottom = 8.0
-color = Color(0.4, 0.4, 0.4, 1.0)
+color = Color(0.4, 0.4, 0.4, 1)
 
-; =============================================================================
-; ZONE 7: SMOOTH WALL SECTION
-; Adjacent to climbable wall. NOT in Climbable group.
-; Blue-gray color — visual hint: painted drywall / smooth surface
-; Tests parry FAIL behavior: grab input does nothing against smooth wall
-; Wall: 32px wide × 250px tall
-;   Left edge at x=2900
-;   Wall top at y=250, bottom at y=500
-;   StaticBody2D center: (2916, 375)
-; =============================================================================
-
-[node name="SmoothWall" type="StaticBody2D" parent="."]
+[node name="SmoothWall" type="StaticBody2D" parent="." unique_id=1947627994]
 position = Vector2(2916, 375)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SmoothWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SmoothWall" unique_id=863013034]
 shape = SubResource("Shape_SmoothWall")
 
-[node name="ColorRect" type="ColorRect" parent="SmoothWall"]
+[node name="ColorRect" type="ColorRect" parent="SmoothWall" unique_id=1556549053]
 offset_left = -16.0
 offset_top = -125.0
 offset_right = 16.0
 offset_bottom = 125.0
-color = Color(0.3, 0.4, 0.5, 1.0)
+color = Color(0.3, 0.4, 0.5, 1)
 
-; =============================================================================
-; ZONE 8: NARROW SQUEEZE GAP
-; A ceiling slab floating over the main ground, creating a 32px tall passage
-; BONNIE height = 48px (capsule: radius=8, height=32, total=48)
-; Passage height = 32px < 48px → SQUEEZING state auto-triggers
-;
-; Main ground continues as floor.
-; Ceiling slab: 200px wide × 68px tall
-;   Slab bottom at y=468 (ground surface at y=500, passage = 32px)
-;   Slab top at y=400
-;   StaticBody2D center: (3300, 434)
-;
-; Approach ramp (left, 100px wide, at y=468 top): bridges ground to squeeze entry
-;   Center: (3190, 476) — this sits on top of main ground, raising floor to y=468
-;   Creates the squeeze "tunnel" with raised floor + ceiling overhead
-;
-; Exit ramp (right, same): mirrors approach
-;   Center: (3410, 476)
-;
-; Dark gray to signal enclosed/dangerous passage
-; =============================================================================
-
-; SqueezeCeiling — the ceiling slab. Ground at y=500, ceiling bottom at y=468 = 32px passage.
-; BONNIE normal shape (48px) can't fit. Squeeze shape (20px) fits with 12px clearance.
-[node name="SqueezeCeiling" type="StaticBody2D" parent="."]
+[node name="SqueezeCeiling" type="StaticBody2D" parent="." unique_id=1445472156]
 position = Vector2(3300, 434)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SqueezeCeiling"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SqueezeCeiling" unique_id=2060440583]
 shape = SubResource("Shape_SqueezeCeil")
 
-[node name="ColorRect" type="ColorRect" parent="SqueezeCeiling"]
+[node name="ColorRect" type="ColorRect" parent="SqueezeCeiling" unique_id=2044836504]
 offset_left = -100.0
 offset_top = -34.0
 offset_right = 100.0
 offset_bottom = 34.0
-color = Color(0.3, 0.3, 0.3, 1.0)
+color = Color(0.3, 0.3, 0.3, 1)
 
-; SqueezeTrigger — covers full approach + passage + exit (x=3050 to x=3550).
-; body_entered → _squeeze_zone_active = true → enter SQUEEZING (20px shape, sprite shrinks).
-; body_exited  → _squeeze_zone_active = false → exit SQUEEZING (48px shape restored).
-; CollisionLayer=0 (no physics presence), CollisionMask=1 (detects BONNIE layer 1).
-[node name="SqueezeTrigger" type="Area2D" parent="." groups=["SqueezeTrigger"]]
+[node name="SqueezeTrigger" type="Area2D" parent="." unique_id=366660085 groups=["SqueezeTrigger"]]
 position = Vector2(3300, 485)
 collision_layer = 0
-collision_mask = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="SqueezeTrigger"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SqueezeTrigger" unique_id=1673322770]
 shape = SubResource("Shape_SqueezeTrigger")
 
-; =============================================================================
-; ZONE 9: COLLISION OBJECTS (RigidBody2D)
-; 3 small boxes in the run corridor for SLIDING collision test
-; Tests: BONNIE slides into box at speed, box is knocked, BONNIE continues
-;
-; Boxes sit on ground surface:
-;   RigidBody2D center y = 500 - 10 = 490 (box half-height = 10px)
-;   Staggered horizontally in run corridor: x=500, x=600, x=700
-; Orange color — visually distinct from static geometry
-; =============================================================================
-
-[node name="CollisionBox1" type="RigidBody2D" parent="."]
+[node name="CollisionBox1" type="RigidBody2D" parent="." unique_id=1544849439]
 position = Vector2(500, 490)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionBox1"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionBox1" unique_id=1015828736]
 shape = SubResource("Shape_RigidBox")
 
-[node name="ColorRect" type="ColorRect" parent="CollisionBox1"]
+[node name="ColorRect" type="ColorRect" parent="CollisionBox1" unique_id=103243585]
 offset_left = -10.0
 offset_top = -10.0
 offset_right = 10.0
 offset_bottom = 10.0
-color = Color(0.8, 0.5, 0.2, 1.0)
+color = Color(0.8, 0.5, 0.2, 1)
 
-[node name="CollisionBox2" type="RigidBody2D" parent="."]
+[node name="CollisionBox2" type="RigidBody2D" parent="." unique_id=1292291541]
 position = Vector2(620, 490)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionBox2"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionBox2" unique_id=2104023726]
 shape = SubResource("Shape_RigidBox")
 
-[node name="ColorRect" type="ColorRect" parent="CollisionBox2"]
+[node name="ColorRect" type="ColorRect" parent="CollisionBox2" unique_id=684845999]
 offset_left = -10.0
 offset_top = -10.0
 offset_right = 10.0
 offset_bottom = 10.0
-color = Color(0.8, 0.5, 0.2, 1.0)
+color = Color(0.8, 0.5, 0.2, 1)
 
-[node name="CollisionBox3" type="RigidBody2D" parent="."]
+[node name="CollisionBox3" type="RigidBody2D" parent="." unique_id=1607145980]
 position = Vector2(740, 490)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionBox3"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionBox3" unique_id=2141748538]
 shape = SubResource("Shape_RigidBox")
 
-[node name="ColorRect" type="ColorRect" parent="CollisionBox3"]
+[node name="ColorRect" type="ColorRect" parent="CollisionBox3" unique_id=1675140876]
 offset_left = -10.0
 offset_top = -10.0
 offset_right = 10.0
 offset_bottom = 10.0
-color = Color(0.8, 0.5, 0.2, 1.0)
+color = Color(0.8, 0.5, 0.2, 1)
 
-; =============================================================================
-; ZONE 10: END WALL (DAZED collision test)
-; Solid wall at the end of the run corridor
-; Tests: BONNIE slides into wall at speed above daze_collision_threshold (280 px/s)
-;         → DAZED state, 1.0s recovery
-;
-; Wall: 40px wide × 600px tall (floor-to-ceiling, no way around it)
-;   Left face at x=3820, right face at x=3860
-;   Wall top at y=-100 (above viewport), bottom at y=500 (ground level)
-;   StaticBody2D center: (3840, 200)
-; =============================================================================
-
-[node name="EndWall" type="StaticBody2D" parent="."]
+[node name="EndWall" type="StaticBody2D" parent="." unique_id=2126116370]
 position = Vector2(3840, 200)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EndWall"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EndWall" unique_id=1499022462]
 shape = SubResource("Shape_EndWall")
 
-[node name="ColorRect" type="ColorRect" parent="EndWall"]
+[node name="ColorRect" type="ColorRect" parent="EndWall" unique_id=2140322467]
 offset_left = -20.0
 offset_top = -300.0
 offset_right = 20.0
 offset_bottom = 300.0
-color = Color(0.4, 0.4, 0.4, 1.0)
+color = Color(0.4, 0.4, 0.4, 1)
