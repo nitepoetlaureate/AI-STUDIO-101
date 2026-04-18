@@ -1,0 +1,4 @@
+kind context
+edge explains commit:1f33041957ce40ecb3ecc495ecb045578ef5fdf5
+
+Bonnie locomotion v2 (round-1 critique P0+P1): tagged jump_up on frame 12; idle/walk silhouette rim and tail pixels; added Tier A frames (sneak, run, double_jump, land_skid, slide, climb, ledge_cling/pull, wall_jump, squeeze, dazed, rough_landing) via bonnie_round1_v2.lua + _gen_tier_a_lua.py; re-exported 528×32 sheet, json-hash with --list-tags, loose hyphenated PNGs; mapping in art/_critique/bonnie-godot-animation-map.md.
