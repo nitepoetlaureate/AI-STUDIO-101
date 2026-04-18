@@ -1,0 +1,4 @@
+kind context
+edge explains commit:89b4074cdda47230f16127b10efc8620fea6409a
+
+Geometry-driven squeeze: ceiling ray + optional SqueezeTrigger; slide/landing keep vx into crawl; run_max crawl cap; exit when ray clears. TestLevel rigid 20x20, trigger 200px wide. project.godot viewport invariants restored; gamepad InputMap.
