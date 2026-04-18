@@ -1,4 +1,12 @@
 === Checking for Documentation Gaps ===
+⚠️  GAP: Core systems exist but only 1 ADR(s) documented
+    Suggested action: /reverse-document architecture src/core/[system]
+⚠️  GAP: Gameplay system 'src/gameplay/chaos/' (6 files) has no design doc
+    Expected: design/gdd/chaos-system.md or design/gdd/chaos.md
+    Suggested action: /reverse-document design src/gameplay/chaos
+⚠️  GAP: Gameplay system 'src/gameplay/npc/' (6 files) has no design doc
+    Expected: design/gdd/npc-system.md or design/gdd/npc.md
+    Suggested action: /reverse-document design src/gameplay/npc
 
 💡 To get a comprehensive project analysis, run: /project-stage-detect
 ===================================
