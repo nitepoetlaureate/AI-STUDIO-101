@@ -14,9 +14,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `NEXT.md` — Session 012 handoff; `main` merged; immediate work **S1-05** Audio Manager
 - `DEVLOG.md` — Session 011 summary (geometry squeeze commit, docs, agent handoff)
 
-### Fixed — Session 011
-- `project.godot` — restore `window/stretch/aspect="keep"` and `default_texture_filter=1` when editor strips them (required by `ViewportConfig.validate_project_settings()`)
-- `prototypes/bonnie-traversal/TestLevel.tscn` — restore `Shape_RigidBox` size `Vector2(20, 20)` for valid RigidBody2D collision
+### Notes — Session 011 (editor pitfall)
+- `project.godot` — if the Godot editor **removes** `window/stretch/aspect="keep"` or `default_texture_filter=1`, restore them; `InputSystem` / `ViewportConfig` assert on boot.
+- `prototypes/bonnie-traversal/TestLevel.tscn` — if `Shape_RigidBox` **loses** its `size` line, restore `Vector2(20, 20)` for valid RigidBody2D collision.
 
 ---
 
