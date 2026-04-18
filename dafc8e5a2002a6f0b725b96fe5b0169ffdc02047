@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:dafc8e5a2002a6f0b725b96fe5b0169ffdc02047
+edge targets-path path:prototypes/bonnie-traversal/TestLevel.tscn
+
+Prototype layout; squeeze trigger 200w; rigid boxes 20x20.
