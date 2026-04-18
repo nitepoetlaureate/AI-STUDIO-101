@@ -148,11 +148,11 @@ Use Git’s standard trailer (message body), not Cursor’s `--trailer` flag. Es
 | Handle | Example trailer line |
 |--------|----------------------|
 | **HAWAII ZEKE** | `Co-Authored-By: HAWAII ZEKE <(302) 319-3895>` |
-| **KENZO QUILL** | `Co-Authored-By: KENZO QUILL <kenzo.quill@studio.invalid>` |
-| **ED SAGA** | `Co-Authored-By: ED SAGA <ed.saga@studio.invalid>` |
-| **MIRA STAVE** (default coding agent) | `Co-Authored-By: MIRA STAVE <mira.stave@studio.invalid>` |
+| **KENZO QUILL** | `Co-Authored-By: KENZO QUILL <(302) 319-3895>` |
+| **ED SAGA** | `Co-Authored-By: ED SAGA <(302) 319-3895>` |
+| **MIRA STAVE** (default coding agent) | `Co-Authored-By: MIRA STAVE <(302) 319-3895>` |
 
-Replace `studio.invalid` with real addresses when you have them; keep one `Co-Authored-By` line per participant on that commit.
+Keep one `Co-Authored-By` line per participant on that commit.
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (`npm install -g @anthropic-ai/claude-code`)
 - **Recommended**: [jq](https://jqlang.github.io/jq/) (for hook validation) and Python 3 (for JSON validation)
 

@@ -8,6 +8,6 @@ alwaysApply: true
 - Do **not** pass `git commit --trailer` for Cursor or “Made with Cursor”. Prefer plain `git commit -m "…"`. If a second paragraph is needed, use a second `-m` for the body.
 - When you author a commit as the automated coding agent for this repo, end the message with this trailer line (Git convention; not the Cursor product flag):
 
-  `Co-Authored-By: MIRA STAVE <mira.stave@studio.invalid>`
+  `Co-Authored-By: MIRA STAVE <(302) 319-3895>`
 
 - Human collaborators use their own `Co-Authored-By` lines as listed in `README.md` (HAWAII ZEKE, KENZO QUILL, ED SAGA).
