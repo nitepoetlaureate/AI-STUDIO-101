@@ -1,0 +1,4 @@
+kind context
+edge explains commit:6acaa8bc05763cf586f2bcd9769e284271ac0c03
+
+docs: import notes for art v2 — added prototypes/bonnie-traversal/IMPORT-GODOT.md (art export v2 paths, frame counts, Aseprite index map, SpriteFrames naming, env tile sizes, TileSet/parallax notes). Set rendering/textures/canvas_textures/default_texture_filter=0 (nearest) in project.godot for pixel art.
