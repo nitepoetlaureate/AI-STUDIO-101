@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:47746a56717d9d996d38a9baf071002204cf4812
+edge targets-path path:prototypes/bonnie-traversal/BonnieController.gd
+
+Squeeze enters on floor when CeilingCast hits or SqueezeTrigger; exits on headroom when squeeze_use_ceiling_ray (default). SLIDING/LANDING can transition without clearing vx. SQUEEZING uses run_max_speed horizontal cap and slide_friction coast.
