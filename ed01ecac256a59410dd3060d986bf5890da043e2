@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:ed01ecac256a59410dd3060d986bf5890da043e2
+edge targets-path path:prototypes/bonnie-traversal/IMPORT-GODOT.md
+
+Canonical res:// paths under art/export/, Bonnie strip 14 cels + JSON tag table (orphan index 11 = jump_up), env PNG dimensions, nearest-filter project default, integration checklist.
