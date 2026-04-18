@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:aff1f89f6985e9934f01269a311afc4ee570b51e
+edge targets-path path:project.godot
+
+Default canvas texture filter 1→0 (nearest) for prototype pixel art; see IMPORT-GODOT.md §2.
