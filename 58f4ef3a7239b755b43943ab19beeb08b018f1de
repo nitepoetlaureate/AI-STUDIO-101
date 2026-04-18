@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:58f4ef3a7239b755b43943ab19beeb08b018f1de
+edge targets-path path:project.godot
+
+Viewport stretch aspect keep, default_texture_filter nearest (1), autoloads, GUT plugin, user gamepad InputMap tweaks.
