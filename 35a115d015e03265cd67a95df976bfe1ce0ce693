@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:35a115d015e03265cd67a95df976bfe1ce0ce693
+edge targets-path path:prototypes/bonnie-traversal/BonnieController.gd
+
+Squeeze: floor + (CeilingCast or trigger); exit via _squeeze_must_remain_crawling; SLIDE/LANDING entry; crawl uses run_max + slide_friction.
