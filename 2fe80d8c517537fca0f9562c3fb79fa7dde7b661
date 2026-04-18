@@ -1,0 +1,4 @@
+kind context
+edge explains commit:2fe80d8c517537fca0f9562c3fb79fa7dde7b661
+
+Env v2 vs v1 (round-1 ENV P0+P1): soft landing tile uses crisper stepped values (outer/body/trim) instead of smeary cushion; platform edge gets left underhang + top lip + bottom-right underhang for slab read; smooth-tall vertical groove columns darkened to #45586C on 8px cadence at atlas (224,80)-(255,111). Re-exported art/export/env from env-tileset-apartment-v01.aseprite (atlas + loose reslice). P0 grayscale squint evidence: art/_critique/round-1-env-grayscale-squint-strip-v02.png (+ .txt caption).
