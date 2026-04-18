@@ -138,7 +138,21 @@ Type `/` in Claude Code to access all 37 skills:
 
 ### Prerequisites
 
-- [Git](https://git-scm.com/) **2.32 or newer** (Cursor and some tools call `git commit --trailer …`, which older binaries reject with `unknown option 'trailer'`). On macOS, if `which git` points at `/usr/local/bin/git` and the version is a very old 2.x, prefer Apple’s Git (`/usr/bin/git`) or upgrade; this repo’s `.vscode/settings.json` pins `git.path` to `/usr/bin/git` and prepends `/usr/bin` to the integrated terminal `PATH` on macOS so commits from the editor and agent succeed.
+- [Git](https://git-scm.com/) **2.32 or newer** recommended. On macOS, if `which git` is an old Homebrew binary that lacks modern `git commit` flags, prefer Apple’s Git (`/usr/bin/git`) or upgrade. This repo’s `.vscode/settings.json` pins `git.path` to `/usr/bin/git` and prepends `/usr/bin` to the integrated terminal `PATH` on macOS.
+- **Cursor Agent attribution:** Cursor can append a `Made with Cursor` trailer by invoking `git commit --trailer …`, which breaks very old Git binaries and is optional. Turn it off under **Cursor Settings → Agent → Attribution**, or set `attribution.attributeCommitsToAgent` / `attributePRsToAgent` to `false` in `~/.cursor/cli-config.json` (see [Cursor Git / CLI docs](https://cursor.com/docs/integrations/git)). This repo expects **plain** `git commit` invocations without that trailer.
+
+### Commit identity (`Co-Authored-By`)
+
+Use Git’s standard trailer (message body), not Cursor’s `--trailer` flag. Established handles:
+
+| Handle | Example trailer line |
+|--------|----------------------|
+| **HAWAII ZEKE** | `Co-Authored-By: HAWAII ZEKE <(302) 319-3895>` |
+| **KENZO QUILL** | `Co-Authored-By: KENZO QUILL <kenzo.quill@studio.invalid>` |
+| **ED SAGA** | `Co-Authored-By: ED SAGA <ed.saga@studio.invalid>` |
+| **MIRA STAVE** (default coding agent) | `Co-Authored-By: MIRA STAVE <mira.stave@studio.invalid>` |
+
+Replace `studio.invalid` with real addresses when you have them; keep one `Co-Authored-By` line per participant on that commit.
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (`npm install -g @anthropic-ai/claude-code`)
 - **Recommended**: [jq](https://jqlang.github.io/jq/) (for hook validation) and Python 3 (for JSON validation)
 
