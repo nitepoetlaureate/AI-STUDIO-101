@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"git.path": "/usr/bin/git",
+		"terminal.integrated.env.osx": {
+			"PATH": "/usr/bin:${env:PATH}"
+		}
+	}
+}

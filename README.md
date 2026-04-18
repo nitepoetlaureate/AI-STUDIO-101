@@ -138,7 +138,7 @@ Type `/` in Claude Code to access all 37 skills:
 
 ### Prerequisites
 
-- [Git](https://git-scm.com/)
+- [Git](https://git-scm.com/) **2.32 or newer** (Cursor and some tools call `git commit --trailer …`, which older binaries reject with `unknown option 'trailer'`). On macOS, if `which git` points at `/usr/local/bin/git` and the version is a very old 2.x, prefer Apple’s Git (`/usr/bin/git`) or upgrade; this repo’s `.vscode/settings.json` pins `git.path` to `/usr/bin/git` and prepends `/usr/bin` to the integrated terminal `PATH` on macOS so commits from the editor and agent succeed.
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (`npm install -g @anthropic-ai/claude-code`)
 - **Recommended**: [jq](https://jqlang.github.io/jq/) (for hook validation) and Python 3 (for JSON validation)
 
