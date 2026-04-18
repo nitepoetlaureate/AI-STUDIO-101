@@ -1,0 +1,4 @@
+kind context
+edge explains commit:3d1e285224f0e33c0fda11e0347075a83de382f2
+
+Prototype: geometry-driven squeeze (ceiling ray + optional trigger), slide/landing momentum into crawl, run_max crawl cap, exit when ray clears. TestLevel: rigid box 20x20, squeeze trigger width 200. project.godot: restore stretch keep + nearest filter; gamepad bindings; GUT autoload block.
