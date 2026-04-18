@@ -1,9 +1,9 @@
 # BONNIE! — Next Steps Handoff
 
-**For**: Session 011
+**For**: Session 012
 **Written by**: Hawaii Zeke (Claude) on 2026-04-17
-**Context**: S1-01/S1-02 on `feat/s1-01-scaffold`; S1-03 + S1-04 landed on `feat/s1-03-s1-04-viewport-input` (viewport validation, `InputSystem` + `assets/data/input_system_config.tres`, GUT). `run/main_scene` still prototype `TestLevel.tscn` until S1-17.
-**Immediate priority**: Merge viewport/input branch, then **S1-05** Audio Manager (depends on S1-03).
+**Context**: **`main` at `89b4074`+** — Sprint 1 S1-01 through S1-04 merged; prototype **geometry squeeze** + TestLevel squeeze/rigid fixes + gamepad `project.godot` on `main`. **Do not** let the Godot editor drop `window/stretch/aspect="keep"` or `default_texture_filter=1` — `InputSystem` asserts via `ViewportConfig`. Parallel agent playbook: `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md`.
+**Immediate priority**: **S1-05** Audio Manager (`design/gdd/audio-manager.md`, `src/core/audio/`). Optional parallel track: prototype **validation grid** `TestLevel` (no `class_name` on production Bonnie until S1-09 per ADR-001).
 
 Read this file first. Then read the locked decisions section before touching anything.
 
@@ -31,10 +31,10 @@ Session 007 infrastructure work (Mycelium sync-init, hooks, prototype P0 fixes, 
 | `design/gdd/npc-personality.md` | Approved | Systems 9 vs 10/11 scope note. |
 | `design/gdd/level-manager.md` | Approved | System #5 — 7-room apartment, BFS attenuation. |
 | `design/gdd/interactive-object-system.md` | Approved | System #7 — 5 weight classes, receive_impact contract. |
-| `project.godot` | Configured | 720x540, input map, GodotPhysics2D, nearest-neighbor, gl_compatibility. |
-| `prototypes/bonnie-traversal/BonnieController.gd` | Updated S007 | soft_landing, dead vars removed, _try_airborne_climb extracted. |
+| `project.godot` | Configured | 720×540, stretch **keep**, nearest filter **1**, input map, autoloads, GUT, gl_compatibility. Re-apply keep/nearest if the editor strips them. |
+| `prototypes/bonnie-traversal/BonnieController.gd` | Updated S011 | Geometry squeeze (ceiling ray + trigger), slide/landing → crawl momentum; see commit `89b4074`. |
 | `prototypes/bonnie-traversal/BonnieController.tscn` | Updated | SqueezeShape position=(0,14). |
-| `prototypes/bonnie-traversal/TestLevel.tscn` | Updated | SqueezeTrigger groups header fixed, ramp geometry removed. |
+| `prototypes/bonnie-traversal/TestLevel.tscn` | Updated S011 | Squeeze trigger width 200; rigid boxes 20×20; editor may strip sub_resource sizes — verify in Git. |
 | `prototypes/bonnie-traversal/PLAYTEST-002.md` | Written | Session 006 report (superseded for GATE 1 by PLAYTEST-003 + GATE-1-AC-ASSESSMENT). |
 | `icon.svg` | Created S007 | Placeholder cat silhouette. Eliminates editor warning. |
 
@@ -66,7 +66,7 @@ All decisions from Sessions 001-005 still apply. Session 006 additions:
 ### Zone 8 SQUEEZING (LOCKED implementation)
 - SqueezeShape position=(0,14) MUST NOT change — this offset is load-bearing
 - SqueezeTrigger groups=["SqueezeTrigger"] is in node header — do not move to body
-- _squeeze_zone_active flag replaces CeilingCast for entry/exit — do not revert
+- **Session 011:** Entry uses **`CeilingCast` + optional `_squeeze_zone_active`**; exit uses **`_squeeze_must_remain_crawling()`** (ceiling ray when `squeeze_use_ceiling_ray` is true). Do not revert to trigger-only without design sign-off.
 
 ---
 
@@ -74,6 +74,8 @@ All decisions from Sessions 001-005 still apply. Session 006 additions:
 
 ```
 Sprint 1 Implementation — Session 010+
+     |
+Session 011: `main` merge + prototype squeeze geometry + docs (see CHANGELOG 0.9.1)
      |
 S1-01: src/ scaffold + autoloads + scene architecture   ← START HERE
 S1-02: ADR-001 (architecture decisions document)
@@ -89,9 +91,10 @@ S1-18: Core Loop Playtest → GATE 3
 
 ---
 
-## Session 010 Opening Protocol
+## Session 012 Opening Protocol
 
-**Operational directive for new agents:** `./SESSION-010-PROMPT.md`
+**Operational directive (historical):** `./SESSION-010-PROMPT.md`  
+**Parallel agents:** `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md`
 
 ### Priority 0: Sprint 1 Implementation Begins
 
@@ -99,7 +102,7 @@ Sprint 1 plan is approved with 30 pre-sprint decisions locked. See `production/s
 
 **Completed Session 010:** S1-01 scaffold + GUT 9.6; S1-02 ADR-001.
 
-**Completed (branch `feat/s1-03-s1-04-viewport-input`):** S1-03 ViewportConfig project validation + stretch `keep` + NEAREST filter fix; S1-04 `InputSystem.get_move_vector()` + config `.tres` + GUT.
+**Completed Session 010–011:** S1-03 Viewport + S1-04 Input on `main`; commit `89b4074` — prototype geometry squeeze, TestLevel squeeze/rigid fixes, gamepad `project.godot`, tracked GDD/session artifacts.
 
 **Next tasks** (sequential):
 1. **S1-05**: Audio Manager (four buses, API stubs filled in)
@@ -127,7 +130,7 @@ Address in production rewrite in `src/` only:
 
 1. **CLIMBING top-edge detect**: `is_on_ceiling()` approximation. Production needs Area2D or raycast top-edge detect.
 2. **LEDGE_PULLUP position snap**: no ledge-top snap in prototype. Production needs snap.
-3. **SQUEEZING exit**: `_squeeze_zone_active` flag (improved but still approximate). Production needs proper overlap test.
+3. **SQUEEZING**: Prototype uses `CeilingCast` + optional `SqueezeTrigger` (see `BonnieController.gd`). Production still needs full overlap / ShapeCast spec from GDD.
 4. **Surface detection for footsteps**: not implemented.
 5. **Parry directional filter**: contact-point Y offset heuristic. Production needs proper raycasts.
 

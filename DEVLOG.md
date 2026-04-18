@@ -658,3 +658,22 @@ Merge `feat/s1-01-scaffold` after review → **S1-03** Viewport (`ViewportConfig
 ### Next
 
 Merge `feat/s1-01-scaffold` + `feat/s1-03-s1-04-viewport-input` → **S1-05** Audio Manager.
+
+---
+
+## [2026-04-17] Session 011 — Prototype squeeze, level fixes, handoff docs
+
+**Developer**: m. raftery  
+**Focus**: Geometry-driven squeeze + documentation; guard viewport settings; agent handoff for Session 012
+
+### Delivered (on `main`, commit `89b4074` and follow-up doc commit)
+
+- **BonnieController**: Squeeze from low ceiling (`CeilingCast`) and/or `SqueezeTrigger`; slide and landing can enter squeeze with horizontal momentum; crawl uses run cap; exit when ceiling ray clears (default `squeeze_use_ceiling_ray`).
+- **TestLevel**: Squeeze trigger width 200; rigid box collision 20×20 (re-assert if editor clears sub_resource size).
+- **project.godot**: Gamepad InputMap; autoloads; GUT plugin — **stretch `keep`** and **nearest filter** must remain for `ViewportConfig`.
+- **Tracked**: `SESSION-010-PROMPT.md`, `design/gdd/chaos-meter-ui.md`, GUT test `.uid` sidecars, `icon.svg.import`.
+- **Session 012 prep**: `NEXT.md` retargeted to S1-05; `CHANGELOG` 0.9.1; `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md` for parallel Cursor Agents.
+
+### Next Session Opens With
+
+**S1-05** Audio Manager; optional parallel **TestLevel** validation grid per handoff doc. Run `mycelium/scripts/compost-workflow.sh` if stale notes accumulate.
