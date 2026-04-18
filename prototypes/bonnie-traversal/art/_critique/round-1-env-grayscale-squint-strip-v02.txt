@@ -1,0 +1,1 @@
+Grayscale squint strip (env v2, post round-1 P0+P1). Left to right: floor, soft landing, climbable, smooth, squeeze ceiling. Source: art/export/env loose tiles after atlas reslice from env-tileset-apartment-v01.aseprite.
