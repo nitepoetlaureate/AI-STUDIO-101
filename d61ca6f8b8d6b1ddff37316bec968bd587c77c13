@@ -1,4 +1,5 @@
 kind summary
+status composted
 edge applies-to tree:d61ca6f8b8d6b1ddff37316bec968bd587c77c13
 edge targets-treepath treepath:src/
 
