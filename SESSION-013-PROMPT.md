@@ -1,6 +1,6 @@
 # Session 013 — Opening brief (integration + Sprint 1 audio + studio tooling)
 
-**Progress (automated pass):** Phase A **IMPORT-GODOT ↔ JSON** reconciled; **`default_texture_filter=1`** fixed for `ViewportConfig`; **S1-05** `AudioManager` + **`tests/unit/test_audio_manager.gd`** (4/4 GUT); sprint + `NEXT` updated. **Not started here:** TileMap collision/custom data, Bonnie `SpriteFrames` `.tscn`, 32×32 crate impulse, NPC exports in scene, verification PNGs, PLAYTEST-004, compost.
+**Status — Session 013 closed (2026-04-17):** Phases **A–E** complete on `main` after merge of `art/bonnie-mvp-1` — TileMap **`surface`/`terrain`** + semisolid row, **32×32** rigid crate collision + scaled sprite, **Bonnie** strip locomotion + semisolid **`collision_mask`**, **parallax** + env **`Sprite2D`** (one **SoftLandingPad** `ColorRect` greybox retained per lock), **Michael + Christen** NPC exports + in-scene **`AnimatedSprite2D`**, **`verification-013/*.png`** (five **720×540** composites via **`tools/composite_verification_013.py`**), **`PLAYTEST-004.md`**, **S1-05** `AudioManager` + GUT, **`gdcli scene validate`** clean on touched scenes, **GUT** `res://tests/unit` **9/9**. Optional: in-editor **`tools/capture_verification_013.gd`** if framebuffer grabs are needed later.
 
 **Read first:** `NEXT.md`, `CLAUDE.md`, `.cursor/rules/claude-game-studio-bridge.mdc`, `prototypes/bonnie-traversal/art/_critique/round-2-intent.md` (Round 3 P0).
 
@@ -73,7 +73,7 @@ Implement **`AudioManager.gd`** per `design/gdd/audio-manager.md` + `production/
 2. **`PLAYTEST-004.md`** short note.  
 3. **`gdcli scene validate`** on touched scenes.  
 4. **`CHANGELOG.md` / `DEVLOG.md`** entries.  
-5. Merge to `main` **after your review**.
+5. Merge to `main` **after your review**. **Done** — producer-approved merge **2026-04-17**.
 
 ## Subagent dispatch (recommended)
 

@@ -125,7 +125,7 @@ const LOOK_AHEAD_BY_STATE: Dictionary = {
 @onready var _debug_label: RichTextLabel = $DebugHUD/DebugLabel
 @onready var _main_shape: CollisionShape2D = $CollisionShape2D
 @onready var _squeeze_shape: CollisionShape2D = $SqueezeShape
-@onready var _sprite: ColorRect = $PlaceholderSprite
+@onready var _locomotion: AnimatedSprite2D = $LocomotionSprite
 
 # --- Runtime State -----------------------------------------------------------
 
@@ -159,6 +159,8 @@ var _rough_landing_timer: float = 0.0
 var _post_double_jumped: bool = false
 var _was_on_floor_last_frame: bool = false
 var _at_apex: bool = false
+## Frames remaining to prefer `wall_jump` clip after climbing wall jump.
+var _wall_jump_anim_frames: int = 0
 var _ledge_pullup_timer: float = 0.0
 var _landing_impact_speed: float = 0.0
 var _jump_hold_timer: int = 0  # frame counter for hold (distinct from legacy float above)
@@ -179,6 +181,7 @@ func _ready() -> void:
 	if squeeze_trigger:
 		squeeze_trigger.body_entered.connect(_on_squeeze_trigger_entered)
 		squeeze_trigger.body_exited.connect(_on_squeeze_trigger_exited)
+	_build_locomotion_sprite_frames()
 
 
 func _physics_process(delta: float) -> void:
@@ -194,10 +197,17 @@ func _physics_process(delta: float) -> void:
 		double_jump_window_timer -= 1
 	if _parry_window_timer > 0:
 		_parry_window_timer -= 1
+	if _wall_jump_anim_frames > 0:
+		_wall_jump_anim_frames -= 1
 
 	# --- Buffer jump input this frame ---
 	if Input.is_action_just_pressed(&"jump"):
 		jump_buffer_timer = jump_buffer_frames
+
+	# Semisolid (TileMap physics layer 2): pass through when moving up.
+	const PHYS_WORLD := 1
+	const PHYS_SEMISOLID := 2
+	collision_mask = PHYS_WORLD | (PHYS_SEMISOLID if velocity.y >= 0.0 else 0)
 
 	# --- Dispatch to per-state handler ---
 	match current_state:
@@ -229,6 +239,7 @@ func _physics_process(delta: float) -> void:
 			_handle_ledge_pullup(delta)
 
 	move_and_slide()
+	_push_crates_from_slide_collisions()
 
 	# --- Parry proximity tracking (open window when entering detection zone) ---
 	var _parry_colliding_now: bool = _parry_cast.is_colliding() and _has_wall_or_ledge_collision()
@@ -238,6 +249,7 @@ func _physics_process(delta: float) -> void:
 
 	# --- Debug HUD ---
 	_update_debug_hud()
+	_sync_locomotion_animation()
 
 # =============================================================================
 # INPUT
@@ -282,10 +294,8 @@ func _change_state(new_state: State) -> void:
 			# Restore full collision shape and sprite when leaving SQUEEZING.
 			_squeeze_shape.disabled = true
 			_main_shape.disabled = false
-			_sprite.offset_left = -8.0
-			_sprite.offset_right = 8.0
-			_sprite.offset_top = -16.0
-			_sprite.offset_bottom = 16.0
+			_locomotion.scale = Vector2.ONE
+			_locomotion.position = Vector2(0, -16)
 		_:
 			pass
 
@@ -297,10 +307,8 @@ func _change_state(new_state: State) -> void:
 			# Shape offset is +14px down so bottom stays floor-aligned (no floating on swap).
 			_main_shape.disabled = true
 			_squeeze_shape.disabled = false
-			_sprite.offset_left = -12.0
-			_sprite.offset_right = 12.0
-			_sprite.offset_top = -4.0
-			_sprite.offset_bottom = 4.0
+			_locomotion.scale = Vector2(1.35, 0.28)
+			_locomotion.position = Vector2(0, -6)
 		State.FALLING:
 			# Begin tracking fall distance for ROUGH_LANDING detection.
 			fall_origin_y = global_position.y
@@ -703,6 +711,7 @@ func _handle_climbing(_delta: float) -> void:
 		velocity.y = -wall_jump_velocity
 		double_jump_available = true
 		_post_double_jumped = false
+		_wall_jump_anim_frames = 12
 		_change_state(State.JUMPING)
 		return
 
@@ -790,6 +799,18 @@ func _handle_ledge_pullup(delta: float) -> void:
 # =============================================================================
 # PHYSICS HELPERS
 # =============================================================================
+
+func _push_crates_from_slide_collisions() -> void:
+	## Session 013: CharacterBody2D does not transfer momentum to RigidBody2D by default.
+	const CRATE_IMPULSE_SCALE := 0.24
+	for i: int in get_slide_collision_count():
+		var collision: KinematicCollision2D = get_slide_collision(i)
+		var body: Object = collision.get_collider()
+		if body is RigidBody2D:
+			var rb: RigidBody2D = body as RigidBody2D
+			var n: Vector2 = collision.get_normal()
+			var along: float = maxf(0.0, -velocity.dot(n))
+			rb.apply_central_impulse(-n * along * CRATE_IMPULSE_SCALE + velocity * (CRATE_IMPULSE_SCALE * 0.4))
 
 
 func _try_airborne_climb() -> bool:
@@ -985,6 +1006,97 @@ func _update_debug_hud() -> void:
 		"[SQUEEZE: low ceiling ray or SqueezeTrigger]",
 	]
 	_debug_label.text = "\n".join(lines)
+
+
+func _build_locomotion_sprite_frames() -> void:
+	var json_path := "res://prototypes/bonnie-traversal/art/export/bonnie/bonnie-locomotion-sheet.json"
+	var png_path := "res://prototypes/bonnie-traversal/art/export/bonnie/bonnie-locomotion-sheet.png"
+	if not FileAccess.file_exists(json_path) or not FileAccess.file_exists(png_path):
+		return
+	var tex: Texture2D = load(png_path) as Texture2D
+	if tex == null:
+		return
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(json_path))
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return
+	var data: Dictionary = parsed
+	var meta: Dictionary = data.get("meta", {}) as Dictionary
+	var tags: Array = meta.get("frameTags", []) as Array
+	var sf := SpriteFrames.new()
+	for tag_any in tags:
+		var tag: Dictionary = tag_any as Dictionary
+		var anim_name: String = str(tag.get("name", ""))
+		if anim_name.is_empty():
+			continue
+		if not sf.has_animation(anim_name):
+			sf.add_animation(anim_name)
+		var from_i: int = int(tag.get("from", 0))
+		var to_i: int = int(tag.get("to", from_i))
+		for fi in range(from_i, to_i + 1):
+			var at := AtlasTexture.new()
+			at.atlas = tex
+			at.region = Rect2(float(fi * 16), 0.0, 16.0, 32.0)
+			sf.add_frame(anim_name, at)
+	_locomotion.sprite_frames = sf
+	if sf.has_animation("idle"):
+		_locomotion.play(&"idle")
+
+
+func _sync_locomotion_animation() -> void:
+	if _locomotion.sprite_frames == null:
+		return
+	var clip := _locomotion_clip_for_state()
+	if clip.is_empty():
+		return
+	if _locomotion.sprite_frames.has_animation(clip):
+		var clip_sn := StringName(clip)
+		if _locomotion.animation != clip_sn:
+			_locomotion.play(clip_sn)
+	_locomotion.flip_h = facing_direction < 0.0
+
+
+func _locomotion_clip_for_state() -> String:
+	match current_state:
+		State.IDLE:
+			return "idle"
+		State.SNEAKING:
+			return "sneak"
+		State.WALKING:
+			return "walk"
+		State.RUNNING:
+			return "run"
+		State.SLIDING:
+			return "slide"
+		State.JUMPING:
+			if _wall_jump_anim_frames > 0:
+				return "wall_jump"
+			if _post_double_jumped and velocity.y < 0.0:
+				return "double_jump"
+			if velocity.y < 0.0:
+				return "jump_up"
+			return "jump_apex"
+		State.FALLING:
+			if _post_double_jumped and velocity.y < 0.0:
+				return "double_jump"
+			return "jump_down"
+		State.LANDING:
+			if in_skid_window or absf(velocity.x) > skid_threshold:
+				return "land_skid"
+			return "idle"
+		State.CLIMBING:
+			return "climb"
+		State.SQUEEZING:
+			return "squeeze"
+		State.DAZED:
+			return "dazed"
+		State.ROUGH_LANDING:
+			return "rough_landing"
+		State.LEDGE_PULLUP:
+			if _ledge_pullup_timer > 0.0:
+				return "ledge_cling"
+			return "ledge_pull"
+		_:
+			return "idle"
 
 
 # =============================================================================

@@ -107,6 +107,11 @@ interact={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="world"
+2d_physics/layer_2="semisolid"
+
 [physics]
 
 2d/physics_engine="GodotPhysics2D"

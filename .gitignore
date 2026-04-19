@@ -33,6 +33,9 @@ dist/
 *.dylib
 *.app
 
+# === Bonnie traversal — Aseprite MCP scale scratch files (regenerate anytime) ===
+prototypes/bonnie-traversal/art/npc/source/_scale_work*.aseprite
+
 # === Engine: Godot ===
 .godot/
 .gdcli/

@@ -13,6 +13,7 @@ Use **one** tree for runtime textures (do not duplicate into a second `assets/` 
 | **Prototype export root** | `res://prototypes/bonnie-traversal/art/export/` |
 | Bonnie sprites | `res://prototypes/bonnie-traversal/art/export/bonnie/` |
 | Environment sprites | `res://prototypes/bonnie-traversal/art/export/env/` |
+| NPC exports | `res://prototypes/bonnie-traversal/art/export/npc/` (+ `michael-16px/` … per §3.5) |
 | Shared palette | `res://prototypes/bonnie-traversal/art/export/palette-traversal-v01.gpl` |
 
 **Version tokens:** `-v01` on `env-tileset-apartment-atlas-v01.png` and `env-parallax-apartment-backdrop-v01.png` marks replaceable sources. On an art bump to **v03**, rename files, re-import, and update TileSet / parallax `Texture2D` references in scenes. Bonnie locomotion JSON keys still reference the Aseprite doc name `bonnie-locomotion-v01` (metadata only; see §4).
@@ -25,7 +26,7 @@ Use **one** tree for runtime textures (do not duplicate into a second `assets/` 
 - **Mipmaps:** leave **off** on these PNGs (2D pixel art).
 - **Per-node override:** if a subtree needs linear filtering, set only those `CanvasItem` nodes to `texture_filter = Inherit` / `Linear` in the inspector.
 
-`BonnieController.tscn` still uses a `ColorRect` placeholder; swapping in `AnimatedSprite2D` / `Sprite2D` inherits the project default unless overridden.
+`BonnieController.tscn` uses **`LocomotionSprite` (`AnimatedSprite2D`)** fed by `bonnie-locomotion-sheet.{png,json}` in `_ready()`; inherits **nearest** filtering from the project default unless overridden.
 
 ---
 
@@ -42,6 +43,33 @@ All **16×32** unless noted. Use for **per-frame** `AtlasTexture` / `ImageTextur
 | `.../bonnie/bonnie-jump-down-0001.png` | **1** |
 
 **Spritesheet (strip):** `bonnie-locomotion-sheet.png` — **528×32** (**33** cels × **16×32**). Authoritative numbers come from `meta.size` and `frames` in `bonnie-locomotion-sheet.json` (Aseprite 1.3.15 export).
+
+### 3.5 NPCs — Michael + Christen (Session 013)
+
+**Aseprite sources:** `res://prototypes/bonnie-traversal/art/npc/source/michael-npc-v01.aseprite`, `christen-npc-v01.aseprite` (authored via **Aseprite MCP** `user-aseprite`: canvas → primitives → `add_frame` → `create_tag` **`idle`** frames **1–4** forward → `export_spritesheet` + JSON).
+
+**`idle` clip:** **4** frames; per-cel durations **100 ms** (frame 0) and **120 ms** (frames 1–3) in current exports (Aseprite defaults + `set_frame_duration` on later frames).
+
+#### Base path (`art/export/npc/`)
+
+| File | Strip / still |
+|------|----------------|
+| `michael-idle-sheet.png` + `.json` | **64×32** horizontal (**4×** 16×32) |
+| `michael.png` | Frame **1** still |
+| `christen-idle-sheet.png` + `.json` | **64×32** |
+| `christen.png` | Frame **1** still |
+
+**JSON:** standard **json-hash**; `meta.frameTags` includes **`idle`** `from` **0** `to` **3**; each `frames[…].frame` gives `{ x, y, w, h }` within the sheet (same pattern as §4 for tooling).
+
+#### Multi-scale folders (nearest-neighbour)
+
+| Folder | Cel size | Strip size (`idle`) | Pipeline |
+|--------|----------|----------------------|----------|
+| `npc/michael-16px/`, `npc/christen-16px/` | 16×32 | 64×32 | Copy of base export |
+| `npc/michael-24px/`, `npc/christen-24px/` | 24×48 | 96×48 | Duplicate `.aseprite` → `scale_sprite` **1.5×** → re-export |
+| `npc/michael-32px/`, `npc/christen-32px/` | 32×64 | 128×64 | Duplicate `.aseprite` → `scale_sprite` **2×** → re-export |
+
+**Godot:** `TestLevel.tscn` → **`NpcIdleFromSheet.gd`** on each NPC `AnimatedSprite2D`; point `sheet_*_path` at the desired folder’s `*-idle-sheet.{json,png}` for LOD experiments.
 
 ---
 
@@ -106,9 +134,9 @@ Use **one clip per `frameTags.name`** (snake_case in Godot to match export tags 
 
 Loose files under `.../bonnie/` remain valid for per-frame QA; the **strip + JSON** is the canonical animation source for `SpriteFrames` generation.
 
-### 4.3 `BonnieController.gd` state → animation (integration stub)
+### 4.3 `BonnieController.gd` state → animation (implemented)
 
-The controller exposes **state enum** names (`IDLE`, `WALKING`, `JUMPING`, …) but **does not** drive a sprite yet. When wiring `AnimatedSprite2D`, map gameplay to clips roughly as follows (iterate with design on edge cases):
+`BonnieController` builds **`SpriteFrames`** from **`meta.frameTags`** in `bonnie-locomotion-sheet.json` and syncs **`LocomotionSprite`** each physics frame. Tier-A mapping (iterate on feel):
 
 | `BonnieController.State` | Suggested clip (Tier-A on disk) |
 |--------------------------|----------------------------------|
@@ -162,19 +190,24 @@ Paths under `res://prototypes/bonnie-traversal/art/export/env/`. Sizes measured 
 
 ## 6. `TestLevel.tscn` integration (current)
 
-Greybox **ColorRect** fills still reference no textures. Replace per `StaticBody2D` child with `Sprite2D` / `TileMapLayer` using the paths above; keep collision sizes aligned with existing `RectangleShape2D` definitions unless art + design change them together.
+- **`TerrainTiles`:** `TestLevel.gd` builds a **TileSet** at runtime: **source 0** = `env-tile-ground-01.png` with **`custom_data`** layers **`surface`** (`floor`) and **`terrain`** (`solid`), physics **layer 1** (`world`). **Source 1** = `env-tile-platform-top-01.png`, **`surface`=`platform`**, **`terrain`=`semisolid`**, physics **layer 2** (`semisolid`) with **one-way** collision polygon; a demo row is painted at **y = −1** (cells **x 15–25**).
+- **`BonnieController`:** `collision_layer = 1`; **`collision_mask`** toggles **layer 2** off while **`velocity.y < 0`** so Bonnie can jump up through semisolid tiles.
+- **Platforms / walls / crates:** `Sprite2D` **Fill** children use env PNGs (`env-tile-platform-top-01`, walls, climbable, smooth, squeeze ceiling, crate prop). **One** deliberate greybox remains: **`SoftLandingPad`** `ColorRect` (soft-landing affordance programmer art).
+- **NPCs:** `AnimatedSprite2D` + `NpcIdleFromSheet.gd` (default **16 px** exports under `art/export/npc/`).
 
 ---
 
 ## 7. Checklist before playtest art gate
 
-- [ ] All new `Sprite2D` / `AnimatedSprite2D` / TileSet layers use **`res://prototypes/bonnie-traversal/art/export/...`** paths.
-- [ ] Confirm **nearest** filtering on character (`AnimatedSprite2D`) and world sprites.
-- [ ] Bonnie `SpriteFrames` covers **all Tier-A tags** in §4.2 (producer “done” line for Session 013).
-- [ ] JSON already includes **`jump_up`** on cel 11 — tooling should use **`meta.frameTags`**, not hard-coded 14-cel assumptions.
+- [x] All new `Sprite2D` / `AnimatedSprite2D` / TileSet layers use **`res://prototypes/bonnie-traversal/art/export/...`** paths.
+- [x] Confirm **nearest** filtering on character (`AnimatedSprite2D`) and world sprites (project default).
+- [x] Bonnie `SpriteFrames` covers **all Tier-A tags** in §4.2 (built from JSON `frameTags`).
+- [x] JSON includes **`jump_up`** on cel 11 — tooling uses **`meta.frameTags`**, not hard-coded cel counts.
 
 ---
 
 ## Mycelium
 
 After changing this file or the export set, attach a **summary** note on `prototypes/bonnie-traversal/IMPORT-GODOT.md` and a **context** note on `HEAD` so the next agent sees path/frame deltas without re-scanning PNGs.
+
+**Session 013 summary:** Added §3.5 **NPC** (MCP sources, base + **16/24/32 px** folders, JSON strip layout); updated §4.3 (Bonnie locomotion live), §6 (TileMap **`surface`/`terrain`**, semisolid row, scene sprites, single greybox), §7 checklist. **verification-013:** `python3 tools/composite_verification_013.py` rebuilds five **720×540** stills from **`art/export/**`** (dummy GL headless cannot read `ViewportTexture`).

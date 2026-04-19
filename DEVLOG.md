@@ -677,3 +677,20 @@ Merge `feat/s1-01-scaffold` + `feat/s1-03-s1-04-viewport-input` → **S1-05** Au
 ### Next Session Opens With
 
 **S1-05** Audio Manager; optional parallel **TestLevel** validation grid per handoff doc. Run `mycelium/scripts/compost-workflow.sh` if stale notes accumulate.
+
+---
+
+## [2026-04-17] Session 013 (closure) — Bonnie traversal integration + NPC LOD exports
+
+**Developer**: m. raftery  
+**Focus**: `SESSION-013-PROMPT.md` Phase B/E — TileMap **`surface`/`terrain`** + semisolid one-way row, Bonnie **`collision_mask`** vs layer 2, env **`Sprite2D`** fills (single **SoftLandingPad** greybox), **Aseprite MCP** NPC sources + **16 / 24 / 32** px export folders, **`IMPORT-GODOT.md`** + **`PLAYTEST-004.md`**, **`verification-013/`** export-pixel composites + optional in-editor **`capture_verification_013.gd`** path.
+
+### Delivered
+
+- Runtime **TileSet** second atlas (**platform top**) on physics layer **2** with **one-way** polygon; demo cells **x 15–25, y −1**; `project.godot` physics **layer names**.
+- **Michael / Christen**: `AnimatedSprite2D` + `NpcIdleFromSheet.gd`; scaled exports under `art/export/npc/michael-{16,24,32}px/` and `christen-{16,24,32}px/`.
+- **CHANGELOG** Session 013 items finalized; `.gitignore` for `_scale_work*.aseprite`.
+
+### Next
+
+**Merged to `main` (2026-04-17)** per producer sign-off. Continue Sprint 1 from **S1-06**; human playtest pass on semisolid feel when convenient.

@@ -7,17 +7,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Pre-Production 0.9.1] — 2026-04-17
 
-### Added — Session 013 (in progress)
+### Added — Session 013
 
 - `SESSION-013-PROMPT.md` — integration + audio + Cursor bridge handoff
 - `.cursor/hooks.json` + hooks calling `.claude` mycelium/validate paths; `.cursor/skills` → `.claude/skills` symlinks; `docs/CREDITS.md`; `prototypes/bonnie-traversal/art/README.md`
+- `NpcIdleFromSheet.gd` — NPC `AnimatedSprite2D` loader for Aseprite **json-hash** sheets
+- `prototypes/bonnie-traversal/art/npc/source/{michael,christen}-npc-v01.aseprite` + multi-scale **`art/export/npc/*-{16,24,32}px/`** exports (Aseprite MCP `user-aseprite`)
+- `prototypes/bonnie-traversal/art/_critique/verification-013/*.png` — five 1× **720×540** composites from **`art/export/**`** (Pillow); `tools/composite_verification_013.py` (CI-safe). `tools/capture_verification_013.gd` — SubViewport grab for visible-Godot runs (dummy GL headless still null)
 
-### Changed — Session 013 (in progress)
+### Changed — Session 013
 
-- `IMPORT-GODOT.md` — Bonnie strip **528×32**, **33** cels, full **`frameTags`** table; Tier-A state map; `default_texture_filter` doc = **1** (NEAREST); crate **32×32** target note
-- `project.godot` — `default_texture_filter=1` (matches `ViewportConfig` / GUT headless)
+- `IMPORT-GODOT.md` — §3.5 **NPC** strips + multi-scale table; §4.3 locomotion **implemented**; §6 **TestLevel** TileMap **`surface`/`terrain`** + semisolid + scene sprite pass; §7 checklist updated
+- `PLAYTEST-004.md` — Session 013 integration gate (composite verification stills + automated check results)
+- `project.godot` — **`2d_physics` layer names** `world` / `semisolid`; `default_texture_filter=1` (matches `ViewportConfig` / GUT headless)
+- `TestLevel.gd` / `TestLevel.tscn` — runtime TileSet **solid + one-way semisolid** row; **Sprite2D** fills for platforms/walls/crates; **one** `ColorRect` greybox (**SoftLandingPad**); **AnimatedSprite2D** NPCs
+- `BonnieController.gd` / `.tscn` — **`LocomotionSprite`** strip + **semisolid** `collision_mask` rule; `collision_layer`/`collision_mask` explicit
+- `verification-013/` — dropped duplicate legacy filenames (`03_03_*`, `04_04_*`, `05_05_*`); tree matches `composite_verification_013.py` outputs only
 - `src/core/audio/AudioManager.gd` — **S1-05**: buses Master/Music/SFX/Ambient, `play_sfx`, `play_music`, `crossfade_music`, `set_bus_volume`; pooled SFX players
 - `tests/unit/test_audio_manager.gd` — GUT coverage for audio API headless
+- `.gitignore` — ignore `art/npc/source/_scale_work*.aseprite` MCP scale scratch files
 
 ### Added — Session 011
 - `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md` — how to run parallel Cursor Agents for Sprint 1 + prototype follow-up

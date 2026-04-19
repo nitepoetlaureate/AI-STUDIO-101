@@ -1,11 +1,11 @@
 # BONNIE! — Next Steps Handoff
 
-**Session 013:** Open `SESSION-013-PROMPT.md` first (integration + S1-05 + Cursor↔Claude bridge). Cursor: enable **Third-party skills** so `.claude` hooks run; see `.cursor/rules/claude-game-studio-bridge.mdc`.
+**Session 013 (integration gate):** **Merged to `main` (2026-04-17).** Deliverables — TileMap **`surface`/`terrain`** + semisolid row, env **`Sprite2D`** pass (one **SoftLandingPad** greybox per lock), Bonnie locomotion + semisolid mask, **NPC** MCP exports + **16/24/32 px** folders, **`IMPORT-GODOT.md`** §3.5, **`PLAYTEST-004.md`**, **`verification-013/`** five **720×540** composites from **`art/export/**`** (`python3 tools/composite_verification_013.py`). **Next:** **S1-06** `NpcState` + shared enums; parallel prototype polish only if capacity allows. Chaos meter / S1-18 full-loop play remains separate. Cursor: **Third-party skills** + `.cursor/rules/claude-game-studio-bridge.mdc`.
 
-**For**: Session 012
+**For**: Post–Session 013 (main)
 **Written by**: Hawaii Zeke (Claude) on 2026-04-17
-**Context**: **`main` at `89b4074`+** — Sprint 1 S1-01 through S1-04 merged; prototype **geometry squeeze** + TestLevel squeeze/rigid fixes + gamepad `project.godot` on `main`. **Do not** let the Godot editor drop `window/stretch/aspect="keep"` or `default_texture_filter=1` — `InputSystem` asserts via `ViewportConfig`. Parallel agent playbook: `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md`.
-**Immediate priority**: **S1-05** Audio Manager (`design/gdd/audio-manager.md`, `src/core/audio/`). Optional parallel track: prototype **validation grid** `TestLevel` (no `class_name` on production Bonnie until S1-09 per ADR-001).
+**Context**: **`main`** includes Session 013 — S1-05 **AudioManager** + GUT; prototype **TestLevel** TileMap + semisolid + **32×32** crate rigid bodies + parallax + NPC strips. **Do not** let the Godot editor drop `window/stretch/aspect="keep"` or `default_texture_filter=1` — `InputSystem` asserts via `ViewportConfig`. Parallel agent playbook: `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md`.
+**Immediate priority**: **S1-06** `NpcState` + shared enums (`production/sprints/sprint-1.md`). Optional: **`mycelium/scripts/compost-workflow.sh`** for stale notes; content under `res://assets/audio/` as WAV/OGG land.
 
 Read this file first. Then read the locked decisions section before touching anything.
 
@@ -78,6 +78,8 @@ All decisions from Sessions 001-005 still apply. Session 006 additions:
 Sprint 1 Implementation — Session 010+
      |
 Session 011: `main` merge + prototype squeeze geometry + docs (see CHANGELOG 0.9.1)
+     |
+Session 013: Bonnie traversal integration gate merged to `main` (TileMap + semisolid + NPC exports + verification composites + S1-05)
      |
 S1-01: src/ scaffold + autoloads + scene architecture   ← START HERE
 S1-02: ADR-001 (architecture decisions document)
