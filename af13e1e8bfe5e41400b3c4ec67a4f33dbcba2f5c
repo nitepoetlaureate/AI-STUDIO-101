@@ -1,4 +1,5 @@
 kind summary
+status composted
 edge applies-to blob:af13e1e8bfe5e41400b3c4ec67a4f33dbcba2f5c
 edge targets-path path:project.godot
 
