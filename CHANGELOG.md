@@ -7,6 +7,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Pre-Production 0.9.1] — 2026-04-17
 
+### Added — Session 013 (in progress)
+
+- `SESSION-013-PROMPT.md` — integration + audio + Cursor bridge handoff
+- `.cursor/hooks.json` + hooks calling `.claude` mycelium/validate paths; `.cursor/skills` → `.claude/skills` symlinks; `docs/CREDITS.md`; `prototypes/bonnie-traversal/art/README.md`
+
+### Changed — Session 013 (in progress)
+
+- `IMPORT-GODOT.md` — Bonnie strip **528×32**, **33** cels, full **`frameTags`** table; Tier-A state map; `default_texture_filter` doc = **1** (NEAREST); crate **32×32** target note
+- `project.godot` — `default_texture_filter=1` (matches `ViewportConfig` / GUT headless)
+- `src/core/audio/AudioManager.gd` — **S1-05**: buses Master/Music/SFX/Ambient, `play_sfx`, `play_music`, `crossfade_music`, `set_bus_volume`; pooled SFX players
+- `tests/unit/test_audio_manager.gd` — GUT coverage for audio API headless
+
 ### Added — Session 011
 - `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md` — how to run parallel Cursor Agents for Sprint 1 + prototype follow-up
 

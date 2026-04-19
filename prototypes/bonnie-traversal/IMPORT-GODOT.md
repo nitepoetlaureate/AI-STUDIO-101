@@ -21,7 +21,7 @@ Use **one** tree for runtime textures (do not duplicate into a second `assets/` 
 
 ## 2. Texture import policy (project + nodes)
 
-- **Project default:** `project.godot` → `[rendering]` → `textures/canvas_textures/default_texture_filter=0` (**Nearest**). Keeps new imports pixel-crisp without per-node setup.
+- **Project default:** `project.godot` → `[rendering]` → `textures/canvas_textures/default_texture_filter=1` (`CanvasItem.TEXTURE_FILTER_NEAREST`). Required by `ViewportConfig` on boot. Keeps new imports pixel-crisp without per-node setup.
 - **Mipmaps:** leave **off** on these PNGs (2D pixel art).
 - **Per-node override:** if a subtree needs linear filtering, set only those `CanvasItem` nodes to `texture_filter = Inherit` / `Linear` in the inspector.
 
@@ -41,7 +41,7 @@ All **16×32** unless noted. Use for **per-frame** `AtlasTexture` / `ImageTextur
 | `.../bonnie/bonnie-jump-apex-0001.png` | **1** |
 | `.../bonnie/bonnie-jump-down-0001.png` | **1** |
 
-**Spritesheet (strip):** `bonnie-locomotion-sheet.png` — **224×32** (14 columns × **16×32** cels).
+**Spritesheet (strip):** `bonnie-locomotion-sheet.png` — **528×32** (**33** cels × **16×32**). Authoritative numbers come from `meta.size` and `frames` in `bonnie-locomotion-sheet.json` (Aseprite 1.3.15 export).
 
 ---
 
@@ -52,44 +52,81 @@ All **16×32** unless noted. Use for **per-frame** `AtlasTexture` / `ImageTextur
 
 ### 4.1 Frame index → strip `region_rect` origin
 
-Each cel is **16×32**. `region_rect.position.x = index * 16`, `y = 0`.
+Each cel is **16×32**. `region_rect.position.x = index * 16`, `y = 0`. Indices **0–32** inclusive.
 
-| Index | JSON `frames` key (Aseprite internal) | `frameTags` tag | Notes |
-|------:|----------------------------------------|-----------------|-------|
-| 0–3 | `bonnie-locomotion-v01 0.aseprite` … `3.aseprite` | **idle** | 4 frames |
-| 4–10 | `… 4.aseprite` … `10.aseprite` | **walk** | 7 frames |
-| 11 | `… 11.aseprite` | *(none)* | **Takeoff** — matches loose `bonnie-jump-up-0001.png`; add **`jump_up`** tag in Aseprite on next export to remove ambiguity |
-| 12 | `… 12.aseprite` | **jump_apex** | 1 frame |
-| 13 | `… 13.aseprite` | **jump_down** | 1 frame |
+| Index | `frameTags` (from `meta.frameTags`) |
+|------:|-------------------------------------|
+| 0–3 | **idle** |
+| 4–10 | **walk** |
+| 11 | **jump_up** |
+| 12 | **jump_apex** |
+| 13 | **jump_down** |
+| 14–15 | **sneak** |
+| 16–17 | **run** |
+| 18 | **double_jump** |
+| 19–20 | **land_skid** |
+| 21–22 | **slide** |
+| 23–24 | **climb** |
+| 25 | **ledge_cling** |
+| 26 | **ledge_pull** |
+| 27 | **wall_jump** |
+| 28–29 | **squeeze** |
+| 30 | **dazed** |
+| 31–32 | **rough_landing** |
 
-**Total strip cels:** **14**. Tag durations in JSON are **100 ms** per cel (Aseprite export default).
+**Total strip cels:** **33**. Tag durations in JSON default to **100 ms** per cel unless changed in Aseprite.
 
 ### 4.2 `SpriteFrames` naming (recommended)
 
-Godot `SpriteFrames` animation names are arbitrary strings; align to JSON tags + explicit takeoff:
+Use **one clip per `frameTags.name`** (snake_case in Godot to match export tags where useful):
 
-| Suggested `SpriteFrames` animation | Source |
-|-----------------------------------|--------|
-| `idle` | tags `idle` → cels 0–3 |
-| `walk` | tags `walk` → cels 4–10 |
-| `jump_up` | cel **11** only (until JSON tag exists) |
-| `jump_apex` | tag `jump_apex` → cel 12 |
-| `jump_down` | tag `jump_down` → cel 13 |
+| `SpriteFrames` animation | Source |
+|--------------------------|--------|
+| `idle` | `idle` |
+| `walk` | `walk` |
+| `jump_up` | `jump_up` |
+| `jump_apex` | `jump_apex` |
+| `jump_down` | `jump_down` |
+| `sneak` | `sneak` |
+| `run` | `run` |
+| `double_jump` | `double_jump` |
+| `land_skid` | `land_skid` |
+| `slide` | `slide` |
+| `climb` | `climb` |
+| `ledge_cling` | `ledge_cling` |
+| `ledge_pull` | `ledge_pull` |
+| `wall_jump` | `wall_jump` |
+| `squeeze` | `squeeze` |
+| `dazed` | `dazed` |
+| `rough_landing` | `rough_landing` |
 
-**Automation note:** do not key off raw `frames` dictionary string keys in tooling; use **numeric index** or `meta.frameTags` (`from` / `to`).
+**Automation note:** Prefer **`meta.frameTags`** (`from` / `to`) over parsing `frames` dictionary keys. If tooling must use indices, use the table in §4.1.
+
+### 4.2b Loose PNGs
+
+Loose files under `.../bonnie/` remain valid for per-frame QA; the **strip + JSON** is the canonical animation source for `SpriteFrames` generation.
 
 ### 4.3 `BonnieController.gd` state → animation (integration stub)
 
 The controller exposes **state enum** names (`IDLE`, `WALKING`, `JUMPING`, …) but **does not** drive a sprite yet. When wiring `AnimatedSprite2D`, map gameplay to clips roughly as follows (iterate with design on edge cases):
 
-| `BonnieController.State` | Suggested first-pass animation |
-|--------------------------|--------------------------------|
+| `BonnieController.State` | Suggested clip (Tier-A on disk) |
+|--------------------------|----------------------------------|
 | `IDLE` | `idle` |
-| `SNEAKING` | `walk` (slower `speed_scale`) or duplicate clip later |
-| `WALKING`, `RUNNING`, `SLIDING`, `LANDING` | `walk` / speed variants |
-| `JUMPING` | `jump_up` → `jump_apex` by velocity / timer |
+| `SNEAKING` | `sneak` (or `walk` + lower `speed_scale` if preferred) |
+| `WALKING` | `walk` |
+| `RUNNING` | `run` |
+| `SLIDING` | `slide` |
+| `LANDING` / skid reads | `land_skid` |
+| `JUMPING` | `jump_up` → `jump_apex` / `double_jump` by context |
 | `FALLING` | `jump_down` |
-| `CLIMBING`, `SQUEEZING`, `DAZED`, `ROUGH_LANDING`, `LEDGE_PULLUP` | reuse nearest readable clip until Tier-B art exists |
+| `CLIMBING` | `climb` |
+| `SQUEEZING` | `squeeze` |
+| `DAZED` | `dazed` |
+| `ROUGH_LANDING` | `rough_landing` |
+| `LEDGE_PULLUP` (cling vs pull) | `ledge_cling` / `ledge_pull` |
+| Wall jump | `wall_jump` |
+| *Missing clip* | **Hold last frame** of current clip (producer rule) |
 
 ---
 
@@ -113,7 +150,7 @@ Paths under `res://prototypes/bonnie-traversal/art/export/env/`. Sizes measured 
 | `env-tile-soft-landing-01.png` | 16×16 |
 | `env-tile-squeeze-ceiling-01.png` | **32×16** |
 | `env-tile-end-wall-01.png` | **32×16** |
-| `env-prop-rigid-crate-01.png` | **20×20** |
+| `env-prop-rigid-crate-01.png` | **20×20** on disk until art v3 — **Session 013 collision target: 32×32** rigid body + re-export |
 | `env-tileset-apartment-atlas-v01.png` | **256×112** (TileSet atlas source) |
 | `env-parallax-apartment-backdrop-v01.png` | **320×180** |
 
@@ -133,8 +170,8 @@ Greybox **ColorRect** fills still reference no textures. Replace per `StaticBody
 
 - [ ] All new `Sprite2D` / `AnimatedSprite2D` / TileSet layers use **`res://prototypes/bonnie-traversal/art/export/...`** paths.
 - [ ] Confirm **nearest** filtering on character (`AnimatedSprite2D`) and world sprites.
-- [ ] Bonnie `SpriteFrames` uses the **five** core clips (`idle`, `walk`, `jump_up`, `jump_apex`, `jump_down`) at minimum.
-- [ ] After Aseprite re-export, confirm **frame 11** gains a **`jump_up`** tag in JSON and update tooling if it relied on index-only.
+- [ ] Bonnie `SpriteFrames` covers **all Tier-A tags** in §4.2 (producer “done” line for Session 013).
+- [ ] JSON already includes **`jump_up`** on cel 11 — tooling should use **`meta.frameTags`**, not hard-coded 14-cel assumptions.
 
 ---
 
