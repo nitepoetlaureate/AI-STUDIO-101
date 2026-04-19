@@ -7,6 +7,12 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Pre-Production 0.9.1] — 2026-04-17
 
+### Changed — Session 013 optional polish (docs)
+
+- `PLAYTEST-004.md` — GUT row **18/18** (post–S1-08) with Session 013 baseline note; **Optional polish** subsection for framebuffer vs composite, feel pass, IMPORT-GODOT drift, hygiene
+- `SESSION-013-PROMPT.md` — **Optional polish (post-closure)** pointer to PLAYTEST-004
+- `tools/capture_verification_013.gd` — run-mode comments (**headless** vs **visible** window)
+
 ### Added — Sprint 1 (S1-06–S1-08)
 
 - `src/shared/enums.gd` — `NpcBehavior`, `InteractionType`, `MeterState`, `ChaosSeverity`, `FeedingPathType`, `BonnieState` (preload from gameplay; avoids global class parse order issues)

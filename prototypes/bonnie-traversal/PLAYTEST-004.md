@@ -24,7 +24,7 @@
 | Check | Result |
 |-------|--------|
 | `godot --headless --path . -s res://tools/boot_test_level_once.gd` | Pass (clean load) |
-| GUT `res://tests/unit` (`gut_cmdln.gd` `-gdir=… -gexit`) | **9/9** (2026-04-19) |
+| GUT `res://tests/unit` (`gut_cmdln.gd` `-gdir=… -gexit`) | **18/18** (post–S1-08 on `main`; Session 013 closure was **9/9**) |
 | `gdcli scene validate` on `TestLevel.tscn`, `BonnieController.tscn` | **Pass** (0 issues, 2026-04-19) |
 | `python3 tools/composite_verification_013.py` | **Pass** (re-run 2026-04-19; **`git status`** clean — outputs match tree) |
 
@@ -43,6 +43,20 @@
 - [x] Session metadata filled in
 - [ ] Core loop / meter / charm flows (S1-18) — **deferred**; prototype traversal only
 - [x] Findings and severity logged (this section)
+
+---
+
+## Optional polish (post–Session 013; not gated)
+
+Tracked for quality and evolution; see also [`SESSION-013-PROMPT.md`](../../SESSION-013-PROMPT.md) end matter.
+
+| Item | Action |
+|------|--------|
+| **Framebuffer stills** | Run [`tools/capture_verification_013.gd`](../../tools/capture_verification_013.gd) **with a visible window** (no `--headless`) if you need SubViewport PNGs; keep [`tools/composite_verification_013.py`](../../tools/composite_verification_013.py) for CI-safe composites. |
+| **Semisolid feel** | Human pass on apex hop, edge pops, margins ([Finding 2](#findings)). |
+| **Round 3 art / IMPORT-GODOT** | Re-export via MCP/Aseprite when art changes; reconcile [`IMPORT-GODOT.md`](IMPORT-GODOT.md) ↔ JSON/PNG; soft-landing / platform-edge micro-read per session brief. |
+| **Phase A re-stat** | When locomotion strip or JSON changes, re-stat sheet + refresh IMPORT-GODOT §3–§4. |
+| **Studio hygiene** | [`NEXT.md`](../../NEXT.md) — Mycelium `compost-workflow.sh --dry-run` when hooks report drift; optional `res://assets/audio/` WAV/OGG; Priority 2 pixel/icon polish. |
 
 ---
 

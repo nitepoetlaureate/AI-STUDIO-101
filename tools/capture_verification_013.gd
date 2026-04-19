@@ -1,13 +1,15 @@
 extends SceneTree
 
 ## Session 013: five 1× PNG captures (720×540) into `art/_critique/verification-013/`.
-## Attempts framebuffer read from a **SubViewport**. Under **`--headless`** + **dummy** GL,
-## `ViewportTexture.get_image()` still fails — use **`python3 tools/composite_verification_013.py`**
+## Reads the framebuffer from a **SubViewport**. Under **`--headless`** + **dummy** GL,
+## `ViewportTexture.get_image()` usually fails — use **`python3 tools/composite_verification_013.py`**
 ## for CI-safe stills built from **`art/export/**` PNGs**.
 ##
 ## Uses **Timer** chains (no `await`) — `await process_frame` on a `SceneTree` `-s` script can stall.
 ##
-## Run: `godot --headless --path . -s res://tools/capture_verification_013.gd`
+## Run modes:
+## - **CI / regression (expect capture to fail):** `godot --headless --path . -s res://tools/capture_verification_013.gd` — use the Python composite script for green stills instead.
+## - **Optional true framebuffer (visible GL):** `godot --path . -s res://tools/capture_verification_013.gd` (omit `--headless`). Then diff `verification-013/*.png` against composite outputs or commit intentionally.
 
 const OUT := "res://prototypes/bonnie-traversal/art/_critique/verification-013/"
 const LEVEL := "res://prototypes/bonnie-traversal/TestLevel.tscn"

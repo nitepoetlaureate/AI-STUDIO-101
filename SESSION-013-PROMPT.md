@@ -86,3 +86,9 @@ Spawn **parallel** `Task` workers with narrow briefs, e.g.:
 - **`godot-gdscript-specialist` (second):** S1-05 AudioManager (if isolated from scene merge conflicts).
 
 Orchestrator merges order: **doc fix → TileMap → Bonnie → NPC → crate physics → audio → verification → compost → merge**.
+
+---
+
+## Optional polish (post-closure; not gated)
+
+Quality and evolution only — **Session 013 required work is complete.** See **`prototypes/bonnie-traversal/PLAYTEST-004.md`** section *Optional polish (post–Session 013; not gated)* for framebuffer captures vs composites, human semisolid feel, Round 3 / IMPORT-GODOT drift, and studio hygiene pointers to **`NEXT.md`**.
