@@ -694,3 +694,19 @@ Merge `feat/s1-01-scaffold` + `feat/s1-03-s1-04-viewport-input` → **S1-05** Au
 ### Next
 
 **Merged to `main` (2026-04-19)** after fast-forward to tip **`d3d2247`** (`art/bonnie-mvp-1` + **`chore: ignore and untrack AI-STUDIO-101.code-workspace`**). Re-verified: **`npx -y gdcli-godot doctor`**, **`scene validate`** on **`TestLevel.tscn`** / **`BonnieController.tscn`**, **GUT** `res://tests/unit` **9/9**, **`python3 tools/composite_verification_013.py`** (tree unchanged). **Mycelium**: batch **`compost-workflow.sh <prefix> --compost`** for `project.godot`, `design`, `.claude`, `prototypes`, `NEXT.md`, `src` — **0 stale** per **`--report`**. Removed stray **`AI-STUDIO-101.code-workspace.untouched-backup`**. Continue Sprint 1 from **S1-06**; human playtest pass on semisolid feel when convenient.
+
+---
+
+## [2026-04-19] Session 014 — S1-09 production traversal + Session 013 polish program
+
+**Developer**: m. raftery + agent  
+**Focus**: `SESSION-014-PROMPT.md` — **Track A** compost dry-run (0 stale); optional framebuffer / semisolid / art deferred per program. **Track B**: production `BonnieController` + `BonnieTraversalConfig` / `bonnie_traversal_config.tres`, `LevelManager.foreach_registered_npc` + `unregister_npc`, GUT + `gdcli script lint`.
+
+### Delivered
+
+- Mergeable vertical slice **B1–B5**: scene shell, state machine + signals, movement subset (run-button model, slide, jump, landing skid, rough landing, squeeze via ceiling ray), stimulus radii + NPC visibility, unit tests.
+- **Follow-up** (documented in `SESSION-014-PROMPT.md`): full AC-T06c–f ladder, AC-T08 camera (S1-10), prototype archive after AC sign-off.
+
+### Next
+
+Playtest production Bonnie in a level with floor collision; iterate `bonnie_traversal_config.tres`; keep **`run/main_scene`** on prototype per ADR-001 until **S1-17**.

@@ -5,7 +5,7 @@
 **For**: Post–Session 013 (main)
 **Written by**: Hawaii Zeke (Claude) on 2026-04-17; Session 013 closure pass 2026-04-19 (m. raftery + agent).
 **Context**: **`main`** includes Session 013 — S1-05 **AudioManager** + GUT; prototype **TestLevel** TileMap + semisolid + **32×32** crate rigid bodies + parallax + NPC strips. **Do not** let the Godot editor drop `window/stretch/aspect="keep"` or `default_texture_filter=1` — `InputSystem` asserts via `ViewportConfig`. Parallel agent playbook: `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md`.
-**Immediate priority**: **S1-09** production Bonnie traversal (`production/sprints/sprint-1.md`) — **`S1-06`–`S1-08` landed** (`NpcState` + `enums.gd`, `LevelManager` + `level_config.tres`, seven `assets/data/*.tres`). **Mycelium:** pre–Session 013 stale-note backlog **composted** (2026-04-19); use **`mycelium/scripts/compost-workflow.sh --dry-run`** when new drift appears. Content under `res://assets/audio/` as WAV/OGG land.
+**Immediate priority**: **S1-09** production Bonnie traversal — **Session 014 landed** first vertical slice (`src/gameplay/bonnie/BonnieController.gd`, `scenes/gameplay/BonnieController.tscn`, expanded `bonnie_traversal_config.tres`, GUT `test_bonnie_controller_production.gd`). **Next:** playtest with floor geometry, tune `.tres`, then sprint row remainder (full AC-T pass, archive prototype only after validation). **`S1-06`–`S1-08`** prerequisites unchanged. **Mycelium:** Session 014 **`compost-workflow.sh --dry-run`** clean; use **`--dry-run`** when drift appears. Content under `res://assets/audio/` as WAV/OGG land.
 
 Read this file first. Then read the locked decisions section before touching anything.
 

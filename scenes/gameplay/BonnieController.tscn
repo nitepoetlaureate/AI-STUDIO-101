@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://bonnie_controller_prod"]
+
+[ext_resource type="Script" path="res://src/gameplay/bonnie/BonnieController.gd" id="1_script"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
+radius = 8.0
+height = 32.0
+
+[node name="BonnieController" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 3
+script = ExtResource("1_script")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_body")
+
+[node name="CeilingCast" type="RayCast2D" parent="."]
+position = Vector2(0, -8)
+target_position = Vector2(0, -22)
+collision_mask = 1
+enabled = true

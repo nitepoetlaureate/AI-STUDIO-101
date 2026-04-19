@@ -7,6 +7,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Pre-Production 0.9.1] — 2026-04-17
 
+### Added — Session 014 (S1-09 slice)
+
+- `SESSION-014-PROMPT.md` — handoff brief (Track A default defer + Track B phases B1–B5, AC-T priority subset, verification).
+- `scenes/gameplay/BonnieController.tscn` — production **CharacterBody2D** shell (`CeilingCast` + capsule collision).
+- **S1-09** — `src/gameplay/bonnie/BonnieController.gd`: 13-state traversal spine, `state_changed` / `stimulus_radius_updated`, `NpcState.visible_to_bonnie` via `LevelManager.foreach_registered_npc`; ground/air/slide/landing/rough/daze/squeeze/climb/ledge-pullup paths; gameplay tuning from `bonnie_traversal_config.tres` only (expanded `BonnieTraversalConfig.gd`: jump-hold, air-sneak scale, climb/ledge/squeeze/slide-exit shape fields).
+- `LevelManager` — `foreach_registered_npc`, `unregister_npc`.
+- `tests/unit/test_bonnie_controller_production.gd` — config load, physics smoke, stimulus visibility, `state_changed` under input; `test_level_manager.gd` — foreach + unregister.
+
 ### Changed — Session 013 optional polish (docs)
 
 - `PLAYTEST-004.md` — GUT row **18/18** (post–S1-08) with Session 013 baseline note; **Optional polish** subsection for framebuffer vs composite, feel pass, IMPORT-GODOT drift, hygiene

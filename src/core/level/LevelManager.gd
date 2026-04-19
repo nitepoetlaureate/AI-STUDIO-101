@@ -46,6 +46,20 @@ func get_active_npc_count() -> int:
 	return _npc_states.size()
 
 
+## Iterates registered NPCs for traversal / awareness (System 6). Callable receives `(npc_id: StringName, npc_node: Node2D, state: NpcState)`.
+func foreach_registered_npc(callback: Callable) -> void:
+	for npc_id: Variant in _npc_states.keys():
+		var st: NpcState = _npc_states[npc_id] as NpcState
+		var n: Node2D = _npc_nodes.get(npc_id, null) as Node2D
+		callback.call(npc_id as StringName, n, st)
+
+
+func unregister_npc(npc_id: StringName) -> void:
+	_npc_states.erase(npc_id)
+	_npc_nodes.erase(npc_id)
+	_npc_rooms.erase(npc_id)
+
+
 func get_room_id_at(world_pos: Vector2) -> StringName:
 	for rid: Variant in _room_bounds.keys():
 		var rect: Rect2 = _room_bounds[rid] as Rect2

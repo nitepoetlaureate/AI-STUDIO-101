@@ -31,6 +31,29 @@ func test_get_room_id_at() -> void:
 	assert_eq(_lm.get_room_id_at(Vector2(999, 999)), &"")
 
 
+func test_foreach_registered_npc() -> void:
+	var n := Node2D.new()
+	add_child_autoqfree(n)
+	var st := NpcState.create_michael_default()
+	_lm.register_npc(&"loop", n, &"kitchen", st)
+	var seen: Array = []
+	_lm.foreach_registered_npc(func(id: StringName, node: Node2D, s: NpcState) -> void:
+		seen.append([id, node, s])
+	)
+	assert_eq(seen.size(), 1)
+	assert_eq(seen[0][0], &"loop")
+	assert_same(seen[0][2], st)
+
+
+func test_unregister_npc_removes_registry() -> void:
+	var n := Node2D.new()
+	add_child_autoqfree(n)
+	_lm.register_npc(&"gone", n, &"kitchen", NpcState.create_michael_default())
+	assert_eq(_lm.get_active_npc_count(), 1)
+	_lm.unregister_npc(&"gone")
+	assert_eq(_lm.get_active_npc_count(), 0)
+
+
 func test_update_npc_room_signal() -> void:
 	var fired: Array = []
 	_lm.npc_room_changed.connect(func(id: StringName, old_r: StringName, new_r: StringName) -> void:
