@@ -1,0 +1,4 @@
+kind context
+edge explains commit:4a3f56a2395a5480fb5eafe74bd387ba5e0f09c1
+
+S1-05: AudioManager buses Music/SFX/Ambient, play_sfx/play_music/crossfade_music/set_bus_volume, SFX pool. IMPORT-GODOT: 528x32 33 cels + full frameTags; filter doc=1. project.godot default_texture_filter=1 for ViewportConfig.
