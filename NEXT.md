@@ -1,5 +1,7 @@
 # BONNIE! — Next Steps Handoff
 
+**Session 013:** Open `SESSION-013-PROMPT.md` first (integration + S1-05 + Cursor↔Claude bridge). Cursor: enable **Third-party skills** so `.claude` hooks run; see `.cursor/rules/claude-game-studio-bridge.mdc`.
+
 **For**: Session 012
 **Written by**: Hawaii Zeke (Claude) on 2026-04-17
 **Context**: **`main` at `89b4074`+** — Sprint 1 S1-01 through S1-04 merged; prototype **geometry squeeze** + TestLevel squeeze/rigid fixes + gamepad `project.godot` on `main`. **Do not** let the Godot editor drop `window/stretch/aspect="keep"` or `default_texture_filter=1` — `InputSystem` asserts via `ViewportConfig`. Parallel agent playbook: `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md`.

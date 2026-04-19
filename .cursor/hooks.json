@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": ".cursor/hooks/cursor-after-file-edit.sh",
+        "timeout": 15
+      }
+    ],
+    "beforeShellExecution": [
+      {
+        "command": ".cursor/hooks/cursor-before-gdcli-shell.sh",
+        "matcher": "gdcli|gdcli-godot",
+        "timeout": 20
+      }
+    ],
+    "subagentStart": [
+      {
+        "command": ".cursor/hooks/cursor-subagent-start.sh",
+        "timeout": 5
+      }
+    ]
+  }
+}

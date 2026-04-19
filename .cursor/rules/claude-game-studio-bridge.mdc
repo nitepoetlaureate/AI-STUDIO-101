@@ -1,0 +1,38 @@
+---
+description: Bridge Cursor agents to Claude Code Game Studio skills, hooks, and specialist patterns
+alwaysApply: true
+---
+
+# Claude Code Game Studio — Cursor bridge
+
+## Third-party hooks (required)
+
+1. Cursor **Settings → Features → Third-party skills** must be **enabled** so `.claude/settings.json` hooks run (`PreToolUse` / `PostToolUse` / `SessionStart` / etc.). See https://cursor.com/docs/reference/third-party-hooks  
+2. **Project-native** hooks in `.cursor/hooks.json` add: **`afterFileEdit`** (mycelium touch tracking + `assets/` validation), **`subagentStart`** (audit log), **`beforeShellExecution`** for commands matching **`gdcli|gdcli-godot`** (Mycelium context injection for `.tscn` paths in the command).
+
+Do **not** duplicate `preToolUse` for Write/Edit in `.cursor/hooks.json` — that is already handled by `.claude` when third-party is on.
+
+## Skills location
+
+- Canonical skill bodies: **`.claude/skills/<skill-name>/SKILL.md`** (and siblings `reference.md`, etc.).
+- Cursor also has **symlinks** under **`.cursor/skills/<skill-name>/`** → same content. When a task matches a skill’s description, **read the SKILL.md from either path** before improvising.
+
+## Specialist agents (Task tool)
+
+Use **`Task`** with an appropriate **`subagent_type`** from the studio roster (see `CLAUDE.md` / `.claude` coordinator docs): e.g. `godot-gdscript-specialist`, `technical-artist`, `ui-programmer`, `gameplay-programmer`, `sound-designer`, `qa-tester`, `explore`, `shell`, etc. Give each subagent a **single atomic brief** and the **exact file paths** to read.
+
+## gdcli (Godot)
+
+- Prefer **Shell**: `/usr/local/bin/npx -y gdcli-godot <subcommand> …` (adjust `npx` path if your machine differs).  
+- **`scene edit` is allowed** — before running it, **`mycelium/scripts/context-workflow.sh <scene>`** on every `.tscn` you will change; after your reviewed commit, **`mycelium.sh note HEAD -k context -m "…"`**.  
+- MCP `CallMcpTool` for gdcli may hang; do not rely on it for automation.
+
+## Mycelium discipline
+
+- **Pre-edit:** `mycelium/scripts/context-workflow.sh <repo-relative-path>` (or rely on hooks where they fire).  
+- **Post-commit (after your review):** `mycelium.sh note HEAD -k context -m "…"` and file notes as per `.claude/rules/mycelium.md`.  
+- Session 013: run **`mycelium/scripts/compost-workflow.sh`** early in the session (stale notes backlog).
+
+## Session handoff
+
+Open **`SESSION-013-PROMPT.md`** and **`NEXT.md`** at session start.
