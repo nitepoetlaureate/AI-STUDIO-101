@@ -1,11 +1,11 @@
 # BONNIE! — Next Steps Handoff
 
-**Session 013 (integration gate):** **Merged to `main` (2026-04-17).** Deliverables — TileMap **`surface`/`terrain`** + semisolid row, env **`Sprite2D`** pass (one **SoftLandingPad** greybox per lock), Bonnie locomotion + semisolid mask, **NPC** MCP exports + **16/24/32 px** folders, **`IMPORT-GODOT.md`** §3.5, **`PLAYTEST-004.md`**, **`verification-013/`** five **720×540** composites from **`art/export/**`** (`python3 tools/composite_verification_013.py`). **Next:** **S1-06** `NpcState` + shared enums; parallel prototype polish only if capacity allows. Chaos meter / S1-18 full-loop play remains separate. Cursor: **Third-party skills** + `.cursor/rules/claude-game-studio-bridge.mdc`.
+**Session 013 (integration gate):** **Merged to `main` (2026-04-19).** Deliverables — TileMap **`surface`/`terrain`** + semisolid row, env **`Sprite2D`** pass (one **SoftLandingPad** greybox per lock), Bonnie locomotion + semisolid mask, **NPC** MCP exports + **16/24/32 px** folders, **`IMPORT-GODOT.md`** §3.5, **`PLAYTEST-004.md`**, **`verification-013/`** five **720×540** composites from **`art/export/**`** (`python3 tools/composite_verification_013.py`). **`AI-STUDIO-101.code-workspace`** is **gitignored** (not tracked). **Next:** **S1-06** `NpcState` + shared enums; parallel prototype polish only if capacity allows. Chaos meter / S1-18 full-loop play remains separate. Cursor: **Third-party skills** + `.cursor/rules/claude-game-studio-bridge.mdc`.
 
 **For**: Post–Session 013 (main)
-**Written by**: Hawaii Zeke (Claude) on 2026-04-17
+**Written by**: Hawaii Zeke (Claude) on 2026-04-17; Session 013 closure pass 2026-04-19 (m. raftery + agent).
 **Context**: **`main`** includes Session 013 — S1-05 **AudioManager** + GUT; prototype **TestLevel** TileMap + semisolid + **32×32** crate rigid bodies + parallax + NPC strips. **Do not** let the Godot editor drop `window/stretch/aspect="keep"` or `default_texture_filter=1` — `InputSystem` asserts via `ViewportConfig`. Parallel agent playbook: `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md`.
-**Immediate priority**: **S1-06** `NpcState` + shared enums (`production/sprints/sprint-1.md`). Optional: **`mycelium/scripts/compost-workflow.sh`** for stale notes; content under `res://assets/audio/` as WAV/OGG land.
+**Immediate priority**: **S1-06** `NpcState` + shared enums (`production/sprints/sprint-1.md`). **Mycelium:** pre–Session 013 stale-note backlog **composted** (2026-04-19); use **`mycelium/scripts/compost-workflow.sh --dry-run`** when new drift appears. Content under `res://assets/audio/` as WAV/OGG land.
 
 Read this file first. Then read the locked decisions section before touching anything.
 
@@ -117,9 +117,9 @@ Sprint 1 plan is approved with 30 pre-sprint decisions locked. See `production/s
 - Stream B (Gameplay, after S1-06): S1-09 Traversal → S1-10 Camera → S1-11 NPC → S1-12 Social → S1-13 Objects → S1-14 Stubs → S1-15 Chaos → S1-16 UI
 - Stream C (Level, after all): S1-17 Test Apartment → S1-18 Playtest
 
-### Priority 1: Stale Mycelium Notes (deferred from Session 009)
+### Priority 1: Mycelium hygiene (ongoing)
 
-21 stale notes on old blob versions. Run `mycelium/scripts/compost-workflow.sh` interactively.
+Stale notes tied to **pre–Session 013** blobs were **batch-composted** (2026-04-19) via `mycelium/scripts/compost-workflow.sh <path-prefix> --compost` (e.g. `prototypes`, `design`). When `mycelium.sh` / session hooks report new drift, run **`compost-workflow.sh --dry-run`** first, then compost or renew as appropriate.
 
 ### Priority 2: Opportunistic Art via pixel-plugin (if bandwidth permits)
 

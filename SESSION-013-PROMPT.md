@@ -1,6 +1,6 @@
 # Session 013 — Opening brief (integration + Sprint 1 audio + studio tooling)
 
-**Status — Session 013 closed (2026-04-19):** Phases **A–E** complete on `main` (fast-forward from `art/bonnie-mvp-1` through **`d3d2247`**, including **`chore: ignore and untrack AI-STUDIO-101.code-workspace`**) — TileMap **`surface`/`terrain`** + semisolid row, **32×32** rigid crate collision + scaled sprite, **Bonnie** strip locomotion + semisolid **`collision_mask`**, **parallax** + env **`Sprite2D`** (one **SoftLandingPad** `ColorRect` greybox retained per lock), **Michael + Christen** NPC exports + in-scene **`AnimatedSprite2D`**, **`verification-013/*.png`** (five **720×540** composites via **`tools/composite_verification_013.py`**), **`PLAYTEST-004.md`**, **S1-05** `AudioManager` + GUT, **`gdcli scene validate`** clean on touched scenes, **GUT** `res://tests/unit` **9/9**. **`AI-STUDIO-101.code-workspace`** is **gitignored** and **not tracked** (local editor config only). Optional: in-editor **`tools/capture_verification_013.gd`** if framebuffer grabs are needed later.
+**Status — Session 013 closed (2026-04-19):** Phases **A–E** complete on `main` (fast-forward from `art/bonnie-mvp-1` through **`d3d2247`**, including **`chore: ignore and untrack AI-STUDIO-101.code-workspace`**) — **Mycelium** stale backlog **composted** (**`compost-workflow.sh --report`**: 0 stale) — TileMap **`surface`/`terrain`** + semisolid row, **32×32** rigid crate collision + scaled sprite, **Bonnie** strip locomotion + semisolid **`collision_mask`**, **parallax** + env **`Sprite2D`** (one **SoftLandingPad** `ColorRect` greybox retained per lock), **Michael + Christen** NPC exports + in-scene **`AnimatedSprite2D`**, **`verification-013/*.png`** (five **720×540** composites via **`tools/composite_verification_013.py`**), **`PLAYTEST-004.md`**, **S1-05** `AudioManager` + GUT, **`gdcli scene validate`** clean on touched scenes, **GUT** `res://tests/unit` **9/9**. **`AI-STUDIO-101.code-workspace`** is **gitignored** and **not tracked** (local editor config only). Optional: in-editor **`tools/capture_verification_013.gd`** if framebuffer grabs are needed later.
 
 **Read first:** `NEXT.md`, `CLAUDE.md`, `.cursor/rules/claude-game-studio-bridge.mdc`, `prototypes/bonnie-traversal/art/_critique/round-2-intent.md` (Round 3 P0).
 
@@ -73,7 +73,7 @@ Implement **`AudioManager.gd`** per `design/gdd/audio-manager.md` + `production/
 2. **`PLAYTEST-004.md`** short note.  
 3. **`gdcli scene validate`** on touched scenes.  
 4. **`CHANGELOG.md` / `DEVLOG.md`** entries.  
-5. Merge to `main` **after your review**. **Done** — producer-approved merge **2026-04-17**.
+5. Merge to `main` **after your review**. **Done** — merged and verified on **`main` (2026-04-19)**; see status header and `DEVLOG.md`.
 
 ## Subagent dispatch (recommended)
 

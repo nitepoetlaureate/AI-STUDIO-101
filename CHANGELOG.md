@@ -17,6 +17,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Changed — Session 013
 
+- `NEXT.md`, `SESSION-013-PROMPT.md`, `PLAYTEST-004.md`, `DEVLOG.md` — merge dates (**2026-04-19**), **mycelium** backlog cleared, verification rows aligned with **`main`**
+- **Mycelium** — stale notes on pre-merge blobs **composted** (`mycelium/scripts/compost-workflow.sh <path-prefix> --compost`); `compost-workflow.sh --report`: **0 stale**
+- `tools/composite_verification_013.py` — closure re-run; **`verification-013/*.png`** unchanged in git
 - `IMPORT-GODOT.md` — §3.5 **NPC** strips + multi-scale table; §4.3 locomotion **implemented**; §6 **TestLevel** TileMap **`surface`/`terrain`** + semisolid + scene sprite pass; §7 checklist updated
 - `PLAYTEST-004.md` — Session 013 integration gate (composite verification stills + automated check results)
 - `project.godot` — **`2d_physics` layer names** `world` / `semisolid`; `default_texture_filter=1` (matches `ViewportConfig` / GUT headless)
@@ -25,7 +28,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `verification-013/` — dropped duplicate legacy filenames (`03_03_*`, `04_04_*`, `05_05_*`); tree matches `composite_verification_013.py` outputs only
 - `src/core/audio/AudioManager.gd` — **S1-05**: buses Master/Music/SFX/Ambient, `play_sfx`, `play_music`, `crossfade_music`, `set_bus_volume`; pooled SFX players
 - `tests/unit/test_audio_manager.gd` — GUT coverage for audio API headless
-- `.gitignore` — ignore `art/npc/source/_scale_work*.aseprite` MCP scale scratch files
+- `.gitignore` — ignore `art/npc/source/_scale_work*.aseprite` MCP scale scratch files; **`AI-STUDIO-101.code-workspace`** (local editor; not tracked)
 
 ### Added — Session 011
 - `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md` — how to run parallel Cursor Agents for Sprint 1 + prototype follow-up

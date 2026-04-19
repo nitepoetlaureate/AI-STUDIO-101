@@ -2,8 +2,8 @@
 
 ## Session Info
 
-- **Date**: 2026-04-17
-- **Build**: HEAD (Session 013 — TileMap + semisolid + env sprites + NPC MCP exports + Bonnie locomotion)
+- **Date**: 2026-04-19 (integration merged to `main`; composites re-checked)
+- **Build**: `main` @ Session 013 — TileMap + semisolid + env sprites + NPC MCP exports + Bonnie locomotion
 - **Duration**: Automated validation + doc pass (no full manual play session)
 - **Tester**: Integration pass (Cursor agent + Godot 4.6 headless)
 - **Platform**: macOS / Godot 4.6
@@ -24,8 +24,9 @@
 | Check | Result |
 |-------|--------|
 | `godot --headless --path . -s res://tools/boot_test_level_once.gd` | Pass (clean load) |
-| GUT `res://tests/unit` (`gut_cmdln.gd` `-gdir=… -gexit`) | **9/9** (2026-04-17) |
-| `gdcli scene validate` on `TestLevel.tscn`, `BonnieController.tscn` | **Pass** (0 issues, 2026-04-17) |
+| GUT `res://tests/unit` (`gut_cmdln.gd` `-gdir=… -gexit`) | **9/9** (2026-04-19) |
+| `gdcli scene validate` on `TestLevel.tscn`, `BonnieController.tscn` | **Pass** (0 issues, 2026-04-19) |
+| `python3 tools/composite_verification_013.py` | **Pass** (re-run 2026-04-19; **`git status`** clean — outputs match tree) |
 
 ---
 
