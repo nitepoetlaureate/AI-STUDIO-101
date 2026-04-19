@@ -107,7 +107,8 @@ Sprint 1 plan is approved with 30 pre-sprint decisions locked. See `production/s
 **Completed Session 010–011:** S1-03 Viewport + S1-04 Input on `main`; commit `89b4074` — prototype geometry squeeze, TestLevel squeeze/rigid fixes, gamepad `project.godot`, tracked GDD/session artifacts.
 
 **Next tasks** (sequential):
-1. **S1-05**: Audio Manager (four buses, API stubs filled in)
+1. ~~**S1-05**: Audio Manager~~ — **Done** Session 013 (`AudioManager.gd` + GUT). Catalog assets under `res://assets/audio/{sfx,music}/` as you add WAV/OGG.
+2. **S1-06**: `NpcState` + shared enums (next core blocker)
 
 **Then parallel streams open**:
 - Stream A (Core): S1-03 Viewport → S1-04 Input → S1-05 Audio → S1-06 NpcState → S1-07 Level Manager → S1-08 Config
