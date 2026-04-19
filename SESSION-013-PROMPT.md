@@ -1,5 +1,7 @@
 # Session 013 — Opening brief (integration + Sprint 1 audio + studio tooling)
 
+**Progress (automated pass):** Phase A **IMPORT-GODOT ↔ JSON** reconciled; **`default_texture_filter=1`** fixed for `ViewportConfig`; **S1-05** `AudioManager` + **`tests/unit/test_audio_manager.gd`** (4/4 GUT); sprint + `NEXT` updated. **Not started here:** TileMap collision/custom data, Bonnie `SpriteFrames` `.tscn`, 32×32 crate impulse, NPC exports in scene, verification PNGs, PLAYTEST-004, compost.
+
 **Read first:** `NEXT.md`, `CLAUDE.md`, `.cursor/rules/claude-game-studio-bridge.mdc`, `prototypes/bonnie-traversal/art/_critique/round-2-intent.md` (Round 3 P0).
 
 ## Repo paths (canonical)
