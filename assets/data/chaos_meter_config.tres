@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ChaosMeterConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/chaos/ChaosMeterConfig.gd" id="1_cmc"]
+
+[resource]
+script = ExtResource("1_cmc")
+chaos_fill_cap = 0.55
+social_fill_weight = 0.45
+meter_threshold_cold = 0.15
+meter_threshold_warming = 0.40
+meter_threshold_hot = 0.55
+meter_threshold_converging = 0.75
+meter_threshold_tipping = 0.95
+fill_chase_speed = 4.0

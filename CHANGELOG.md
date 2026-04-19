@@ -7,6 +7,15 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Pre-Production 0.9.1] — 2026-04-17
 
+### Added — Sprint 1 (S1-06–S1-08)
+
+- `src/shared/enums.gd` — `NpcBehavior`, `InteractionType`, `MeterState`, `ChaosSeverity`, `FeedingPathType`, `BonnieState` (preload from gameplay; avoids global class parse order issues)
+- `src/shared/stimulus.gd` — minimal stimulus payload for `NpcState.active_stimuli`
+- `NpcState` factory defaults — `create_michael_default()` / `create_christen_default()` per npc-personality §7
+- `LevelManager` — `register_npc`, `register_room`, `update_npc_room`, `get_npc_state`, `get_active_npc_count`, `get_room_id_at`, `get_level_chaos_baseline`, signals + `level_config` default load
+- `assets/data/level_config.tres`, `bonnie_traversal_config.tres`, `chaos_meter_config.tres`, `social_system_config.tres`, `npc/michael_profile.tres`, `npc/christen_profile.tres` — GDD-aligned tuning (seven data files including existing `input_system_config.tres`)
+- `tests/unit/test_npc_state.gd`, `tests/unit/test_level_manager.gd` — GUT coverage
+
 ### Added — Session 013
 
 - `SESSION-013-PROMPT.md` — integration + audio + Cursor bridge handoff

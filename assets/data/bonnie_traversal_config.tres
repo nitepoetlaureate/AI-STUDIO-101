@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="BonnieTraversalConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/bonnie/BonnieTraversalConfig.gd" id="1_btc"]
+
+[resource]
+script = ExtResource("1_btc")
+walk_speed = 180.0
+run_max_speed = 360.0
+sneak_max_speed = 108.0
+climb_speed = 90.0
+slide_trigger_speed = 280.0
