@@ -693,4 +693,4 @@ Merge `feat/s1-01-scaffold` + `feat/s1-03-s1-04-viewport-input` → **S1-05** Au
 
 ### Next
 
-**Merged to `main` (2026-04-17)** per producer sign-off. Continue Sprint 1 from **S1-06**; human playtest pass on semisolid feel when convenient.
+**Merged to `main` (2026-04-19)** after fast-forward to tip **`d3d2247`** (`art/bonnie-mvp-1` + **`chore: ignore and untrack AI-STUDIO-101.code-workspace`**). Re-verified: **`npx -y gdcli-godot doctor`**, **`scene validate`** on **`TestLevel.tscn`** / **`BonnieController.tscn`**, **GUT** `res://tests/unit` **9/9**. **Mycelium**: `mycelium/scripts/compost-workflow.sh --dry-run` (33 stale notes listed); interactive compost still optional — run when ready to review removals. Continue Sprint 1 from **S1-06**; human playtest pass on semisolid feel when convenient.
