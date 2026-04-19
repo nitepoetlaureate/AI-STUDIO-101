@@ -117,7 +117,7 @@ Sprint 1 plan is approved with 30 pre-sprint decisions locked. See `production/s
 
 **Then parallel streams open**:
 - Stream A (Core): S1-03 Viewport → S1-04 Input → S1-05 Audio → ~~S1-06 NpcState~~ → ~~S1-07 Level Manager~~ → ~~S1-08 Config~~ → S1-09 Traversal…
-- Stream B (Gameplay, after S1-06): S1-09 Traversal → S1-10 Camera → S1-11 NPC → S1-12 Social → S1-13 Objects → S1-14 Stubs → S1-15 Chaos → S1-16 UI
+- Stream B (Gameplay, after S1-08): S1-09 Traversal → S1-10 Camera → S1-11 NPC → S1-12 Social → S1-13 Objects → S1-14 Stubs → S1-15 Chaos → S1-16 UI
 - Stream C (Level, after all): S1-17 Test Apartment → S1-18 Playtest
 
 ### Priority 1: Mycelium hygiene (ongoing)
