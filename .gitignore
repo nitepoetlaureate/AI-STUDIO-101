@@ -7,6 +7,7 @@
 .DS_Store
 Thumbs.db
 Desktop.ini
+AI-STUDIO-101.code-workspace
 
 # === Claude Code Local ===
 .claude/settings.local.json
