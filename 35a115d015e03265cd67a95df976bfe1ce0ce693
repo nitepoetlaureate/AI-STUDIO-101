@@ -1,4 +1,5 @@
 kind summary
+status composted
 edge applies-to blob:35a115d015e03265cd67a95df976bfe1ce0ce693
 edge targets-path path:prototypes/bonnie-traversal/BonnieController.gd
 
