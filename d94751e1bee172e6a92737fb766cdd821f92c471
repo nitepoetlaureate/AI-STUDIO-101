@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:d94751e1bee172e6a92737fb766cdd821f92c471
+edge targets-path path:src/core/level/LevelManager.gd
+
+LOS pass Tier A/B/C: syncs NpcState.visible_to_bonnie from ledger + LineOfSightEvaluator; register_npc; get_visibility_ledger. Session 015.
