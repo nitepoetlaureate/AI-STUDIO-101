@@ -41,7 +41,7 @@ func test_idle_stimulus_sets_visible_to_bonnie_within_radius() -> void:
 	_bonnie = scn.instantiate() as CharacterBody2D
 	_bonnie.global_position = Vector2.ZERO
 	add_child_autoqfree(_bonnie)
-	await wait_process_frames(3)
+	await wait_physics_frames(6)
 	var st: NpcState = _lm.get_npc_state(&"gut_bonnie_npc") as NpcState
 	assert_true(st.visible_to_bonnie)
 
@@ -52,7 +52,26 @@ func test_idle_stimulus_clears_visibility_beyond_radius() -> void:
 	_bonnie = scn.instantiate() as CharacterBody2D
 	_bonnie.global_position = Vector2.ZERO
 	add_child_autoqfree(_bonnie)
-	await wait_process_frames(3)
+	await wait_physics_frames(6)
+	var st: NpcState = _lm.get_npc_state(&"gut_bonnie_npc") as NpcState
+	assert_false(st.visible_to_bonnie)
+
+
+func test_wall_blocks_visible_to_bonnie_when_in_radius() -> void:
+	var scn := load("res://scenes/gameplay/BonnieController.tscn") as PackedScene
+	_bonnie = scn.instantiate() as CharacterBody2D
+	_bonnie.global_position = Vector2.ZERO
+	var wall := StaticBody2D.new()
+	wall.collision_layer = 1
+	wall.position = Vector2(48, 0)
+	var cs := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(24, 160)
+	cs.shape = rect
+	wall.add_child(cs)
+	add_child_autoqfree(wall)
+	add_child_autoqfree(_bonnie)
+	await wait_physics_frames(8)
 	var st: NpcState = _lm.get_npc_state(&"gut_bonnie_npc") as NpcState
 	assert_false(st.visible_to_bonnie)
 

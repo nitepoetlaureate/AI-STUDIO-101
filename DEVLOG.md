@@ -5,6 +5,16 @@ a sandbox chaos puzzle game developed with Claude Code Game Studios.
 
 ---
 
+## [2026-04-19] Session 015 — LOS A+C implementation
+
+**Shipped:** `LineOfSightConfig` + `.tres`, `LineOfSightEvaluator`, `VisibilityLedger`, **`LevelManager` `_physics_process` LOS** (Tier A/B/C, high-primary ray to NPC chest from profile defaults), **`BonnieController` LOS markers** + `bonnie` group + `get_los_*` / `get_current_stimulus_radius`, physics layer **`npc`**, **`NpcProfile` LOS fields**, GUT (`test_line_of_sight_evaluator.gd`, wall integration test). **245** lines `LevelManager.gd` (< 450 extract threshold). **Follow-up:** consumer inventory rows + §10 cutover; NPC colliders on layer **npc** when characters block LOS.
+
+## [2026-04-19] Session 015 prep — LOS handoff (documentation)
+
+**Focus:** Locked LOS walkthrough (plan) rolled into **`SESSION-015-PROMPT.md`**; **`design/gdd/los-portal.md`** stub; **`NEXT.md`**, **`sprint-1.md`** (S1-09 **In progress**), **`CLAUDE.md`** naming/Mycelium; **`CHANGELOG`** Unreleased section.
+
+---
+
 ## [2026-04-05] Session 001 — Pre-Production Sprint 0
 
 **Developer**: m. raftery

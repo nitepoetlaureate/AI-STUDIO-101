@@ -49,7 +49,7 @@
 
 ## Track B — S1-09 production Bonnie traversal (essential)
 
-**Goal:** Production `BonnieController` satisfies sprint **S1-09** slice: enum-driven **13 states**, tuning **only** from `bonnie_traversal_config.tres`, **`state_changed`**, **`stimulus_radius_updated`**, **`visible_to_bonnie`** via **`LevelManager`** iteration (world distance from Bonnie to each registered NPC `Node2D` ≤ current stimulus radius → `true`; else `false`).
+**Goal:** Production `BonnieController` satisfies sprint **S1-09** slice: enum-driven **13 states**, tuning **only** from `bonnie_traversal_config.tres`, **`state_changed`**, **`stimulus_radius_updated`**, **`visible_to_bonnie`** owned by **`LevelManager`** LOS pass (**Session 015 — A+C**: in-radius **and** line-of-sight; see **`SESSION-015-PROMPT.md`**). Bonnie notifies invalidation and exposes LOS rig positions only.
 
 ```mermaid
 flowchart LR
@@ -104,7 +104,7 @@ flowchart LR
 ### Phase B4 — Stimulus radius + NPC visibility
 
 - Implement **`stimulus_radius_updated(radius: float)`** whenever effective radius changes (state-driven per GDD §3.4: SLIDING = run radius + slide bonus).
-- **`LevelManager.foreach_registered_npc`** (or equivalent) to resolve each NPC’s `Node2D` position; set **`NpcState.visible_to_bonnie`** by distance rule above.
+- **`LevelManager`** LOS pass (**Session 015 — A+C**): distance to registered NPC root **and** line-of-sight (high-primary ray to chest); updates **`VisibilityLedger`** and syncs **`NpcState.visible_to_bonnie`**. **`BonnieController`** notifies invalidation + exposes LOS rig API only — it does **not** own the per-NPC visibility loop. See **`SESSION-015-PROMPT.md`**.
 - Ambiguous rules → **`CLAUDE.md`**: question → options → decision.
 
 ### Phase B5 — Verification
@@ -137,3 +137,7 @@ flowchart LR
 - This file is **self-contained** for a new agent.
 - Track B lands at least **one mergeable vertical slice** (**B1+B2** minimum) with green GUT + gdcli; **B3–B5** per implementation session.
 - Track A items are **done**, **documented deferred**, or **assigned human** — no false “complete” claims.
+
+## Next session
+
+- **`SESSION-015-PROMPT.md`** — **A+C** visibility (distance + LOS), `VisibilityLedger`, LevelManager LOS pass; consumer inventory; §10 cutover after inventory.

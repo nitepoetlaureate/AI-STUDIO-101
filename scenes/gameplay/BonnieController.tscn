@@ -14,6 +14,14 @@ script = ExtResource("1_script")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_body")
 
+[node name="LosRig" type="Node2D" parent="."]
+
+[node name="LosHigh" type="Marker2D" parent="LosRig"]
+position = Vector2(0, -14)
+
+[node name="LosLow" type="Marker2D" parent="LosRig"]
+position = Vector2(0, 4)
+
 [node name="CeilingCast" type="RayCast2D" parent="."]
 position = Vector2(0, -8)
 target_position = Vector2(0, -22)

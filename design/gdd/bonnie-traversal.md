@@ -663,7 +663,12 @@ from long falls that would otherwise create oversized rough landing durations.
   **Camera quality is co-equal with traversal feel. Bad camera = bad game.**
   Camera system must be prototyped alongside traversal, not after.
 - **Reactive NPC System (9)** — reads BONNIE's current movement state and
-  stimulus radius to determine `visible_to_bonnie` and ambient NPC stimulus
+  stimulus radius; **`visible_to_bonnie`** on `NpcState` is set by the **LevelManager**
+  LOS pass (**A+C**: in-radius **and** line-of-sight). Dual ray origins on Bonnie
+  (**high-primary**) target the NPC chest from profile defaults; mask includes **`world`**
+  + **`semisolid`**; NPC bodies that should block rays use physics layer **`npc`** when
+  production scenes land. Full consumer inventory and locks: **`SESSION-015-PROMPT.md`**.
+  Ambient NPC stimulus still keys off movement + radius as elsewhere in this GDD.
 - **Interactive Object System (7)** — reads BONNIE's velocity and collision
   events to determine object interaction force
 - **Bidirectional Social System (12)** — proximity interaction (rub, sit-near)

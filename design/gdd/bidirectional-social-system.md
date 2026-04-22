@@ -923,7 +923,7 @@ Resolution: NpcState as shared data object. Neither system calls the other.
 
 **Frame execution order:**
 1. Input System processes player input
-2. BONNIE Traversal System updates movement state, stimulus radii, writes `visible_to_bonnie`
+2. BONNIE Traversal System updates movement state and stimulus radii; **`LevelManager`** syncs `NpcState.visible_to_bonnie` from LOS + **`VisibilityLedger`** (distance + line-of-sight — see **`SESSION-015-PROMPT.md`**).
 3. Reactive NPC System processes all active stimuli → updates `emotional_level`,
    `current_behavior`, `comfort_receptivity`
 4. **Bidirectional Social System reads updated NpcState → resolves BONNIE's active

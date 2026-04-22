@@ -14,3 +14,7 @@ extends Resource
 @export var comfort_receptivity_floor: float
 @export var comfort_receptivity_default: float
 @export var can_flee: bool
+
+@export_group("Line of Sight (character-local)")
+@export var los_nose_bridge_local: Vector2 = Vector2(0, -18)
+@export var los_chest_from_nose_local: Vector2 = Vector2(0, 24)

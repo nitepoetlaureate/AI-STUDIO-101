@@ -1,11 +1,15 @@
 # BONNIE! — Next Steps Handoff
 
-**Session 013 (integration gate):** **Merged to `main` (2026-04-19).** Deliverables — TileMap **`surface`/`terrain`** + semisolid row, env **`Sprite2D`** pass (one **SoftLandingPad** greybox per lock), Bonnie locomotion + semisolid mask, **NPC** MCP exports + **16/24/32 px** folders, **`IMPORT-GODOT.md`** §3.5, **`PLAYTEST-004.md`**, **`verification-013/`** five **720×540** composites from **`art/export/**`** (`python3 tools/composite_verification_013.py`). **`AI-STUDIO-101.code-workspace`** is **gitignored** (not tracked). **Next:** **S1-09** production Bonnie traversal (`src/gameplay/bonnie/`); parallel prototype polish only if capacity allows. Chaos meter / S1-18 full-loop play remains separate. Cursor: **Third-party skills** + `.cursor/rules/claude-game-studio-bridge.mdc`.
+**Session 015 (closed 2026-04-19):** **`visible_to_bonnie` = A+C** — `src/core/visibility/*`, **`LevelManager`** LOS pass, Bonnie **`LosHigh`/`LosLow`**, layer **`npc`** in `project.godot`. Consumer inventory + **§10 hard cutover** in **`SESSION-015-PROMPT.md`**. **S1-09 Done** still = human **AC-T01–T08** in **S1-17 apartment** only.
 
-**For**: Post–Session 013 (main)
-**Written by**: Hawaii Zeke (Claude) on 2026-04-17; Session 013 closure pass 2026-04-19 (m. raftery + agent).
+**Session 016 (working title — rename when producer locks milestone):** **`S1-10` Camera** — next sprint gameplay row after traversal slice; open **`production/sprints/sprint-1.md`** for task detail. Handoff doc: add a dedicated `SESSION-016-PROMPT.md` when scope is written.
+
+**Session 013 (integration gate):** **Merged to `main` (2026-04-19).** Deliverables — TileMap **`surface`/`terrain`** + semisolid row, env **`Sprite2D`** pass (one **SoftLandingPad** greybox per lock), Bonnie locomotion + semisolid mask, **NPC** MCP exports + **16/24/32 px** folders, **`IMPORT-GODOT.md`** §3.5, **`PLAYTEST-004.md`**, **`verification-013/`** five **720×540** composites from **`art/export/**`** (`python3 tools/composite_verification_013.py`). **`AI-STUDIO-101.code-workspace`** is **gitignored** (not tracked). Chaos meter / S1-18 full-loop play remains separate. Cursor: **Third-party skills** + `.cursor/rules/claude-game-studio-bridge.mdc`.
+
+**For**: Post–Session 015 handoff (`main`)
+**Written by**: Hawaii Zeke (Claude) on 2026-04-17; Session 013 closure pass 2026-04-19 (m. raftery + agent); Session 015 pointer 2026-04-19.
 **Context**: **`main`** includes Session 013 — S1-05 **AudioManager** + GUT; prototype **TestLevel** TileMap + semisolid + **32×32** crate rigid bodies + parallax + NPC strips. **Do not** let the Godot editor drop `window/stretch/aspect="keep"` or `default_texture_filter=1` — `InputSystem` asserts via `ViewportConfig`. Parallel agent playbook: `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md`.
-**Immediate priority**: **S1-09** production Bonnie traversal — **Session 014 landed** first vertical slice (`src/gameplay/bonnie/BonnieController.gd`, `scenes/gameplay/BonnieController.tscn`, expanded `bonnie_traversal_config.tres`, GUT `test_bonnie_controller_production.gd`). **Next:** playtest with floor geometry, tune `.tres`, then sprint row remainder (full AC-T pass, archive prototype only after validation). **`S1-06`–`S1-08`** prerequisites unchanged. **Mycelium:** Session 014 **`compost-workflow.sh --dry-run`** clean; use **`--dry-run`** when drift appears. Content under `res://assets/audio/` as WAV/OGG land.
+**Immediate priority**: **Session 015** LOS + visibility architecture per prompt; then playtest / tune, full AC-T pass in S1-17 when level exists. **`S1-06`–`S1-08`** prerequisites unchanged. **Mycelium:** use **`compost-workflow.sh --dry-run`** when drift appears; notes include **commit SHA** when describing code changes. Content under `res://assets/audio/` as WAV/OGG land.
 
 Read this file first. Then read the locked decisions section before touching anything.
 

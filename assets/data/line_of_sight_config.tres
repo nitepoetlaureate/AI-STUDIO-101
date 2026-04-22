@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/core/visibility/line_of_sight_config.gd" id="1_los"]
+
+[resource]
+script = ExtResource("1_los")
+los_collision_mask = 7
+origin_slack_px = 2.0
+segment_end_epsilon_px = 0.75
+outer_band_m = 0.75
+tier_b_n_frames = 2
+tier_b_dirty_move_px = 4.0
+default_nose_bridge_local = Vector2(0, -18)
+default_chest_from_nose_local = Vector2(0, 24)

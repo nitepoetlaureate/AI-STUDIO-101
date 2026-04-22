@@ -13,6 +13,8 @@ signal stimulus_radius_updated(radius: float)
 @export var traversal_config: BonnieTraversalConfig
 
 @onready var _ceiling_cast: RayCast2D = $CeilingCast as RayCast2D
+@onready var _los_high: Marker2D = $LosRig/LosHigh as Marker2D
+@onready var _los_low: Marker2D = $LosRig/LosLow as Marker2D
 
 ## Cached autoloads — avoids global identifiers for static tooling ([code]gdcli script lint[/code]).
 var _level_manager: Node = null
@@ -37,6 +39,7 @@ func _ready() -> void:
 		return
 	_level_manager = get_node_or_null("/root/LevelManager")
 	_input_system = get_node_or_null("/root/InputSystem")
+	add_to_group(&"bonnie")
 	_emit_stimulus_if_changed(_compute_stimulus_radius(), true)
 
 
@@ -74,23 +77,26 @@ func _emit_stimulus_if_changed(radius: float, force: bool) -> void:
 	if force or not is_equal_approx(radius, _last_stimulus_radius):
 		_last_stimulus_radius = radius
 		stimulus_radius_updated.emit(radius)
-		_apply_npc_visibility(radius)
+		if _level_manager != null and _level_manager.has_method(&"notify_bonnie_stimulus_changed"):
+			_level_manager.call(&"notify_bonnie_stimulus_changed")
 
 
-func _apply_npc_visibility(radius: float) -> void:
-	if _level_manager == null or not _level_manager.has_method(&"foreach_registered_npc"):
-		return
-	var self_pos := global_position
-	_level_manager.call(
-		&"foreach_registered_npc",
-		func(_id: StringName, node: Node2D, st: NpcState) -> void:
-			if st == null:
-				return
-			if node == null or not is_instance_valid(node):
-				st.visible_to_bonnie = false
-				return
-			st.visible_to_bonnie = self_pos.distance_to(node.global_position) <= radius
-	)
+func get_current_stimulus_radius() -> float:
+	if _last_stimulus_radius < 0.0:
+		return _compute_stimulus_radius()
+	return _last_stimulus_radius
+
+
+func get_los_high_global() -> Vector2:
+	if _los_high != null and is_instance_valid(_los_high):
+		return _los_high.global_position
+	return global_position + Vector2(0, -14)
+
+
+func get_los_low_global() -> Vector2:
+	if _los_low != null and is_instance_valid(_los_low):
+		return _los_low.global_position
+	return global_position + Vector2(0, 4)
 
 
 func _physics_process(delta: float) -> void:

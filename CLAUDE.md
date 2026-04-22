@@ -69,3 +69,15 @@ Quick reference:
 ## Context Management
 
 @.claude/docs/context-management.md
+
+## Studio naming (Session 014+)
+
+Single source for agent confusion reduction:
+
+- **Git branches:** `kebab-case` (e.g. `feature/s1-09-los-visibility`).
+- **Godot scripts / resources:** `snake_case` filenames (e.g. `line_of_sight_evaluator.gd`, `bonnie_traversal_config.tres`).
+- **No spaces** in branch or asset names; use hyphen or underscore consistently.
+
+**Mycelium:** Post-edit notes that describe code changes should include **commit SHA** when a commit exists; **branch tip + WIP** if pre-commit. **Multi-file refactors:** strict **per-file** notes (no summary-only escape hatch).
+
+**LOS / visibility spec:** `SESSION-015-PROMPT.md` (repo); full producer walkthrough also in Cursor plan `session_014_owner_inputs_c46f92ad.plan.md` if available.

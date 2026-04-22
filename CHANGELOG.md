@@ -5,6 +5,36 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [Unreleased]
+
+### Added — Session 015 (LOS A+C implementation)
+
+- `src/core/visibility/line_of_sight_config.gd` + `assets/data/line_of_sight_config.tres` — mask, tier B (`m`, `N`, `δ`), origin slack, default anatomy locals.
+- `src/core/visibility/line_of_sight_evaluator.gd` — real `PhysicsDirectSpaceState2D` segment queries (origin slack, end epsilon, exclude RIDs).
+- `src/core/visibility/visibility_ledger.gd` — canonical per-`npc_id` visibility; LevelManager sole writer.
+- `project.godot` — physics layer **3 = `npc`** (mask bit in LOS config).
+- `NpcProfile` — `los_nose_bridge_local`, `los_chest_from_nose_local`; Michael/Christen `.tres` values.
+- `tests/unit/test_line_of_sight_evaluator.gd` — open space, wall block, self-exclude.
+- `test_wall_blocks_visible_to_bonnie_when_in_radius` — integration-style LOS through `LevelManager` + production Bonnie.
+
+### Changed — Session 015
+
+- `LevelManager` — `_physics_process` LOS pass: Tier A (`d ≤ R`) distance + **high-primary** ray to NPC chest; Tier B (`R < d ≤ R_outer`) forces false throttled; Tier C no work; optional `NpcProfile` on `register_npc`; `notify_bonnie_stimulus_changed`; `get_visibility_ledger()`.
+- `BonnieController` — `LosRig`/`LosHigh`/`LosLow` markers; `add_to_group("bonnie")`; `get_current_stimulus_radius()`, `get_los_high_global()`, `get_los_low_global()`; visibility delegated to LevelManager (removed `_apply_npc_visibility`).
+- `scenes/gameplay/BonnieController.tscn` — LOS markers.
+- `tests/unit/test_bonnie_controller_production.gd` — `wait_physics_frames` for LOS timing.
+
+### Added — Session 015 handoff (docs)
+
+- `SESSION-015-PROMPT.md` — spec + consumer inventory + checklist.
+- `design/gdd/los-portal.md` — door/vent phased stub.
+
+### Changed — Session 015 handoff (docs)
+
+- `NEXT.md`, `production/sprints/sprint-1.md`, `CLAUDE.md`, `SESSION-014-PROMPT.md`, `DEVLOG.md` — pointers and S1-09 **In progress** note.
+
+---
+
 ## [Pre-Production 0.9.1] — 2026-04-17
 
 ### Added — Session 014 (S1-09 slice)

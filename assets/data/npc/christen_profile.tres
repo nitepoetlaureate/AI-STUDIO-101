@@ -15,3 +15,5 @@ feeding_threshold = 0.7
 comfort_receptivity_floor = 0.2
 comfort_receptivity_default = 0.65
 can_flee = true
+los_nose_bridge_local = Vector2(0, -18)
+los_chest_from_nose_local = Vector2(0, 24)
