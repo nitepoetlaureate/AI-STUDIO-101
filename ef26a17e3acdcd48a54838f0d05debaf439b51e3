@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:ef26a17e3acdcd48a54838f0d05debaf439b51e3
+edge targets-path path:SESSION-015-PROMPT.md
+
+Session 015 LOS spec: consumer inventory (16 rows), §10 hard cutover, locks A+C; single writer LevelManager + VisibilityLedger; follow-ups npc layer on hulls.
