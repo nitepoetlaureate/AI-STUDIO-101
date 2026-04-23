@@ -4,13 +4,15 @@
 
 ---
 
-## 0) Git push (human — blocked from agent remote)
+## 0) Git / GitHub
 
-`git push origin main` may fail with:
+**Current assumption:** `main` is **pushed** and GitHub matches local (PAT with **Workflows** or **SSH**). Use this doc as-is for the next session.
+
+**If push fails again** with:
 
 `refusing to allow an OAuth App to create or update workflow .github/workflows/godot-ci.yml without workflow scope`
 
-**Fix:** push using credentials with **`workflow`** scope (PAT) or **SSH**, or temporarily remove/rename the workflow from the commit set (not recommended). Local `main` tip at last agent commit should be **`07dce9f`** (or newer if you committed after).
+use HTTPS with a PAT that includes **workflow** / **Workflows: write**, or **SSH**, or see prior session notes — do not strip `.github/workflows` from history as a workaround.
 
 ---
 
@@ -67,18 +69,24 @@ Cross-check [`production/sprints/sprint-1.md`](production/sprints/sprint-1.md) *
 
 ## 4) Opening line to paste into the next chat (Plan mode)
 
-Copy from the block below:
+Copy from the block below. **After** you approve the plan that comes back, open **Agent mode** (same or new chat per your workflow) and instruct the agent to execute that plan with verification per task.
 
 ```
-Plan mode. Read SESSION-017-HANDOFF.md and execute its mandate.
+Plan mode. Read SESSION-017-HANDOFF.md (sections 1–3) and treat it as authoritative alongside production/sprints/sprint-1.md, docs/SCAFFOLD-REGISTER.md, docs/architecture/ADR-001-production-architecture.md, and CLAUDE.md.
 
-Constraints:
-- Do not mark any sprint row Done without listing GUT and/or AC evidence.
-- Close S1-11 through S1-18 per production/sprints/sprint-1.md; scaffolds in docs/SCAFFOLD-REGISTER.md must be replaced with real behavior or explicitly blocked with producer sign-off.
-- I will push git myself if workflow scope blocks the agent; plan should assume main includes commit 07dce9f (S1-10 camera + thin ChaosMeter + CI file).
+Context: Git is set up; main is pushed to GitHub. Sprint 1 still has large gaps between declared status and real acceptance (see SESSION-017 gap table). CI may be green while gameplay Must-Haves remain incomplete.
 
-Deliver: a single execution plan with atomic tasks, verification per task, and parallelization graph. No optional deferrals unless named as producer exceptions.
+Mandate:
+1. Reconcile every Must-Have row (Done / In progress) with evidence: scenes, scripts, GUT tests, AC IDs — or an explicit gap.
+2. Produce one ordered critical path: S1-09 closure through S1-18 per sprint dependencies (S1-10 polish parallel; S1-13 / S1-14 per docs), with parallel tracks only where merge-safe.
+3. No silent deferrals: “optional” or TBD becomes in-scope work or a named producer exception (Mycelium + sprint footnote).
+4. CI: confirm GitHub Actions godot-ci is green on main; include gdcli/script lint in the plan if that is the project bar.
+5. Deliverable from Plan mode: an execution plan with atomic tasks and verification steps (GUT / scene / human AC) per task. Do not mark any row Done without proof.
+
+After the plan is approved, execute in Agent mode: replace scaffolds in SCAFFOLD-REGISTER with substantive behavior for S1-11–S1-18 (and finish S1-09 Done, S1-10 AC-T08, S1-14 vs S1-15 split per planning docs). Update sprint-1 and SCAFFOLD-REGISTER only when evidence matches.
 ```
+
+**Optional one-liner:** Plan mode — read SESSION-017-HANDOFF.md and production/sprints/sprint-1.md; produce an execution plan to close S1-09 through S1-18 with GUT/AC evidence only; main is already on GitHub.
 
 ---
 
