@@ -1,0 +1,4 @@
+kind context
+edge explains commit:d14ad53dceaa8ce2f035ac2052920edc5f0364a8
+
+Audit remediation: chaos_meter_ui_config.tres, CI (GUT+gdcli doctor), NEXT/SESSION-015 truth fixes, ADR tuning vs literals, scaffold register + chaos S1-14/15 plan, SESSION-016 S1-10. Commit d14ad53.
