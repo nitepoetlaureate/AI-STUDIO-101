@@ -8,7 +8,7 @@
 |---|------|-----|
 | 1 | `NEXT.md` | Current priorities |
 | 2 | This file | LOS spec summary + tasks + consumer inventory |
-| 3 | `SESSION-014-PROMPT.md` | Prior traversal slice; **visibility there is A-only** — Session 015 upgrades to **A+C** |
+| 3 | `SESSION-014-PROMPT.md` | Prior **S1-09** handoff program; **visibility = LevelManager A+C** (Phase B4 + goal aligned with Session 015). **`SESSION-015-PROMPT.md`** is the LOS spec of record. |
 | 4 | `design/gdd/bonnie-traversal.md` | Stimulus, AC-T, §3.4 |
 | 5 | `design/gdd/los-portal.md` | Door / vent phased LOS (stub) |
 | 6 | `src/core/level/LevelManager.gd` | Registry + hook for LOS pass |
@@ -80,7 +80,7 @@
 2. **`LineOfSightEvaluator`** — pure API: `space_state`, `from`, `to`, `mask`, `exclude` → `bool`; unit-tested in minimal real scene.
 3. **`VisibilityLedger`** — `get_visible(npc_id)`, `set_visible(...)`, optional `visibility_changed` signal; **single writer** from LOS pass.
 4. **`LevelManager`** — `_physics_process` (or deferred tick): Tier A/B/C; call evaluator (high + optional low); update ledger; **sync** `NpcState.visible_to_bonnie` from ledger **if** sprint AC still expects field on `NpcState` (or migrate consumers to ledger — **inventory gate**).
-5. **Bonnie** — Export **`get_los_high_global()` / `get_los_low_global()`** (or `Marker2D` paths); **remove** `_apply_npc_visibility` distance-only loop when LevelManager owns pass; keep **`stimulus_radius_updated`** for invalidation/dirty.
+5. **Bonnie** — Export **`get_los_high_global()` / `get_los_low_global()`** (or `Marker2D` paths); distance-only visibility loop **removed** — **`LevelManager`** owns LOS + ledger sync; keep **`stimulus_radius_updated`** for invalidation/dirty.
 6. **`project.godot`** — Add **`npc`** layer when NPC hulls block LOS; document mask.
 7. **GUT** — New tests under `res://tests/unit/` per §9; update `test_bonnie_controller_production.gd`.
 8. **Docs** — `CHANGELOG.md`, `DEVLOG.md`, Mycelium notes with **SHA**; **`bonnie-traversal.md`** short LOS paragraph if needed.

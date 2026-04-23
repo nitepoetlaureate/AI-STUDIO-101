@@ -7,6 +7,24 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added — Audit remediation (2026-04-23)
+
+- `assets/data/chaos_meter_ui_config.tres` — defaults per `chaos-meter-ui.md` / sprint S1-16 (fill chase, zone pixels).
+- `.github/workflows/godot-ci.yml` — headless **GUT** + **gdcli doctor** on push/PR to `main`.
+- `docs/SCAFFOLD-REGISTER.md` — `src/gameplay` + `src/ui` line counts vs Sprint IDs.
+- `docs/planning/s1-14-s1-15-chaos-meter-minimal.md` — thin **S1-14** meter + GUT path before full **S1-15**.
+- `docs/GATE-CHECK-AUDIT-REMEDIATION-2026-04-23.md` — **CONCERNS** verdict + evidence checklist.
+- `production/stage.txt` — explicit **`Production`** stage marker.
+- `SESSION-016-PROMPT.md` — **S1-10 Camera** handoff after audit closure.
+
+### Changed — Audit remediation (2026-04-23)
+
+- `NEXT.md` — split **approved design** vs **implementation gaps**; Mycelium path + Session 016 priority.
+- `SESSION-015-PROMPT.md` — Session 014 read-first row (**A+C**, not “A-only”); checklist wording for LevelManager-owned visibility.
+- `production/sprints/sprint-1.md` — `assets/data` tree + **S1-08** row (all `.tres` including LOS + UI config).
+- `docs/architecture/ADR-001-production-architecture.md` — **tuning vs algorithmic literals** in configuration section.
+- `CLAUDE.md`, `.claude/rules/mycelium.md` — **`./mycelium/mycelium.sh`** paths from repo root.
+
 ### Added — Session 015 (LOS A+C implementation)
 
 - `src/core/visibility/line_of_sight_config.gd` + `assets/data/line_of_sight_config.tres` — mask, tier B (`m`, `N`, `δ`), origin slack, default anatomy locals.

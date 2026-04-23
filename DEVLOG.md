@@ -5,6 +5,10 @@ a sandbox chaos puzzle game developed with Claude Code Game Studios.
 
 ---
 
+## [2026-04-23] Audit remediation — truth layer + CI + Session 016 handoff
+
+**Shipped:** `chaos_meter_ui_config.tres`; sprint **`assets/data`** tree + **S1-08** row; **ADR-001** tuning vs algorithmic literals; **NEXT.md** design vs implementation gaps; **SESSION-015** Session 014 row fix; **Mycelium** paths in **CLAUDE.md** / **`.claude/rules/mycelium.md`**; **`.github/workflows/godot-ci.yml`** (GUT + gdcli doctor); **`docs/SCAFFOLD-REGISTER.md`**, **`docs/planning/s1-14-s1-15-chaos-meter-minimal.md`**, **`docs/GATE-CHECK-AUDIT-REMEDIATION-2026-04-23.md`**, **`production/stage.txt`**, **`SESSION-016-PROMPT.md`** (S1-10 Camera). GUT: `test_config_resources_load` covers LOS + UI + input `.tres`.
+
 ## [2026-04-19] Session 015 — LOS A+C implementation
 
 **Shipped:** `LineOfSightConfig` + `.tres`, `LineOfSightEvaluator`, `VisibilityLedger`, **`LevelManager` `_physics_process` LOS** (Tier A/B/C, high-primary ray to NPC chest from profile defaults), **`BonnieController` LOS markers** + `bonnie` group + `get_los_*` / `get_current_stimulus_radius`, physics layer **`npc`**, **`NpcProfile` LOS fields**, GUT (`test_line_of_sight_evaluator.gd`, wall integration test). **245** lines `LevelManager.gd` (< 450 extract threshold). **Follow-up:** consumer inventory rows + §10 cutover; NPC colliders on layer **npc** when characters block LOS.

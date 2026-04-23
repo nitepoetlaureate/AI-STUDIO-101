@@ -9,7 +9,7 @@
 **For**: Post–Session 015 handoff (`main`)
 **Written by**: Hawaii Zeke (Claude) on 2026-04-17; Session 013 closure pass 2026-04-19 (m. raftery + agent); Session 015 pointer 2026-04-19.
 **Context**: **`main`** includes Session 013 — S1-05 **AudioManager** + GUT; prototype **TestLevel** TileMap + semisolid + **32×32** crate rigid bodies + parallax + NPC strips. **Do not** let the Godot editor drop `window/stretch/aspect="keep"` or `default_texture_filter=1` — `InputSystem` asserts via `ViewportConfig`. Parallel agent playbook: `docs/CURSOR-AGENTS-WINDOW-HANDOFF.md`.
-**Immediate priority**: **Session 015** LOS + visibility architecture per prompt; then playtest / tune, full AC-T pass in S1-17 when level exists. **`S1-06`–`S1-08`** prerequisites unchanged. **Mycelium:** use **`compost-workflow.sh --dry-run`** when drift appears; notes include **commit SHA** when describing code changes. Content under `res://assets/audio/` as WAV/OGG land.
+**Immediate priority**: **Session 016** — **S1-10 Camera** (see **`SESSION-016-PROMPT.md`**); production **`run/main_scene`** remains prototype per **ADR-001** until **S1-17**. **Mycelium:** from repo root run **`./mycelium/mycelium.sh`**; use **`compost-workflow.sh --dry-run`** when drift appears; notes include **commit SHA** when describing code changes. Content under `res://assets/audio/` as WAV/OGG land.
 
 Read this file first. Then read the locked decisions section before touching anything.
 
@@ -44,14 +44,22 @@ Session 007 infrastructure work (Mycelium sync-init, hooks, prototype P0 fixes, 
 | `prototypes/bonnie-traversal/PLAYTEST-002.md` | Written | Session 006 report (superseded for GATE 1 by PLAYTEST-003 + GATE-1-AC-ASSESSMENT). |
 | `icon.svg` | Created S007 | Placeholder cat silhouette. Eliminates editor warning. |
 
-### What Does NOT Exist Yet
+### Approved design artifacts (on disk — do not confuse with “missing”)
 
-- Chaos Meter GDD — **APPROVED** — `design/gdd/chaos-meter.md`
-- Bidirectional Social System GDD — **APPROVED** — `design/gdd/bidirectional-social-system.md`
-- Chaos Meter UI GDD — **APPROVED** — `design/gdd/chaos-meter-ui.md`
-- Sprint 1 plan — **APPROVED** — `production/sprints/sprint-1.md` (30 pre-sprint decisions locked)
-- Production gameplay in `src/` — **S1-01 scaffold + autoloads landed**; systems implemented per Sprint 1 tasks S1-03+.
-- Any art assets in `assets/` — **Placeholder pixel art via pixel-plugin**
+These GDDs and plans **exist** and are approved. They are **not** implementation.
+
+- `design/gdd/chaos-meter.md`
+- `design/gdd/bidirectional-social-system.md`
+- `design/gdd/chaos-meter-ui.md`
+- `production/sprints/sprint-1.md` (30 pre-sprint decisions locked)
+
+### Implementation gaps vs Sprint 1 (honest snapshot)
+
+- **Foundation (S1-01–S1-08, S1-05):** Done in code + data for the listed slice; see **`production/sprints/sprint-1.md`** rows.
+- **Traversal + LOS (S1-09 + Session 015):** Production **`BonnieController`** + **`LevelManager`** LOS pass landed; **S1-09 “Done”** still gated on human **AC-T** in **S1-17** apartment.
+- **After S1-09 on the critical path:** **S1-10 Camera**, **S1-11 NPC**, **S1-12 Social**, **S1-13 Objects**, **S1-14–S1-16** chaos stack + UI — mostly **scaffold scripts** today (`NpcController`, `SocialSystem`, `ChaosMeter`, `BonnieCamera`, `ChaosMeterUI`). See **`docs/SCAFFOLD-REGISTER.md`**.
+- **Test apartment (S1-17):** Not assembled in production; **`run/main_scene`** still **prototype** `TestLevel.tscn` per **ADR-001**.
+- **Art:** No production art pipeline output in `assets/` yet — **placeholder / pixel-plugin** only.
 
 ---
 

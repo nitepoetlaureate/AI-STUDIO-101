@@ -54,11 +54,11 @@ Notes sync to GitHub via the git remote — `git push` pushes notes, `git fetch`
 
 **Agents MUST follow the arrival and departure protocol defined below.**
 
-Quick reference:
-- On session start: `mycelium.sh find constraint && mycelium.sh find warning`
-- On file work: `mycelium/scripts/context-workflow.sh <file>`
-- On departure: `mycelium.sh note HEAD -k context -m "..."` + file notes
-- Full primer: `mycelium.sh prime`
+Quick reference (from **repository root**; the CLI is **`mycelium/mycelium.sh`**, not `./mycelium.sh`):
+- On session start: `./mycelium/mycelium.sh find constraint && ./mycelium/mycelium.sh find warning`
+- On file work: `./mycelium/scripts/context-workflow.sh <file>`
+- On departure: `./mycelium/mycelium.sh note HEAD -k context -m "..."` + file notes
+- Full primer: `./mycelium/mycelium.sh prime`
 
 @.claude/rules/mycelium.md
 

@@ -57,7 +57,7 @@ Use Godot `process_priority` per sprint table when multiple systems must read/wr
 
 - **Custom Resources (`.tres`)** plus **`.cfg` overrides** (**B5**) for tuning.
 - Target layout under `assets/data/` per sprint; **S1-08** creates the typed resources.
-- Sprint Definition of Done: no raw float literals in `src/gameplay/*.gd` once configs exist (enforced from S1-08 onward).
+- Sprint Definition of Done: **tuning** values (speeds, radii, timers, feel thresholds) live in **`assets/data/*.tres`**, not in gameplay scripts. **`BonnieController.gd`** must read traversal and LOS knobs from **`bonnie_traversal_config.tres`** / **`line_of_sight_config.tres`** (and profiles), not duplicate them as magic numbers. **Algorithmic literals** in `src/gameplay/*.gd` are allowed when they are structural or mathematical sentinels (e.g. zeroing velocity, `1.0` in normalization, clamp algebra) — not alternate tunings. Reviewers treat new unexplained numeric constants as tuning debt to move into Resources.
 
 ## Decision: `class_name BonnieController` conflict
 

@@ -11,16 +11,16 @@ The full protocol and command reference is at `./mycelium/SKILL.md`.
 At the start of any session working on a specific file or system:
 
 ```bash
-mycelium.sh find constraint     # project-wide constraints — READ FIRST
-mycelium.sh find warning        # known fragile things — READ FIRST
-mycelium/scripts/context-workflow.sh <file>   # file + parent dirs + commit context
+./mycelium/mycelium.sh find constraint     # project-wide constraints — READ FIRST
+./mycelium/mycelium.sh find warning        # known fragile things — READ FIRST
+./mycelium/scripts/context-workflow.sh <file>   # file + parent dirs + commit context
 ```
 
 If `context-workflow.sh` is unavailable, do this manually:
 
 ```bash
-mycelium.sh read <file>         # note on this exact file version
-mycelium.sh read HEAD           # note on current commit
+./mycelium/mycelium.sh read <file>         # note on this exact file version
+./mycelium/mycelium.sh read HEAD           # note on current commit
 ```
 
 ## Mandatory Departure Protocol
@@ -29,16 +29,16 @@ After any meaningful work (design decision, code change, architectural discovery
 
 ```bash
 # Note on the commit (context — why this change exists)
-mycelium.sh note HEAD -k context -m "What you did and why."
+./mycelium/mycelium.sh note HEAD -k context -m "What you did and why."
 
 # Note on changed files (summary — what future agents should know)
-mycelium.sh note <changed-file> -k summary -m "What this file does now."
+./mycelium/mycelium.sh note <changed-file> -k summary -m "What this file does now."
 
 # If you found something fragile or dangerous
-mycelium.sh note <file> -k warning -m "What to watch out for."
+./mycelium/mycelium.sh note <file> -k warning -m "What to watch out for."
 
 # If you made an architectural decision
-mycelium.sh note <file> -k decision -t "Short label" -m "Decision and rationale."
+./mycelium/mycelium.sh note <file> -k decision -t "Short label" -m "Decision and rationale."
 ```
 
 ## When to Write Which Kind

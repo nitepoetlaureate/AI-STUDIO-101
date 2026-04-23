@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ChaosMeterUIConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/ui/chaos_meter/ChaosMeterUIConfig.gd" id="1_cmui"]
+
+[resource]
+script = ExtResource("1_cmui")
+fill_chase_speed = 4.0
+chaos_zone_width_px = 16
+chaos_zone_height_px = 35
+social_zone_height_px = 29

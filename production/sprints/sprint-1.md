@@ -135,15 +135,16 @@ All tuning knobs in `assets/data/` as typed `.tres` Resource files. No float lit
 
 ```
 assets/data/
+├── input_system_config.tres
 ├── bonnie_traversal_config.tres
+├── line_of_sight_config.tres      # Session 015 — LOS tuning
 ├── npc/
 │   ├── michael_profile.tres
 │   └── christen_profile.tres
 ├── social_system_config.tres
 ├── chaos_meter_config.tres
-├── chaos_meter_ui_config.tres
-└── levels/
-    └── apartment_config.tres     # level_chaos_baseline = 0.0
+├── chaos_meter_ui_config.tres     # System 23 defaults (GDD §3.x / tuning table)
+└── level_config.tres              # apartment / level baseline (sprint “apartment_config” name → resource file)
 ```
 
 **Runtime invariant:** `ChaosMeter._ready()` asserts `chaos_fill_cap + social_fill_weight == 1.0` and fails loud if violated.
@@ -172,7 +173,7 @@ assets/data/
 | **S1-05** | System 3: Audio Manager | `godot-gdscript-specialist` | 1 | S1-01, S1-03 | 4 buses (Master, Music, SFX, Ambient); `play_sfx()`, `play_music()`, `crossfade_music()`, `set_bus_volume()` API; no direct `AudioStreamPlayer` calls from gameplay; GUT: all API callable headless without error | **Done** (Session 013 — merged to **`main` 2026-04-19**; buses + API + `test_audio_manager.gd`; catalog WAV/OGG under `res://assets/audio/` optional) |
 | **S1-06** | `NpcState` data object + shared enums | `godot-gdscript-specialist` | 1 | S1-01 | All fields from npc-personality §3.1 + Social extensions (`last_interaction_timestamp: float`, `recovering_comfort_stacks: int`); `NpcBehavior` (11), `InteractionType`, `MeterState` (6), `ChaosSeverity` (4), `FeedingPathType`, `BonnieState` (13) all in `enums.gd`; GUT: initializes with Michael defaults | **Done** (post–Session 013 — `NpcState.gd`, `enums.gd`, `test_npc_state.gd`) |
 | **S1-07** | System 5: Level Manager | `godot-gdscript-specialist` | 2 | S1-01, S1-03, S1-06 | `register_npc()`, `get_npc_state()`, `get_active_npc_count()`, `get_room_id_at()` API; `apartment_config.tres` with `level_chaos_baseline = 0.0`; GUT: NPC registration round-trip; baseline applied on level load | **Done** (MVP slice — `LevelManager.gd` + `level_config.tres` + `register_room` / `get_room_id_at`; `test_level_manager.gd`) |
-| **S1-08** | Config `.tres` data files — all 11 MVP systems | `godot-gdscript-specialist` | 1 | S1-06 | All 7 files in `assets/data/` with GDD §7 defaults; zero float literals in any `src/gameplay/*.gd`; `gdcli` validates all resources load clean | **Done** (seven `.tres`: `input_system_config`, `level_config`, `bonnie_traversal_config`, `chaos_meter_config`, `social_system_config`, `npc/michael_profile`, `npc/christen_profile`; gameplay Resource scripts use `@export` without inline floats) |
+| **S1-08** | Config `.tres` data files — all 11 MVP systems | `godot-gdscript-specialist` | 1 | S1-06 | All typed `.tres` under `assets/data/` with GDD defaults; **tuning** literals live in `.tres` (see **ADR-001** — algorithmic sentinels allowed in `.gd`); `gdcli` validates resources load clean | **Done** (`input_system_config`, `level_config`, `bonnie_traversal_config`, `line_of_sight_config`, `chaos_meter_config`, **`chaos_meter_ui_config`**, `social_system_config`, `npc/michael_profile`, `npc/christen_profile`; audit remediation **2026-04-23** added missing UI config + sprint tree alignment) |
 | **S1-09** | System 6: BONNIE Traversal — production rewrite | `godot-gdscript-specialist` | 3 | S1-04, S1-08 | All 13 states; all values from `.tres`; signals `state_changed`, `stimulus_radius_updated`; **`visible_to_bonnie` = distance + LOS** (`SESSION-015-PROMPT.md`); `VisibilityLedger` + LevelManager LOS pass; AC-T01 through AC-T08 all pass; prototype moved to `prototypes/archived/` only after AC validation | **In progress** (Session 015 — A+C visibility; **Done** still waits S1-17 + human AC-T) |
 | **S1-10** | System 4: Camera System | `godot-gdscript-specialist` | 2 | S1-09 | Look-ahead per state via `LOOK_AHEAD_BY_STATE` table; smooth follow (no whip on reversal); ground-biased vertical framing; all AC-T08 pass | Pending |
 | **S1-11** | System 9: Reactive NPC System | `godot-gdscript-specialist` | 3 | S1-06, S1-07, S1-09 | 11-state machine; `emotional_level` decay (§4.1); `comfort_receptivity` transitions (§4.3); Domino Rally cascade depth ≤ 2 with `cascade_source_id` loop prevention; Michael + Christen from `.tres`; phase routine timer (pauses outside ROUTINE); Christen arrival trigger on Michael Afternoon → Evening; AC-01 through AC-11 pass; GUT: decay formula, cascade loop blocked, FED gate both-conditions required | Pending |
