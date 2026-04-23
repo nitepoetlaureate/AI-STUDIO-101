@@ -1,0 +1,5 @@
+kind observation
+edge applies-to tree:5c77ccd5d8d27722fa2710fdcdc6f020a3fdbda9
+edge targets-treepath treepath:.
+
+Production stage: design ahead of code. Substantive: core+LevelManager+LOS, Bonnie traversal, camera follow slice, thin ChaosMeter. Scaffolds: NPC, Social, Chaos UI, objects (stub). main_scene prototype until S1-17. Milestone B not A.
