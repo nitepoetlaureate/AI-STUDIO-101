@@ -8,14 +8,15 @@
 |------|-----------------|------|----------------|
 | `src/gameplay/bonnie/BonnieController.gd` | ~370 | Substantive | **S1-09** — production traversal + LOS rig API |
 | `src/gameplay/bonnie/BonnieTraversalConfig.gd` | ~51 | Resource | **S1-08** / S1-09 tuning |
-| `src/gameplay/camera/BonnieCamera.gd` | ~6 | Scaffold | **S1-10** — Camera2D shell |
+| `src/gameplay/camera/BonnieCamera.gd` | ~117 | Substantive | **S1-10** — follow + look-ahead + zoom skeleton |
+| `src/gameplay/camera/BonnieCameraConfig.gd` | ~38 | Resource | **S1-10** tuning |
 | `src/gameplay/npc/NpcController.gd` | ~6 | Scaffold | **S1-11** |
 | `src/gameplay/npc/NpcProfile.gd` | ~20 | Resource | **S1-08** / S1-11 data |
 | `src/gameplay/npc/NpcRoutinePhase.gd` | ~4 | Resource | **S1-11** data |
 | `src/gameplay/social/SocialSystem.gd` | ~6 | Scaffold | **S1-12** |
 | `src/gameplay/social/SocialSystemConfig.gd` | ~9 | Resource | **S1-08** |
 | `src/gameplay/chaos/ChaosEventBus.gd` | ~9 | Scaffold (autoload) | **S1-14** — signals only |
-| `src/gameplay/chaos/ChaosMeter.gd` | ~6 | Scaffold | **S1-15** |
+| `src/gameplay/chaos/ChaosMeter.gd` | ~29 | Thin impl | **S1-14** subscribe + fill increment; **S1-15** formulas TBD |
 | `src/gameplay/chaos/ChaosMeterConfig.gd` | ~13 | Resource | **S1-08** |
 | `src/gameplay/objects/InteractiveObjectStub.gd` | ~6 | Intentional stub | **S1-13** placeholder per sprint |
 | `src/ui/chaos_meter/ChaosMeterUI.gd` | ~6 | Scaffold | **S1-16** |

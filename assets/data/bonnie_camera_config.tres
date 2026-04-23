@@ -1,0 +1,27 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://src/gameplay/camera/BonnieCameraConfig.gd" id="1_bcc"]
+
+[resource]
+script = ExtResource("1_bcc")
+camera_lerp_speed = 6.0
+camera_catch_up_speed = 4.0
+vertical_framing_offset_y = -110.0
+look_ahead_idle = 0.0
+look_ahead_sneaking = 40.0
+look_ahead_walking = 80.0
+look_ahead_running = 180.0
+look_ahead_sliding = 220.0
+look_ahead_jumping_falling = 120.0
+look_ahead_climbing = 60.0
+look_ahead_squeezing = 0.0
+look_ahead_dazed_rough = 0.0
+look_ahead_ledge_pullup = 60.0
+look_ahead_landing = 80.0
+ledge_bias_activation_radius = 80.0
+ledge_bias_extra_lookahead = 40.0
+climb_vertical_lookahead = -60.0
+zoom_normal = 1.0
+zoom_min = 0.65
+zoom_out_rate = 0.4
+zoom_return_rate = 0.8

@@ -7,6 +7,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [Unreleased]
 
+### Added — Session 016 + S1-14 thin slice (2026-04-23)
+
+- `src/gameplay/camera/BonnieCameraConfig.gd`, `assets/data/bonnie_camera_config.tres` — look-ahead / framing / zoom knobs per `camera-system.md`.
+- `BonnieCamera` child on `scenes/gameplay/BonnieController.tscn` — state-scaled look-ahead, reversal catch-up, vertical framing, zoom hold skeleton.
+- `tests/unit/test_bonnie_camera_production.gd` — config load + horizontal lead while walking.
+- `ChaosMeter` — subscribes to `ChaosEventBus.object_chaos_event`, clamps fill to `chaos_fill_cap`; `tests/unit/test_chaos_event_bus_meter.gd`.
+
+### Changed — CI + gate clarity (2026-04-23)
+
+- `.github/workflows/godot-ci.yml` — `curl -L` on Godot zip; **`--quit-after 2`** bootstrap before GUT; header comment on CI scope.
+- `SESSION-016-PROMPT.md`, `docs/GATE-CHECK-AUDIT-REMEDIATION-2026-04-23.md` — **CI ≠ Sprint complete**; **S1-14** partial; **`gdcli script lint`** full-tree deferred (documented).
+
 ### Added — Audit remediation (2026-04-23)
 
 - `assets/data/chaos_meter_ui_config.tres` — defaults per `chaos-meter-ui.md` / sprint S1-16 (fill chase, zone pixels).

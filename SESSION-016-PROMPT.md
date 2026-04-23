@@ -1,7 +1,9 @@
 # Session 016 — S1-10 Camera (production) + empirical baseline
 
-**Status:** **Open** — executes after audit remediation (2026-04-23).  
+**Status:** **Implementation landed (2026-04-23)** — production **`BonnieCamera`** + **`BonnieCameraConfig`** + **`bonnie_camera_config.tres`** + scene wiring + GUT. **Polish / full AC-T08** may still need human playtest.  
 **Milestone anchor:** **Milestone B** — Session 015 LOS + traversal slice remains the last closed vertical slice; **S1-09 “Done”** still requires human **AC-T01–T08** in **S1-17** apartment per sprint. **Milestone A** (full Sprint 1 Must-Haves) is **not** claimed.
+
+**CI guardrail:** A green [`.github/workflows/godot-ci.yml`](.github/workflows/godot-ci.yml) run proves **headless GUT + `gdcli doctor` only**. It does **not** close **S1-09 Done**, **S1-11–S1-18**, or substitute **human AC-T**. See [`production/sprints/sprint-1.md`](production/sprints/sprint-1.md) and [`docs/GATE-CHECK-AUDIT-REMEDIATION-2026-04-23.md`](docs/GATE-CHECK-AUDIT-REMEDIATION-2026-04-23.md).
 
 ---
 
@@ -40,10 +42,15 @@
 
 ## Deliverables
 
-- [ ] Substantive **`BonnieCamera.gd`** (+ config `.gd` / `.tres`).
-- [ ] Scene wiring documented in this file’s “Integration” subsection (after implementation).
-- [ ] New/updated **GUT** under `tests/unit/`.
-- [ ] **`CHANGELOG.md`** / **`DEVLOG.md`** bullets; **Mycelium** `./mycelium/mycelium.sh note HEAD -k context` with SHA.
+- [x] Substantive **`BonnieCamera.gd`** (+ **`BonnieCameraConfig.gd`** / **`bonnie_camera_config.tres`**).
+- [x] Scene wiring — see **Integration** below.
+- [x] **GUT** — [`tests/unit/test_bonnie_camera_production.gd`](tests/unit/test_bonnie_camera_production.gd).
+- [x] **`CHANGELOG.md`** / **`DEVLOG.md`** + **Mycelium** context on closure commit.
+
+### Integration
+
+- [`scenes/gameplay/BonnieController.tscn`](scenes/gameplay/BonnieController.tscn): child **`BonnieCamera`** (`Camera2D` + [`BonnieCamera.gd`](src/gameplay/camera/BonnieCamera.gd)), default config from **`res://assets/data/bonnie_camera_config.tres`**.
+- **`run/main_scene`** remains prototype per **ADR-001**; open production scene in editor or instantiate `BonnieController.tscn` in tests to exercise the camera.
 
 ---
 

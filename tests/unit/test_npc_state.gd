@@ -30,6 +30,7 @@ func test_chaos_meter_config_invariant() -> void:
 
 func test_config_resources_load() -> void:
 	const _LineOfSightConfig := preload("res://src/core/visibility/line_of_sight_config.gd")
+	const _BonnieCameraConfig := preload("res://src/gameplay/camera/BonnieCameraConfig.gd")
 	assert_true(load("res://assets/data/level_config.tres") is LevelConfig)
 	assert_true(load("res://assets/data/bonnie_traversal_config.tres") is BonnieTraversalConfig)
 	assert_true(load("res://assets/data/social_system_config.tres") is SocialSystemConfig)
@@ -38,6 +39,8 @@ func test_config_resources_load() -> void:
 	assert_true(load("res://assets/data/line_of_sight_config.tres") is _LineOfSightConfig)
 	assert_true(load("res://assets/data/chaos_meter_ui_config.tres") is ChaosMeterUIConfig)
 	assert_true(load("res://assets/data/input_system_config.tres") is InputSystemConfig)
+	var bcc := load("res://assets/data/bonnie_camera_config.tres")
+	assert_true(bcc != null and bcc.get_script() == _BonnieCameraConfig)
 
 
 func test_bonnie_state_enum_count() -> void:

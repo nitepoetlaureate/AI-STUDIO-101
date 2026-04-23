@@ -5,6 +5,10 @@ a sandbox chaos puzzle game developed with Claude Code Game Studios.
 
 ---
 
+## [2026-04-23] Mycelium backlog plan — S1-10 camera + S1-14 meter + CI hardening
+
+**Shipped:** **`BonnieCamera`** + **`BonnieCameraConfig`** + **`bonnie_camera_config.tres`** + **`BonnieController.tscn`** camera child; **`test_bonnie_camera_production`**. Thin **`ChaosMeter`** + **`test_chaos_event_bus_meter`**. CI: **`curl -L`**, project bootstrap **`--quit-after 2`**. Gate + **SESSION-016** CI guardrails; sprint **S1-10** / **S1-14** → **In progress**; **SCAFFOLD-REGISTER** refresh. GUT **32** tests. Mycelium: **HEAD todo**, **`.` observation**, **workflow summary**.
+
 ## [2026-04-23] Audit remediation — truth layer + CI + Session 016 handoff
 
 **Shipped:** `chaos_meter_ui_config.tres`; sprint **`assets/data`** tree + **S1-08** row; **ADR-001** tuning vs algorithmic literals; **NEXT.md** design vs implementation gaps; **SESSION-015** Session 014 row fix; **Mycelium** paths in **CLAUDE.md** / **`.claude/rules/mycelium.md`**; **`.github/workflows/godot-ci.yml`** (GUT + gdcli doctor); **`docs/SCAFFOLD-REGISTER.md`**, **`docs/planning/s1-14-s1-15-chaos-meter-minimal.md`**, **`docs/GATE-CHECK-AUDIT-REMEDIATION-2026-04-23.md`**, **`production/stage.txt`**, **`SESSION-016-PROMPT.md`** (S1-10 Camera). GUT: `test_config_resources_load` covers LOS + UI + input `.tres`.

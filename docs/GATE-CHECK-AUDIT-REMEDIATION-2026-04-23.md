@@ -13,19 +13,21 @@
 
 ## Gate verdict: **CONCERNS** (not FAIL)
 
+**CI scope:** Passing **godot-ci** means **GUT** + **`gdcli doctor`** on the runner only. It does **not** mean Sprint 1 Must-Haves are complete, **S1-09 Done**, or **AC-T** signed off — see **`production/sprints/sprint-1.md`**.
+
 | Area | Status | Notes |
 |------|--------|-------|
 | Milestone B (Session 015 LOS + docs) | **PASS** | Inventory + §10 + drift fixes landed earlier; SESSION-015 row Session 014 corrected in this pass. |
 | Data parity (`assets/data`) | **PASS** | **`chaos_meter_ui_config.tres`** added; sprint tree + **S1-08** row reconciled. |
 | Doc / onboarding | **PASS** | **`NEXT.md`** split “approved design” vs “implementation gaps”; **`docs/SCAFFOLD-REGISTER.md`** added. |
-| Empirical CI | **CONCERNS** | Workflow must succeed on GitHub (Godot download URL, headless import if needed). **`gdcli script lint`** not looped on all `.gd` in CI (doctor only) — full lint remains local / optional follow-up. |
-| Sprint 1 gameplay completeness | **CONCERNS** | **S1-10–S1-16** still largely scaffolds — expected; see scaffold register. |
-| S1-14 AC | **CONCERNS** | **GUT** for `ChaosEventBus` → `ChaosMeter` **not** implemented yet — **`docs/planning/s1-14-s1-15-chaos-meter-minimal.md`** is the execution spec. |
+| Empirical CI | **CONCERNS** | Workflow: **`curl -L`** on Godot zip + **`--quit-after 2`** bootstrap before GUT. Confirm green on GitHub. **`gdcli script lint`** on every `src/**/*.gd` is **deferred** (cost + noise); run locally / pre-commit — see **Recommended next actions**. |
+| Sprint 1 gameplay completeness | **CONCERNS** | **S1-10** camera slice landed **2026-04-23**; **S1-11–S1-13, S1-15–S1-16** still largely scaffolds — see scaffold register. |
+| S1-14 AC | **CONCERNS** | Thin **`ChaosMeter`** subscribe + **`test_chaos_event_bus_meter.gd`** landed **2026-04-23**; full **S1-15** formulas + sprint “Done” still pending. |
 
 **FAIL** would apply if: CI permanently red, ADR layering broken, or sprint marked Done without tests.
 
 ## Recommended next actions
 
-1. Merge CI workflow; fix runner if Godot asset URL changes.
-2. Execute **SESSION-016-PROMPT.md** (**S1-10 Camera**).
-3. Implement **S1-14** minimal meter + GUT per planning doc.
+1. Confirm **godot-ci** is green on GitHub after push; fix URL or import steps if the runner differs from local macOS.
+2. Run **`npx -y gdcli-godot script lint --file <path>`** locally on changed `.gd` (full-tree lint not in CI by design unless added later).
+3. Continue **S1-15** chaos formulas and **S1-11+** per critical path; update **`docs/SCAFFOLD-REGISTER.md`** when scaffolds graduate.

@@ -1,4 +1,4 @@
-# Headless GUT + gdcli doctor on push/PR. Requires Godot 4.6.x on PATH.
+# Headless GUT + gdcli doctor on push/PR. Does not prove Sprint 1 complete — see docs/GATE-CHECK-AUDIT-REMEDIATION-2026-04-23.md
 name: godot-ci
 
 on:
@@ -17,10 +17,13 @@ jobs:
         run: |
           set -euo pipefail
           GODOT_URL="https://github.com/godotengine/godot/releases/download/4.6.2-stable/Godot_v4.6.2-stable_linux.x86_64.zip"
-          curl -fsSL -o godot.zip "$GODOT_URL"
+          curl -fsSL -L -o godot.zip "$GODOT_URL"
           unzip -q godot.zip
           chmod +x Godot_v4.6.2-stable_linux.x86_64
           sudo mv Godot_v4.6.2-stable_linux.x86_64 /usr/local/bin/godot
+
+      - name: Bootstrap project (import / first frames)
+        run: godot --headless --path . --quit-after 2
 
       - name: Run GUT (tests/unit)
         run: godot --headless --path . -s addons/gut/gut_cmdln.gd -- -gdir=res://tests/unit -gexit

@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://bonnie_controller_prod"]
+[gd_scene load_steps=4 format=3 uid="uid://bonnie_controller_prod"]
 
 [ext_resource type="Script" path="res://src/gameplay/bonnie/BonnieController.gd" id="1_script"]
+[ext_resource type="Script" path="res://src/gameplay/camera/BonnieCamera.gd" id="2_cam"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
 radius = 8.0
@@ -27,3 +28,6 @@ position = Vector2(0, -8)
 target_position = Vector2(0, -22)
 collision_mask = 1
 enabled = true
+
+[node name="BonnieCamera" type="Camera2D" parent="."]
+script = ExtResource("2_cam")
