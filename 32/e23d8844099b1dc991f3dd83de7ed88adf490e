@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:32e23d8844099b1dc991f3dd83de7ed88adf490e
+edge targets-path path:.github/workflows/godot-ci.yml
+
+Runs: Godot 4.6.2 linux zip (curl -L), bootstrap --quit-after 2, GUT tests/unit, gdcli doctor. Does not: full gdcli lint tree, Sprint completion, AC-T sign-off.
