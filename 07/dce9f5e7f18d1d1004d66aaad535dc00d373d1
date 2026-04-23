@@ -1,0 +1,4 @@
+kind context
+edge explains commit:07dce9f5e7f18d1d1004d66aaad535dc00d373d1
+
+S1-10: BonnieCamera + BonnieCameraConfig + scene child + GUT. S1-14 thin ChaosMeter + bus GUT. CI: curl -L, quit-after 2 bootstrap. Gate/SESSION-016: CI scope guardrails. Commit 07dce9f.
