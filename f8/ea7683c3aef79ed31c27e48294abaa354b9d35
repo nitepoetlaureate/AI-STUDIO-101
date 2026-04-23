@@ -1,0 +1,5 @@
+kind todo
+edge applies-to blob:f8ea7683c3aef79ed31c27e48294abaa354b9d35
+edge targets-path path:production/sprints/sprint-1.md
+
+Open Must-Haves after 07dce9f: finish S1-10, S1-11–S1-18, full S1-15; S1-09 Done = S1-17 + AC-T. CI: confirm Actions green.
