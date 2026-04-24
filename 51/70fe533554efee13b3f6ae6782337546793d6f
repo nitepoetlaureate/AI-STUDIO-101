@@ -2,4 +2,4 @@ kind summary
 edge applies-to blob:5170fe533554efee13b3f6ae6782337546793d6f
 edge targets-path path:src/gameplay/objects/InteractiveObject.gd
 
-RigidBody2D prop: receive_impact (impulse + chaos over min threshold), apply_grab_push for sustained E shove, weight_class presets, can_sleep false, lock_rotation, collision layer/mask 1.
+RigidBody2D prop: weight presets, receive_impact, apply_grab_push, chaos/NPC hooks on displace; layer/mask 1; can_sleep false; lock_rotation.
