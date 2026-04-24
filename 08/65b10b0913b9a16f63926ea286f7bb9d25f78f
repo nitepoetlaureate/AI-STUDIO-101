@@ -1,0 +1,5 @@
+kind observation
+edge applies-to blob:0865b10b0913b9a16f63926ea286f7bb9d25f78f
+edge targets-path path:.gitignore
+
+Ignores include production/session-state hook log and debug artifacts as configured.
