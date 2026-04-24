@@ -1,0 +1,5 @@
+kind observation
+edge applies-to blob:daa1fca8cb39c03981a6d8fc96b9f60dd089454b
+edge targets-path path:src/shared/NpcState.gd
+
+NPC runtime state; factory helpers for Michael/Christen defaults.
