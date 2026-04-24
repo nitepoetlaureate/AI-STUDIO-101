@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:7d7802f2a430478e3105734799b1a490af438da2
+edge targets-path path:src/gameplay/chaos/ChaosMeter.gd
+
+chaos_fill/social_fill/meter_state; foreach_registered_npc sums goodwill via progress_acc[0] (lambda-safe); listens ChaosEventBus object_chaos_event + pest_caught.
