@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:789303807c826adf65c4b7d37ee6ca2182b82210
+edge targets-path path:tests/unit/test_npc_controller_decay.gd
+
+GUT: NPC emotional decay toward baseline.
