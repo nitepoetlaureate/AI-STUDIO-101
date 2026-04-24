@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:de060383973cecbda010e5af0943588f26bf0699
+edge targets-path path:src/gameplay/chaos/ChaosEventBus.gd
+
+Autoload relay; object_chaos_event + pest_caught signals with @warning_ignore unused_signal (consumers connect externally).
