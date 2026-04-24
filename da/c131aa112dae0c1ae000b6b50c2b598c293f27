@@ -1,0 +1,4 @@
+kind context
+edge explains commit:dac131aa112dae0c1ae000b6b50c2b598c293f27
+
+Sprint1 execution: NpcController+Social+ChaosMeter+UI+InteractiveObject+test_apartment; CI lint step; sprint producer exceptions §S1-PROD-001–005; PLAYTEST-004 template. Evidence: GUT 40 pass, gdcli lint 0.
