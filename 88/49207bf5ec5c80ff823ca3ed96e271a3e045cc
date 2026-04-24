@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:8849207bf5ec5c80ff823ca3ed96e271a3e045cc
+edge targets-path path:scenes/production/test_apartment.tscn
+
+Wrapper scene: root script test_apartment_root.gd. Child _EditorPreview (floor + props + spawn polygons) visible in editor only; script queue_frees it at runtime.
