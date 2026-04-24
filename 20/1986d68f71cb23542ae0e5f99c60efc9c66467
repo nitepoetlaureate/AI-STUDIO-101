@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:201986d68f71cb23542ae0e5f99c60efc9c66467
+edge targets-path path:assets/data/bonnie_traversal_config.tres
+
+BonnieTraversalConfig resource: includes slide_object_impulse_min_speed, grab_object_push_impulse_per_sec, IO speed gates.
