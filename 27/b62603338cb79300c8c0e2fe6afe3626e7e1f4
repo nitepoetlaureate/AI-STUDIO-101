@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:27b62603338cb79300c8c0e2fe6afe3626e7e1f4
+edge targets-path path:assets/data/chaos_meter_config.tres
+
+ChaosMeter thresholds/caps; chaos_fill_cap + social_fill_weight invariant.
