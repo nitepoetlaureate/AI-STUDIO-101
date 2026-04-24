@@ -1,0 +1,5 @@
+kind observation
+edge applies-to blob:505d80a5f952f6bbc027cf70f8f4f6bbd43854e9
+edge targets-path path:src/gameplay/npc/NpcProfile.gd
+
+NPC profile resource; feeding thresholds and tuning.
