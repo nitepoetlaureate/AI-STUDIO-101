@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:6cac1807e303fc7023a5155fa43958c2e900b9ec
+edge targets-path path:.claude/rules/mycelium.md
+
+Agent discipline: find constraints/warnings on arrival; write note HEAD + file summaries same turn as substantive edits; note-and-push / Cursor hook for remote notes.
