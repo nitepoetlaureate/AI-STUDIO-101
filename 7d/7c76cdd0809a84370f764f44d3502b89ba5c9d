@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:7d7c76cdd0809a84370f764f44d3502b89ba5c9d
+edge targets-path path:src/ui/chaos_meter/ChaosMeterUI.gd
+
+CanvasLayer HUD bowl: ColorRect chaos/social fills from ChaosMeter group; no invalid layout_mode int (Godot 4.6); loads UI+meter configs.
