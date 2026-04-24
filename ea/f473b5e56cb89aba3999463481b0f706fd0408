@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:eaf473b5e56cb89aba3999463481b0f706fd0408
+edge targets-path path:src/gameplay/camera/BonnieCamera.gd
+
+Camera2D follow/lookahead from config; may contain folded debug agent log in _ready for playtest diagnostics.
