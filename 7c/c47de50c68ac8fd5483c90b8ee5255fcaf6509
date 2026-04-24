@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:7cc47de50c68ac8fd5483c90b8ee5255fcaf6509
+edge targets-path path:tests/unit/test_chaos_event_bus_meter.gd
+
+GUT: ChaosEventBus events increment chaos meter fill.
