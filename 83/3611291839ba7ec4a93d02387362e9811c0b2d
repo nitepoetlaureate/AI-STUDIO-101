@@ -1,0 +1,5 @@
+kind observation
+edge applies-to blob:833611291839ba7ec4a93d02387362e9811c0b2d
+edge targets-path path:.cursor/rules/claude-game-studio-bridge.mdc
+
+Cursor bridge rules; mycelium same-turn note guidance.
