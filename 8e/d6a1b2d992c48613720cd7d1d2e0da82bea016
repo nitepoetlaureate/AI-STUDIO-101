@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:8ed6a1b2d992c48613720cd7d1d2e0da82bea016
+edge targets-path path:prototypes/bonnie-traversal/PLAYTEST-004.md
+
+Sprint1 core-loop checklist: preconditions (GUT, gdcli, headless), AC-T table PENDING human, agent evidence table 2026-04-23, verdict BLOCKED until F5 rows filled.
