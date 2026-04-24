@@ -1,0 +1,5 @@
+kind observation
+edge applies-to blob:d0931258b07c68c3e22db191bc63e7d943e2c31e
+edge targets-path path:docs/SCAFFOLD-REGISTER.md
+
+Scaffold/register index; updated alongside production cutover.
