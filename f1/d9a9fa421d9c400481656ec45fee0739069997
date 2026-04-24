@@ -1,0 +1,4 @@
+kind context
+edge explains commit:f1d9a9fa421d9c400481656ec45fee0739069997
+
+Production test_apartment (S1-17) is main scene: runtime builds floor/NPCs/props/Bonnie; _EditorPreview in tscn is editor-only and queue_freed in _ready. Props must use center Y = floor top + half box height (332+10) so RigidBody2D rests on slab—minus half-height floated crates and broke slide/grab. Floor width 3000 for slide tests. Bonnie: grab uses E (project grab action); slide impulse uses floor speed when SLIDING; grab push uses slide contacts plus horizontal ray; _grab_facing_x when idle. InteractiveObject: can_sleep off, lock_rotation, layer/mask 1, apply_grab_push. PLAYTEST-004 documents agent Layer-1 gates; human AC rows still pending. GDScript warning cleanups (ChaosMeterUI, SocialSystem, NpcController, ChaosEventBus, ChaosMeter lambda, test_apartment ternary). Cursor hook afterShell pushes refs/notes/mycelium when mycelium.autoPushNotes true.
