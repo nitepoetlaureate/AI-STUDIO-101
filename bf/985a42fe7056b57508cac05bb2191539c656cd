@@ -1,0 +1,5 @@
+kind observation
+edge applies-to blob:bf985a42fe7056b57508cac05bb2191539c656cd
+edge targets-path path:production/sprints/sprint-1.md
+
+Sprint 1 tracking; S1-09/17/playtest rows depend on human PLAYTEST-004 closure.
