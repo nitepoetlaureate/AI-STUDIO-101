@@ -1,5 +1,5 @@
-kind warning
+kind summary
 edge applies-to blob:f2a8b85db5600e399f5a7f5beca22a4d818385f5
 edge targets-path path:scenes/production/test_apartment_root.gd
 
-If props float, prop_y must be FLOOR_TOP_Y + half height (not minus). Keep _FLOOR_WIDTH in sync with floor Rect2 width and respawn bounds.
+S1-17 smoke level: _ready builds ChaosMeter, SocialSystem, ChaosMeterUI, floor StaticBody2D+Polygon2D, two InteractiveObjects, Bonnie from tscn, NPC registration. Removes _EditorPreview child if present. Christen timer 120s. OOB respawn via soft_respawn_at. Agent debug NDJSON to .cursor path + user://.
