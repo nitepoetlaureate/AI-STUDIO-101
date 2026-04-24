@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:4da4e40204d4427fc33f2ae38c41b67b6daa18db
+edge targets-path path:.cursor/hooks.json
+
+afterShellExecution runs cursor-after-shell-mycelium-notes.sh when command matches mycelium note; optional auto-push refs/notes/mycelium via git config.
