@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:4d0acafca8077af3e2fcb4eabdc627a6b8b8da07
+edge targets-path path:tests/unit/helpers/camera_mock_bonnie.gd
+
+Test double for Bonnie camera production tests (stimulus/lookahead).
