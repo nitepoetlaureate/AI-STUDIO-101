@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:189e70fa25b58ae26049a0a6d72fb0ef608f523f
+edge targets-path path:src/core/level/LevelManager.gd
+
+Autoload level/NPC registry, rooms, LOS/visibility pass hooks; used by test_apartment NPC registration and gameplay systems.
