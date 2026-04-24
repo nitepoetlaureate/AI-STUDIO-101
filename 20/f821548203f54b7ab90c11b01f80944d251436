@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:20f821548203f54b7ab90c11b01f80944d251436
+edge targets-path path:tests/unit/test_chaos_meter_formulas.gd
+
+GUT: chaos meter config invariants and reacting contribution.
