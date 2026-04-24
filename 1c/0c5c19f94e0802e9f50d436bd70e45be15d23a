@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:1c0c5c19f94e0802e9f50d436bd70e45be15d23a
+edge targets-path path:tests/unit/test_bonnie_camera_production.gd
+
+GUT: Bonnie camera config and lookahead behavior with mock bonnie.
