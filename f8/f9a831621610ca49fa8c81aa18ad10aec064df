@@ -1,0 +1,5 @@
+kind observation
+edge applies-to blob:f8f9a831621610ca49fa8c81aa18ad10aec064df
+edge targets-path path:src/gameplay/chaos/ChaosMeterConfig.gd
+
+ChaosMeter config resource script.
