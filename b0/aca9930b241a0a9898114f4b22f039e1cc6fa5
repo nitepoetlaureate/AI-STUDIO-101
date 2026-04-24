@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:b0aca9930b241a0a9898114f4b22f039e1cc6fa5
+edge targets-path path:.cursor/hooks/cursor-after-shell-mycelium-notes.sh
+
+Shell hook: on successful mycelium.sh note, append hook log; if mycelium.autoPushNotes true, git push origin refs/notes/mycelium.
