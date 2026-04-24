@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:3b28a2e2bc21ce2b002fe6f347ef795786650bad
+edge targets-path path:project.godot
+
+main_scene res://scenes/production/test_apartment.tscn; autoloads include InputSystem LevelManager ChaosEventBus; 2d_physics layers world/semisolid/npc; grab=E interact=F.
