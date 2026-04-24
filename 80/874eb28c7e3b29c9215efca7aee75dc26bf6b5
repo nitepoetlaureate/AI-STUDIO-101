@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:80874eb28c7e3b29c9215efca7aee75dc26bf6b5
+edge targets-path path:tests/unit/test_interactive_object.gd
+
+GUT: receive_impact displaces and emits object_chaos_event via ChaosEventBus mock.
