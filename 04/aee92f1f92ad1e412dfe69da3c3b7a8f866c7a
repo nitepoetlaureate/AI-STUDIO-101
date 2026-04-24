@@ -2,4 +2,4 @@ kind summary
 edge applies-to blob:04aee92f1f92ad1e412dfe69da3c3b7a8f866c7a
 edge targets-path path:src/gameplay/bonnie/BonnieController.gd
 
-Traversal + IO: receive_impact from slide collisions with allow rules; slide uses slide_object_impulse_min_speed floor. Grab (E): apply_grab_push on slide hits else ray from mid-body; _grab_facing_x when idle. soft_respawn_at for playtest. Recovery applies gravity when airborne.
+Traversal states; move_and_slide; IO receive_impact when allowed (walk/run/slide mins); slide uses slide_object_impulse_min_speed; grab: apply_grab_push + _grab_push_via_ray; _grab_facing_x; soft_respawn_at; _physics_recovery gravity if airborne. Optional debug _agent_log regions.
