@@ -2,6 +2,4 @@ kind summary
 edge applies-to blob:f2a8b85db5600e399f5a7f5beca22a4d818385f5
 edge targets-path path:scenes/production/test_apartment_root.gd
 
-S1-17 smoke level: _ready builds ChaosMeter, SocialSystem, ChaosMeterUI, floor StaticBody2D+Polygon2D, two InteractiveObjects, Bonnie from tscn, NPC registration; removes _EditorPreview at runtime. Christen 120s. OOB soft_respawn_at. DEBUG: NDJSON to .cursor + user://.
-
-WARNING: Prop center Y must be FLOOR_TOP_Y + half box height (crates on slab). Keep _FLOOR_WIDTH in sync with floor Rect2 and respawn bounds.
+S1-17 smoke: builds meter/social/UI, floor, two InteractiveObjects, Bonnie, NPCs+rooms, Christen timer, OOB respawn. Prop Y = FLOOR_TOP_Y+10. _FLOOR_WIDTH matches floor+respawn. Agent logs: .cursor + user:// NDJSON.
