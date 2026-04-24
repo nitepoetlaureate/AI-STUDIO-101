@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:0aa9e9d26fc5033d2054a40e54738d945de18721
+edge targets-path path:src/gameplay/bonnie/BonnieTraversalConfig.gd
+
+Exported tuning: walk/run IO thresholds, slide_object_impulse_min_speed, grab_object_push_impulse_per_sec, interactive_object_impulse_scale. Loaded from bonnie_traversal_config.tres.
