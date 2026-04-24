@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:991b09d0302c1d15f2e924c061a59ad2f5c15293
+edge targets-path path:tests/unit/test_social_levity.gd
+
+GUT: social levity multiplier when chaos recent.
