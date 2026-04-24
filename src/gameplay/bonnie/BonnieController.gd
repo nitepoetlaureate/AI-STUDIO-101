@@ -28,6 +28,41 @@ var _recovery_timer: float = 0.0
 var _airborne_start_y: float = 0.0
 var _was_on_floor: bool = true
 var _jump_held_frames: int = 0
+## Last non-zero horizontal intent for grab-push when velocity and stick are neutral.
+var _grab_facing_x: float = 1.0
+
+#region agent log
+const _AGENT_LOG_PATHS: Array[String] = [
+	"/Users/michaelraftery/AI-STUDIO-101/.cursor/debug-1bb634.log",
+	"user://debug_1bb634.log",
+]
+var _dbg_last_io_skip_ms: int = 0
+var _dbg_last_fall_ms: int = 0
+var _dbg_last_recovery_air_ms: int = 0
+
+
+func _agent_log(loc: String, msg: String, data: Dictionary, hypothesis_id: String) -> void:
+	var payload: Dictionary = {
+		"sessionId": "1bb634",
+		"timestamp": Time.get_ticks_msec(),
+		"location": loc,
+		"message": msg,
+		"data": data,
+		"hypothesisId": hypothesis_id,
+	}
+	var line: String = JSON.stringify(payload) + "\n"
+	for p: String in _AGENT_LOG_PATHS:
+		var f: FileAccess = FileAccess.open(p, FileAccess.READ_WRITE)
+		if f == null:
+			f = FileAccess.open(p, FileAccess.WRITE)
+		if f == null:
+			continue
+		f.seek(f.get_length())
+		f.store_string(line)
+		f.close()
+
+
+#endregion agent log
 
 
 func _ready() -> void:
@@ -127,6 +162,13 @@ func _physics_process(delta: float) -> void:
 		var pre_vx_l := velocity.x
 		move_and_slide()
 		_try_wall_slide_daze(cfg, pre_vx_l)
+		_apply_interactive_object_collisions(cfg, delta)
+		var mv_landing: Vector2 = Vector2.ZERO
+		if _input_system != null and _input_system.has_method(&"get_move_vector"):
+			mv_landing = _input_system.call(&"get_move_vector") as Vector2
+		if absf(mv_landing.x) > 0.08:
+			_grab_facing_x = signf(mv_landing.x)
+		_apply_grab_push_interactive_objects(cfg, mv_landing, delta)
 		_was_on_floor = is_on_floor()
 		return
 
@@ -135,6 +177,8 @@ func _physics_process(delta: float) -> void:
 		_was_on_floor = is_on_floor()
 		return
 	var move_vec: Vector2 = _input_system.call(&"get_move_vector") as Vector2
+	if absf(move_vec.x) > 0.08:
+		_grab_facing_x = signf(move_vec.x)
 	var sneak_btn := Input.is_action_pressed(&"sneak")
 	var run_btn := Input.is_action_pressed(&"run")
 	var auto_sneak: bool = _input_system.call(&"should_auto_sneak_from_analog", move_vec) as bool
@@ -148,6 +192,8 @@ func _physics_process(delta: float) -> void:
 	var pre_vx := velocity.x
 	move_and_slide()
 	_try_wall_slide_daze(cfg, pre_vx)
+	_apply_interactive_object_collisions(cfg, delta)
+	_apply_grab_push_interactive_objects(cfg, move_vec, delta)
 
 	if is_on_floor() and not was_on_floor:
 		_on_touch_down(cfg, move_vec, sneak_on, run_btn)
@@ -158,11 +204,48 @@ func _physics_process(delta: float) -> void:
 	_try_climb_entry(cfg, move_vec)
 	_try_ledge_pullup_entry(cfg)
 	_was_on_floor = is_on_floor()
+	# region agent log
+	var now_f: int = Time.get_ticks_msec()
+	if global_position.y > 420.0 and now_f - _dbg_last_fall_ms > 500:
+		_dbg_last_fall_ms = now_f
+		_agent_log(
+			"BonnieController.gd:_physics_process",
+			"deep_fall",
+			{"y": global_position.y, "x": global_position.x, "state": _state, "vel": velocity, "on_floor": is_on_floor()},
+			"H7"
+		)
+	# endregion
+
+
+func soft_respawn_at(pos: Vector2) -> void:
+	global_position = pos
+	velocity = Vector2.ZERO
+	_recovery_timer = 0.0
+	_landing_timer = 0.0
+	_stub_timer = 0.0
+	_jump_held_frames = 0
+	_set_state(_E.BonnieState.IDLE)
 
 
 func _physics_recovery(delta: float, cfg: BonnieTraversalConfig) -> void:
-	velocity = Vector2.ZERO
+	if not is_on_floor():
+		velocity.y = minf(velocity.y + cfg.gravity * delta, cfg.fall_velocity_max)
+		velocity.x = move_toward(velocity.x, 0.0, cfg.ground_deceleration * delta)
+	else:
+		velocity = Vector2.ZERO
 	move_and_slide()
+	# region agent log
+	if not is_on_floor() and (_state == _E.BonnieState.ROUGH_LANDING or _state == _E.BonnieState.DAZED):
+		var now_r: int = Time.get_ticks_msec()
+		if now_r - _dbg_last_recovery_air_ms > 400:
+			_dbg_last_recovery_air_ms = now_r
+			_agent_log(
+				"BonnieController.gd:_physics_recovery",
+				"recovery_airborne",
+				{"state": _state, "vel": velocity, "y": global_position.y, "recovery_left": _recovery_timer},
+				"H9"
+			)
+	# endregion
 	_recovery_timer -= delta
 	if _recovery_timer <= 0.0:
 		_set_state(_E.BonnieState.IDLE)
@@ -368,3 +451,95 @@ func _try_wall_slide_daze(cfg: BonnieTraversalConfig, pre_collision_horizontal_s
 
 func get_movement_state() -> int:
 	return _state
+
+
+func _apply_grab_push_interactive_objects(cfg: BonnieTraversalConfig, move_vec: Vector2, delta: float) -> void:
+	if not Input.is_action_pressed(&"grab"):
+		return
+	if _state in [
+		_E.BonnieState.DAZED,
+		_E.BonnieState.ROUGH_LANDING,
+		_E.BonnieState.LEDGE_PULLUP,
+		_E.BonnieState.CLIMBING,
+	]:
+		return
+	if not is_on_floor():
+		return
+	var dir: float = signf(move_vec.x)
+	if dir == 0.0:
+		dir = signf(velocity.x)
+	if dir == 0.0:
+		dir = _grab_facing_x
+	var cnt: int = get_slide_collision_count()
+	var hit_prop: bool = false
+	for i in cnt:
+		var hit: Node = get_slide_collision(i).get_collider() as Node
+		if hit != null and hit.has_method(&"apply_grab_push"):
+			hit.call(&"apply_grab_push", dir, delta, cfg.grab_object_push_impulse_per_sec)
+			hit_prop = true
+	if not hit_prop:
+		_grab_push_via_ray(dir, delta, cfg)
+
+
+func _grab_push_via_ray(dir: float, delta: float, cfg: BonnieTraversalConfig) -> void:
+	if dir == 0.0:
+		return
+	var space: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	var origin: Vector2 = global_position + Vector2(0.0, -6.0)
+	var reach: float = 44.0
+	var to: Vector2 = origin + Vector2(dir * reach, 0.0)
+	var pq: PhysicsRayQueryParameters2D = PhysicsRayQueryParameters2D.create(origin, to)
+	pq.collision_mask = collision_mask
+	pq.exclude = [get_rid()]
+	var res: Dictionary = space.intersect_ray(pq)
+	if res.is_empty():
+		return
+	var collider: Variant = res.get("collider")
+	if collider is Node:
+		var n: Node = collider as Node
+		if n.has_method(&"apply_grab_push"):
+			n.call(&"apply_grab_push", dir, delta, cfg.grab_object_push_impulse_per_sec)
+
+
+func _apply_interactive_object_collisions(cfg: BonnieTraversalConfig, _delta: float) -> void:
+	var allow := false
+	var vx_abs := absf(velocity.x)
+	match _state:
+		_E.BonnieState.SLIDING:
+			allow = true
+		_E.BonnieState.RUNNING:
+			allow = vx_abs >= cfg.run_object_interaction_min_speed
+		_E.BonnieState.WALKING, _E.BonnieState.SNEAKING, _E.BonnieState.SQUEEZING, _E.BonnieState.IDLE, _E.BonnieState.LANDING:
+			allow = vx_abs >= cfg.walk_object_interaction_min_speed
+		_:
+			allow = false
+	if not allow:
+		# region agent log
+		var cnt0 := get_slide_collision_count()
+		for j in cnt0:
+			var h0: Node = get_slide_collision(j).get_collider() as Node
+			if h0 != null and h0.has_method(&"receive_impact"):
+				var now0: int = Time.get_ticks_msec()
+				if now0 - _dbg_last_io_skip_ms > 400:
+					_dbg_last_io_skip_ms = now0
+					_agent_log(
+						"BonnieController.gd:_apply_interactive_object_collisions",
+						"io_skip_state_gate",
+						{"state": _state, "vel": velocity, "walk_min": cfg.walk_object_interaction_min_speed, "run_min": cfg.run_object_interaction_min_speed},
+						"H6"
+					)
+				break
+		# endregion
+		return
+	var io_scale: float = cfg.interactive_object_impulse_scale
+	var spd: float = velocity.length()
+	if _state == _E.BonnieState.SLIDING:
+		spd = maxf(spd, cfg.slide_object_impulse_min_speed)
+	if spd < 1.0:
+		return
+	var cnt := get_slide_collision_count()
+	for i in cnt:
+		var hit: Node = get_slide_collision(i).get_collider() as Node
+		if hit != null and hit.has_method(&"receive_impact"):
+			var normal: Vector2 = get_slide_collision(i).get_normal()
+			hit.call(&"receive_impact", -normal * spd * io_scale)

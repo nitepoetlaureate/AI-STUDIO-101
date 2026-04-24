@@ -1,65 +1,63 @@
-# Playtest Report — PLAYTEST-004: Session 013 integration gate
+# PLAYTEST-004 — Sprint 1 core loop (production apartment)
 
-## Session Info
+**Build:** `main` @ production `test_apartment.tscn`  
+**Tester:** Agent (Layer 1 + headless); **human still required** for traversal AC spot-checks and meter/NPC visual sign-off  
+**Date:** 2026-04-23  
+**Environment:** Godot 4.6.2, 720×540, keyboard
 
-- **Date**: 2026-04-19 (integration merged to `main`; composites re-checked)
-- **Build**: `main` @ Session 013 — TileMap + semisolid + env sprites + NPC MCP exports + Bonnie locomotion
-- **Duration**: Automated validation + doc pass (no full manual play session)
-- **Tester**: Integration pass (Cursor agent + Godot 4.6 headless)
-- **Platform**: macOS / Godot 4.6
-- **Test Type**: Session 013 **Phase B/E** closure — scene load, GUT, import handoff
+## Session goal
 
----
+Validate Sprint 1 Must-Haves **S1-09** (traversal AC-T01–T08), **S1-10** (AC-T08 camera), **S1-11–S1-18** per [production/sprints/sprint-1.md](../../production/sprints/sprint-1.md). **Do not mark sprint rows Done in-repo until this checklist is filled with PASS/FAIL evidence.**
 
-## Scope
+## Agent-run evidence (2026-04-23)
 
-**In scope:** `TestLevel.tscn` integration (TileMap floor + semisolid demo row, `Sprite2D` platform fills, crate art, parallax, `AnimatedSprite2D` NPCs), `BonnieController` locomotion + semisolid `collision_mask`, `IMPORT-GODOT.md` NPC + TestLevel truth, multi-scale NPC exports (`*-16px/`, `*-24px/`, `*-32px/`), `verification-013/` stills (**real export pixels** via `tools/composite_verification_013.py`; `tools/capture_verification_013.gd` remains for future **visible** Godot runs where `ViewportTexture.get_image()` works).
+| Gate | Result | Evidence |
+|------|--------|----------|
+| GUT `tests/unit` | **PASS** | 40/40 tests, 5.767s, exit 0 |
+| `gdcli-godot script lint` | **PASS** | `error_count: 0` |
+| Headless `test_apartment.tscn` | **PASS** | `--quit-after 8`, `--quit-after 15`, `--quit-after 125` — no script errors, exit 0 |
+| Camera subsystem (AC-T08 surrogate) | **PASS** | `test_bonnie_camera_production.gd` — 3/3 (lookahead / config) |
 
-**Out of scope:** Chaos meter / charm full-loop play (Sprint S1-18 gameplay), subjective audio mix / feel pass (S1-05 API is in; assets optional).
+**In-editor (F5) not executed by agent:** placeholder visuals, prop bumps, OOB respawn feel, and subjective AC-T01–T07 still need a human row below.
 
----
+## Preconditions
 
-## Automated checks
+- [x] `godot --headless --path . -s addons/gut/gut_cmdln.gd -- -gdir=res://tests/unit -gexit` — all green (**40/40, 2026-04-23**)
+- [x] `npx -y gdcli-godot script lint` — 0 errors (**2026-04-23**)
+- [x] `godot --headless --path . res://scenes/production/test_apartment.tscn --quit-after 8` — no errors (**2026-04-23**)
 
-| Check | Result |
-|-------|--------|
-| `godot --headless --path . -s res://tools/boot_test_level_once.gd` | Pass (clean load) |
-| GUT `res://tests/unit` (`gut_cmdln.gd` `-gdir=… -gexit`) | **18/18** (post–S1-08 on `main`; Session 013 closure was **9/9**) |
-| `gdcli scene validate` on `TestLevel.tscn`, `BonnieController.tscn` | **Pass** (0 issues, 2026-04-19) |
-| `python3 tools/composite_verification_013.py` | **Pass** (re-run 2026-04-19; **`git status`** clean — outputs match tree) |
+## Traversal (AC-T01–T08) — S1-09 / S1-10
 
----
+| AC | Result | Notes |
+|----|--------|-------|
+| AC-T01 | **PENDING** | Human F5 per [bonnie-traversal.md](../../design/gdd/bonnie-traversal.md) §AC-T01; no frame-level harness in this run. |
+| AC-T02 | **PENDING** | Human F5; automated: `test_input_system.gd`, config loads. |
+| AC-T03 | **PENDING** | Human F5. |
+| AC-T04 | **PENDING** | Human F5. |
+| AC-T05 | **PENDING** | Human F5. |
+| AC-T06 | **PENDING** | Human F5. |
+| AC-T06b | **PENDING** | Human F5. |
+| AC-T07 | **PENDING** | Human F5. |
+| AC-T08 (camera) | **PASS (automated surrogate)** | `test_bonnie_camera_production.gd` 3/3; full AC wording still needs human confirm on `test_apartment.tscn`. |
 
-## Findings
+## NPC / social (spot-check)
 
-1. **Headless viewport capture** — `ViewportTexture.get_image()` stays **broken** under the **dummy** display driver (even with a `SubViewport`). **verification-013** PNGs are **720×540 composites** built from shipped **`art/export/**` PNGs** (parallax, ground tile, Bonnie strip, NPC strips) via **`python3 tools/composite_verification_013.py`** — real game art pixels, not solid-colour stubs. For a **single true framebuffer** still, run the project in-editor and extend `capture_verification_013.gd` as needed.
-2. **Semisolid** — Implemented via TileSet **physics layer 2** + **one-way** polygon + Bonnie **`velocity.y`** gate on `collision_mask`. Feel and margin tuning need **human** play (apex hop, edge pops).
-3. **NPC art** — Throwaway MCP pixel blocks; **16 px** path wired in-scene; **24/32** folders exist for LOD / UI experiments per `IMPORT-GODOT.md` §3.5.
+| Area | Result | Notes |
+|------|--------|-------|
+| Michael REACTING ×2 | **PENDING** | Human F5 + social/chaos drive; headless did not assert NPC reactions. |
+| Charm during RECOVERING | **PENDING** | Human F5. |
+| Christen appears after ~120s | **PARTIAL** | Long headless run exited 0 (`CHRISTEN_ARRIVAL_SEC` in `test_apartment_root.gd`); visibility/timer not asserted in automation — human should confirm in-editor. |
 
----
+## Meter / UI
 
-## Checklist
+| Check | Result | Notes |
+|-------|--------|-------|
+| Chaos + social fills visible | **PENDING** | Human F5 (`ChaosMeterUI` bottom-right). |
+| 6+ meter visual states distinguishable | **PENDING** | Human F5. |
+| FED / overwhelm behaviour per design | **PENDING** | Human F5 + design reference. |
 
-- [x] Session metadata filled in
-- [ ] Core loop / meter / charm flows (S1-18) — **deferred**; prototype traversal only
-- [x] Findings and severity logged (this section)
+## Verdict
 
----
-
-## Optional polish (post–Session 013; not gated)
-
-Tracked for quality and evolution; see also [`SESSION-013-PROMPT.md`](../../SESSION-013-PROMPT.md) end matter.
-
-| Item | Action |
-|------|--------|
-| **Framebuffer stills** | Run [`tools/capture_verification_013.gd`](../../tools/capture_verification_013.gd) **with a visible window** (no `--headless`) if you need SubViewport PNGs; keep [`tools/composite_verification_013.py`](../../tools/composite_verification_013.py) for CI-safe composites. |
-| **Semisolid feel** | Human pass on apex hop, edge pops, margins ([Finding 2](#findings)). |
-| **Round 3 art / IMPORT-GODOT** | Re-export via MCP/Aseprite when art changes; reconcile [`IMPORT-GODOT.md`](IMPORT-GODOT.md) ↔ JSON/PNG; soft-landing / platform-edge micro-read per session brief. |
-| **Phase A re-stat** | When locomotion strip or JSON changes, re-stat sheet + refresh IMPORT-GODOT §3–§4. |
-| **Studio hygiene** | [`NEXT.md`](../../NEXT.md) — Mycelium `compost-workflow.sh --dry-run` when hooks report drift; optional `res://assets/audio/` WAV/OGG; Priority 2 pixel/icon polish. |
-
----
-
-## Scene note (updated)
-
-`TestLevel.tscn` **NPCs** use **`AnimatedSprite2D`** + **`NpcIdleFromSheet.gd`** with `res://.../art/export/npc/*-idle-sheet.{json,png}` (default **16 px**). **`SoftLandingPad`** retains a **single `ColorRect` greybox** per Session 013 allowance.
+- **PASS / FAIL / BLOCKED:** **BLOCKED** for full Sprint 1 traversal/social/UI sign-off — **Layer 1 automated gates PASS**; **AC-T01–T07, NPC spot-checks, meter rows remain PENDING** until human PLAYTEST.
+- **Blockers:** In-editor validation (F5) on `test_apartment.tscn` to close PENDING rows; optional: remove or archive debug NDJSON instrumentation in `BonnieController.gd` / `test_apartment_root.gd` after green human run.
+- **Sign-off for marking S1-09 / S1-10 / S1-11–S1-18 Done in sprint-1:** _Deferred — replace with name/date after human closes PENDING rows above._

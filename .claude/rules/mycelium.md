@@ -23,9 +23,27 @@ If `context-workflow.sh` is unavailable, do this manually:
 ./mycelium/mycelium.sh read HEAD           # note on current commit
 ```
 
+## Immediate persistence (Cursor + agents)
+
+**Do not defer Mycelium writes to “end of session”** when the agent has already applied substantive edits in this turn.
+
+1. **Same turn as the change:** after meaningful `Write` / `Edit` / shell-driven edits, run **in the same assistant response** (before ending the turn):
+   - `./mycelium/mycelium.sh note HEAD -k context -m "…"`
+   - `./mycelium/mycelium.sh note <changed-path> -k summary -m "…"` (per file that needs cross-session context)
+2. **Push notes to GitHub immediately (optional, recommended when notes must survive on other machines):**
+   ```bash
+   git config mycelium.autoPushNotes true
+   git config mycelium.remote origin   # optional
+   ```
+   Then either:
+   - use **`./mycelium/scripts/note-and-push.sh …`** instead of `mycelium.sh note …` for those commands, **or**
+   - rely on **Cursor `afterShellExecution`** (see `.cursor/hooks.json`): after a successful shell command that invokes `mycelium.sh note`, the hook appends to `production/session-state/.mycelium-hook-log` and **auto-pushes** `refs/notes/mycelium` when `mycelium.autoPushNotes` is true.
+
+3. **Code commits** (`git commit` of the branch) remain separate from **git notes** (`refs/notes/mycelium`). Notes can be pushed without a new code commit.
+
 ## Mandatory Departure Protocol
 
-After any meaningful work (design decision, code change, architectural discovery):
+After any meaningful work (design decision, code change, architectural discovery), if you have **not** already written the notes in the same turn as above, run:
 
 ```bash
 # Note on the commit (context — why this change exists)

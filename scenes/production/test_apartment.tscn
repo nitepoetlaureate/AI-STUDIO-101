@@ -1,0 +1,28 @@
+[gd_scene load_steps=2 format=3 uid="uid://test_apartment_s1_17"]
+
+[ext_resource type="Script" path="res://scenes/production/test_apartment_root.gd" id="1_root"]
+
+[node name="TestApartment" type="Node2D"]
+script = ExtResource("1_root")
+
+[node name="_EditorPreview" type="Node2D" parent="."]
+editor_description = "Approximate layout for the editor only. Removed at runtime when the script builds colliders + visuals."
+
+[node name="FloorPreview" type="Polygon2D" parent="_EditorPreview"]
+color = Color(0.42, 0.35, 0.28, 1)
+polygon = PackedVector2Array(0, 332, 3000, 332, 3000, 380, 0, 380)
+
+[node name="PropPreviewA" type="Polygon2D" parent="_EditorPreview"]
+position = Vector2(520, 342)
+color = Color(0.35, 0.55, 0.85, 1)
+polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
+
+[node name="PropPreviewB" type="Polygon2D" parent="_EditorPreview"]
+position = Vector2(1600, 342)
+color = Color(0.35, 0.55, 0.85, 1)
+polygon = PackedVector2Array(-10, -10, 10, -10, 10, 10, -10, 10)
+
+[node name="SpawnHint" type="Polygon2D" parent="_EditorPreview"]
+position = Vector2(120, 280)
+color = Color(0.92, 0.55, 0.18, 0.85)
+polygon = PackedVector2Array(-10, -18, 10, -18, 10, 18, -10, 18)

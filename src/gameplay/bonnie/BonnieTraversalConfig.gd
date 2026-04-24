@@ -49,3 +49,15 @@ extends Resource
 @export var walk_stimulus_radius: float
 @export var run_stimulus_radius: float
 @export var slide_stimulus_bonus: float
+
+@export_group("Interactive objects (Godot 4 impulse bridge)")
+## Scale for [method InteractiveObject.receive_impact] from slide/run collisions.
+@export var interactive_object_impulse_scale: float = 1.15
+## Minimum horizontal speed for RUNNING to displace objects on contact ([code]interactive-object-system.md[/code] §3.3).
+@export var run_object_interaction_min_speed: float = 200.0
+## Minimum horizontal speed for WALKING/SNEAKING to apply [method InteractiveObject.receive_impact] (lower than run; bumping while walking).
+@export var walk_object_interaction_min_speed: float = 55.0
+## Floor for [method InteractiveObject.receive_impact] speed term while SLIDING (Godot may zero lateral velocity on rigid contact).
+@export var slide_object_impulse_min_speed: float = 260.0
+## Per-second impulse scale while grab is held and moving into a prop ([method InteractiveObject.apply_grab_push]).
+@export var grab_object_push_impulse_per_sec: float = 140.0

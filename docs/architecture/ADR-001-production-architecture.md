@@ -71,7 +71,7 @@ The prototype script `prototypes/bonnie-traversal/BonnieController.gd` already r
 
 ## Decision: `run/main_scene`
 
-Until **S1-17** delivers the production test apartment scene, **`run/main_scene`** stays on the prototype `TestLevel.tscn` so Play in editor remains a valid traversal sandbox.
+**2026-04-23 (S1-17 MVP):** `run/main_scene` is `res://scenes/production/test_apartment.tscn` — code-built apartment + core systems. The traversal prototype `TestLevel.tscn` remains available under `prototypes/bonnie-traversal/` for reference until **S1-09** archive rule fires after human AC-T sign-off.
 
 ## Decision: viewport bootstrap (S1-03)
 

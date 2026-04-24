@@ -11,3 +11,7 @@ extends Resource
 @export var meter_threshold_converging: float
 @export var meter_threshold_tipping: float
 @export var fill_chase_speed: float
+
+@export_group("Chaos from NPC REACTING (chaos-meter §4.1)")
+@export var chaos_event_scale: float = 0.12
+@export var cascade_bonus_per_depth: float = 0.15

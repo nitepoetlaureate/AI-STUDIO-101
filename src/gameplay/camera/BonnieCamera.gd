@@ -23,6 +23,33 @@ func _ready() -> void:
 		return
 	zoom = Vector2.ONE * camera_config.zoom_normal
 	global_position = _bonnie.global_position if _bonnie != null else global_position
+	# region agent log
+	var _lp := "/Users/michaelraftery/AI-STUDIO-101/.cursor/debug-1bb634.log"
+	var _f: FileAccess = FileAccess.open(_lp, FileAccess.READ_WRITE)
+	if _f == null:
+		_f = FileAccess.open(_lp, FileAccess.WRITE)
+	if _f != null:
+		_f.seek(_f.get_length())
+		_f.store_string(
+			JSON.stringify(
+				{
+					"sessionId": "1bb634",
+					"timestamp": Time.get_ticks_msec(),
+					"location": "BonnieCamera.gd:_ready",
+					"message": "camera_ready",
+					"data": {
+						"bonnie_null": _bonnie == null,
+						"enabled": enabled,
+						"global_pos": global_position,
+						"zoom": zoom,
+					},
+					"hypothesisId": "H2",
+				}
+			)
+			+ "\n"
+		)
+		_f.close()
+	# endregion
 
 
 func _physics_process(delta: float) -> void:

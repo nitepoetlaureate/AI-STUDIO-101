@@ -1,6 +1,9 @@
 extends GutTest
 
 const _BCC := preload("res://src/gameplay/camera/BonnieCameraConfig.gd")
+const _E := preload("res://src/shared/enums.gd")
+const _MockBonnie := preload("res://tests/unit/helpers/camera_mock_bonnie.gd")
+const _BonnieCam := preload("res://src/gameplay/camera/BonnieCamera.gd")
 
 
 func test_camera_config_loads() -> void:
@@ -31,3 +34,19 @@ func test_camera_leads_horizontally_when_walking_right() -> void:
 	Input.action_release(&"move_right")
 	assert_gt(cam.global_position.x, start_cam_x + 20.0, "camera should lerp ahead when moving right")
 	assert_gt(cam.global_position.x, bonnie.global_position.x, "look-ahead should place camera ahead of BONNIE while moving right")
+
+
+func test_lookahead_running_exceeds_walking_on_mock_bonnie() -> void:
+	var bonnie := _MockBonnie.new()
+	bonnie.global_position = Vector2(100, 0)
+	bonnie.velocity = Vector2(200, 0)
+	add_child_autoqfree(bonnie)
+	var cam := _BonnieCam.new() as Camera2D
+	bonnie.add_child(cam)
+	bonnie.mock_movement_state = _E.BonnieState.WALKING
+	await wait_physics_frames(2)
+	var walk_ahead := cam.global_position.x - bonnie.global_position.x
+	bonnie.mock_movement_state = _E.BonnieState.RUNNING
+	await wait_physics_frames(2)
+	var run_ahead := cam.global_position.x - bonnie.global_position.x
+	assert_gt(run_ahead, walk_ahead, "RUNNING look-ahead px should exceed WALKING per state table")

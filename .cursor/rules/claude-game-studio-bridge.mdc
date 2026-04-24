@@ -8,7 +8,7 @@ alwaysApply: true
 ## Third-party hooks (required)
 
 1. Cursor **Settings → Features → Third-party skills** must be **enabled** so `.claude/settings.json` hooks run (`PreToolUse` / `PostToolUse` / `SessionStart` / etc.). See https://cursor.com/docs/reference/third-party-hooks  
-2. **Project-native** hooks in `.cursor/hooks.json` add: **`afterFileEdit`** (mycelium touch tracking + `assets/` validation), **`subagentStart`** (audit log), **`beforeShellExecution`** for commands matching **`gdcli|gdcli-godot`** (Mycelium context injection for `.tscn` paths in the command).
+2. **Project-native** hooks in `.cursor/hooks.json` add: **`afterFileEdit`** (mycelium touch tracking + `assets/` validation), **`subagentStart`** (audit log), **`beforeShellExecution`** for commands matching **`gdcli|gdcli-godot`** (Mycelium context injection for `.tscn` paths in the command), **`afterShellExecution`** after **`mycelium.sh note`** (logs + optional **`git push`** of `refs/notes/mycelium` when `git config mycelium.autoPushNotes true`).
 
 Do **not** duplicate `preToolUse` for Write/Edit in `.cursor/hooks.json` — that is already handled by `.claude` when third-party is on.
 
@@ -30,7 +30,8 @@ Use **`Task`** with an appropriate **`subagent_type`** from the studio roster (s
 ## Mycelium discipline
 
 - **Pre-edit:** `mycelium/scripts/context-workflow.sh <repo-relative-path>` (or rely on hooks where they fire).  
-- **Post-commit (after your review):** `mycelium.sh note HEAD -k context -m "…"` and file notes as per `.claude/rules/mycelium.md`.  
+- **Post-edit (same turn as substantive tool use):** `mycelium.sh note HEAD -k context -m "…"` and per-file notes per `.claude/rules/mycelium.md` — **not only** after a git commit. Use **`./mycelium/scripts/note-and-push.sh`** when `mycelium.autoPushNotes` should publish notes immediately.  
+- **Post-commit (after your review):** repeat or amend HEAD/file notes if the commit message obsoletes the prior note.  
 - Session 013: run **`mycelium/scripts/compost-workflow.sh`** early in the session (stale notes backlog).
 
 ## Session handoff

@@ -14,6 +14,13 @@
         "timeout": 20
       }
     ],
+    "afterShellExecution": [
+      {
+        "command": ".cursor/hooks/cursor-after-shell-mycelium-notes.sh",
+        "matcher": "mycelium\\.sh.*\\snote\\s|mycelium/mycelium\\.sh.*\\snote\\s|\\./mycelium/mycelium\\.sh.*\\snote\\s",
+        "timeout": 45
+      }
+    ],
     "subagentStart": [
       {
         "command": ".cursor/hooks/cursor-subagent-start.sh",

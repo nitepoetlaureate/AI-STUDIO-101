@@ -27,6 +27,9 @@ var _los_last_bonnie_pos: Vector2 = Vector2.ZERO
 var _los_last_npc_pos: Dictionary = {}
 var _los_force_refresh: bool = true
 
+## Monotonic level clock (seconds) for routines and social timestamps.
+var level_elapsed_time: float = 0.0
+
 
 func _ready() -> void:
 	if level_config == null:
@@ -37,7 +40,8 @@ func _ready() -> void:
 	print_verbose("[LevelManager] ready")
 
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
+	level_elapsed_time += delta
 	_run_los_visibility_pass()
 
 
@@ -73,6 +77,14 @@ func update_npc_room(npc_id: StringName, new_room: StringName) -> void:
 
 func get_npc_state(npc_id: StringName) -> NpcState:
 	return _npc_states.get(npc_id, null) as NpcState
+
+
+func get_npc_profile(npc_id: StringName) -> NpcProfile:
+	return _npc_profiles.get(npc_id, null) as NpcProfile
+
+
+func get_npc_node(npc_id: StringName) -> Node2D:
+	return _npc_nodes.get(npc_id, null) as Node2D
 
 
 func get_active_npc_count() -> int:

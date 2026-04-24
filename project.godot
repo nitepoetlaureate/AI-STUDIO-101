@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="BONNIE!"
-run/main_scene="res://prototypes/bonnie-traversal/TestLevel.tscn"
+run/main_scene="res://scenes/production/test_apartment.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -30,7 +30,6 @@ window/size/initial_position_type=0
 window/size/window_width_override=1440
 window/size/window_height_override=1080
 window/stretch/mode="viewport"
-window/stretch/aspect="keep"
 
 [editor_plugins]
 
@@ -119,6 +118,5 @@ interact={
 
 [rendering]
 
-textures/canvas_textures/default_texture_filter=1
 renderer/rendering_method="gl_compatibility"
 environment/defaults/default_clear_color=Color(0, 0, 0, 1)

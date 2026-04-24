@@ -17,6 +17,9 @@ var last_interaction_type: int = _E.InteractionType.NONE
 var bonnie_hunger_context: bool = false
 var last_interaction_timestamp: float = -1.0
 var recovering_comfort_stacks: int = 0
+## Prevents cascade ping-pong (npc-personality §4.4) — last propagator in chain.
+var cascade_source_id: StringName = &""
+var last_chaos_timestamp: float = -1000.0
 
 
 static func create_michael_default() -> NpcState:

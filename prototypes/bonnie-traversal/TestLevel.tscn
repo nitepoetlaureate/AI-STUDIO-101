@@ -1,15 +1,15 @@
-[gd_scene load_steps=21 format=3 uid="uid://cusf0xdp3xu5u"]
+[gd_scene format=3 uid="uid://cusf0xdp3xu5u"]
 
 [ext_resource type="PackedScene" path="res://prototypes/bonnie-traversal/BonnieController.tscn" id="1_bonnie"]
-[ext_resource type="Script" path="res://prototypes/bonnie-traversal/TestLevel.gd" id="2_level_script"]
-[ext_resource type="Texture2D" path="res://prototypes/bonnie-traversal/art/export/env/env-parallax-apartment-backdrop-v01.png" id="3_parallax"]
-[ext_resource type="Script" path="res://prototypes/bonnie-traversal/NpcIdleFromSheet.gd" id="4_npc_idle"]
-[ext_resource type="Texture2D" path="res://prototypes/bonnie-traversal/art/export/env/env-tile-platform-top-01.png" id="5_tex_plat"]
-[ext_resource type="Texture2D" path="res://prototypes/bonnie-traversal/art/export/env/env-tile-wall-kitchen-01.png" id="6_tex_wall"]
-[ext_resource type="Texture2D" path="res://prototypes/bonnie-traversal/art/export/env/env-tile-climbable-01.png" id="7_tex_climb"]
-[ext_resource type="Texture2D" path="res://prototypes/bonnie-traversal/art/export/env/env-tile-smooth-01.png" id="8_tex_smooth"]
-[ext_resource type="Texture2D" path="res://prototypes/bonnie-traversal/art/export/env/env-tile-squeeze-ceiling-01.png" id="9_tex_squeeze"]
-[ext_resource type="Texture2D" path="res://prototypes/bonnie-traversal/art/export/env/env-prop-rigid-crate-01.png" id="10_tex_crate"]
+[ext_resource type="Script" uid="uid://bffp8yups7bxs" path="res://prototypes/bonnie-traversal/TestLevel.gd" id="2_level_script"]
+[ext_resource type="Texture2D" uid="uid://baduaknkdeqgu" path="res://prototypes/bonnie-traversal/art/export/env/env-parallax-apartment-backdrop-v01.png" id="3_parallax"]
+[ext_resource type="Script" uid="uid://bb5f5ycqbkvmt" path="res://prototypes/bonnie-traversal/NpcIdleFromSheet.gd" id="4_npc_idle"]
+[ext_resource type="Texture2D" uid="uid://bohumlloaflvp" path="res://prototypes/bonnie-traversal/art/export/env/env-tile-platform-top-01.png" id="5_tex_plat"]
+[ext_resource type="Texture2D" uid="uid://bxwupkycvskph" path="res://prototypes/bonnie-traversal/art/export/env/env-tile-wall-kitchen-01.png" id="6_tex_wall"]
+[ext_resource type="Texture2D" uid="uid://ckco4dt7gga2x" path="res://prototypes/bonnie-traversal/art/export/env/env-tile-climbable-01.png" id="7_tex_climb"]
+[ext_resource type="Texture2D" uid="uid://dk8v167hst0be" path="res://prototypes/bonnie-traversal/art/export/env/env-tile-smooth-01.png" id="8_tex_smooth"]
+[ext_resource type="Texture2D" uid="uid://caciyt4oc1xoi" path="res://prototypes/bonnie-traversal/art/export/env/env-tile-squeeze-ceiling-01.png" id="9_tex_squeeze"]
+[ext_resource type="Texture2D" uid="uid://uhablobhsx1y" path="res://prototypes/bonnie-traversal/art/export/env/env-prop-rigid-crate-01.png" id="10_tex_crate"]
 
 [sub_resource type="RectangleShape2D" id="Shape_PlatStd"]
 size = Vector2(200, 16)
@@ -50,35 +50,32 @@ script = ExtResource("2_level_script")
 motion_scale = Vector2(0.12, 0.12)
 
 [node name="ParallaxSprite" type="Sprite2D" parent="Backdrop/Sky" unique_id=901001002]
+position = Vector2(724, 756)
+scale = Vector2(2.4, 2.4)
 texture = ExtResource("3_parallax")
 centered = false
-position = Vector2(-80, -120)
-scale = Vector2(2.4, 2.4)
 
 [node name="TerrainTiles" type="TileMapLayer" parent="." unique_id=901002000]
 z_index = -2
-collision_enabled = true
 
 [node name="BonnieController" parent="." unique_id=1601096601 instance=ExtResource("1_bonnie")]
 position = Vector2(100, 476)
+
+[node name="Camera2D" type="Camera2D" parent="BonnieController" unique_id=716343174]
 
 [node name="NPCs" type="Node2D" parent="." unique_id=501001001]
 
 [node name="Michael" type="AnimatedSprite2D" parent="NPCs" unique_id=501001002]
 position = Vector2(360, 460)
-centered = true
 script = ExtResource("4_npc_idle")
 sheet_json_path = "res://prototypes/bonnie-traversal/art/export/npc/michael-idle-sheet.json"
 sheet_png_path = "res://prototypes/bonnie-traversal/art/export/npc/michael-idle-sheet.png"
 
 [node name="Christen" type="AnimatedSprite2D" parent="NPCs" unique_id=501001004]
 position = Vector2(460, 460)
-centered = true
 script = ExtResource("4_npc_idle")
 sheet_json_path = "res://prototypes/bonnie-traversal/art/export/npc/christen-idle-sheet.json"
 sheet_png_path = "res://prototypes/bonnie-traversal/art/export/npc/christen-idle-sheet.png"
-
-[node name="Camera2D" type="Camera2D" parent="BonnieController" unique_id=716343174]
 
 [node name="PlatformA" type="StaticBody2D" parent="." unique_id=1550849976]
 position = Vector2(400, 468)
@@ -87,10 +84,10 @@ position = Vector2(400, 468)
 shape = SubResource("Shape_PlatStd")
 
 [node name="Fill" type="Sprite2D" parent="PlatformA" unique_id=821087691]
-texture = ExtResource("5_tex_plat")
-centered = false
 position = Vector2(-100, -8)
 scale = Vector2(12.5, 1)
+texture = ExtResource("5_tex_plat")
+centered = false
 
 [node name="PlatformB" type="StaticBody2D" parent="." unique_id=658273925]
 position = Vector2(650, 418)
@@ -99,10 +96,10 @@ position = Vector2(650, 418)
 shape = SubResource("Shape_PlatStd")
 
 [node name="Fill" type="Sprite2D" parent="PlatformB" unique_id=1149174151]
-texture = ExtResource("5_tex_plat")
-centered = false
 position = Vector2(-100, -8)
 scale = Vector2(12.5, 1)
+texture = ExtResource("5_tex_plat")
+centered = false
 
 [node name="PlatformC" type="StaticBody2D" parent="." unique_id=1906826560]
 position = Vector2(900, 308)
@@ -111,10 +108,10 @@ position = Vector2(900, 308)
 shape = SubResource("Shape_PlatStd")
 
 [node name="Fill" type="Sprite2D" parent="PlatformC" unique_id=1717760292]
-texture = ExtResource("5_tex_plat")
-centered = false
 position = Vector2(-100, -8)
 scale = Vector2(12.5, 1)
+texture = ExtResource("5_tex_plat")
+centered = false
 
 [node name="HardDropPlatform" type="StaticBody2D" parent="." unique_id=1745586849]
 position = Vector2(1100, 208)
@@ -123,10 +120,10 @@ position = Vector2(1100, 208)
 shape = SubResource("Shape_PlatWide")
 
 [node name="Fill" type="Sprite2D" parent="HardDropPlatform" unique_id=1483124602]
-texture = ExtResource("5_tex_plat")
-centered = false
 position = Vector2(-150, -8)
 scale = Vector2(18.75, 1)
+texture = ExtResource("5_tex_plat")
+centered = false
 
 [node name="SoftDropPlatform" type="StaticBody2D" parent="." unique_id=1683466253]
 position = Vector2(1500, 208)
@@ -135,10 +132,10 @@ position = Vector2(1500, 208)
 shape = SubResource("Shape_PlatWide")
 
 [node name="Fill" type="Sprite2D" parent="SoftDropPlatform" unique_id=461904520]
-texture = ExtResource("5_tex_plat")
-centered = false
 position = Vector2(-150, -8)
 scale = Vector2(18.75, 1)
+texture = ExtResource("5_tex_plat")
+centered = false
 
 [node name="SoftLandingPad" type="StaticBody2D" parent="." unique_id=2101839009 groups=["soft_landing"]]
 position = Vector2(1500, 490)
@@ -160,10 +157,10 @@ position = Vector2(1900, 408)
 shape = SubResource("Shape_PlatNarrow")
 
 [node name="Fill" type="Sprite2D" parent="LedgeParry1" unique_id=1723054622]
-texture = ExtResource("5_tex_plat")
-centered = false
 position = Vector2(-75, -8)
 scale = Vector2(9.375, 1)
+texture = ExtResource("5_tex_plat")
+centered = false
 
 [node name="LedgeParry2" type="StaticBody2D" parent="." unique_id=1085728651]
 position = Vector2(2100, 328)
@@ -172,10 +169,10 @@ position = Vector2(2100, 328)
 shape = SubResource("Shape_PlatNarrow")
 
 [node name="Fill" type="Sprite2D" parent="LedgeParry2" unique_id=1243243927]
-texture = ExtResource("5_tex_plat")
-centered = false
 position = Vector2(-75, -8)
 scale = Vector2(9.375, 1)
+texture = ExtResource("5_tex_plat")
+centered = false
 
 [node name="LedgeParry3" type="StaticBody2D" parent="." unique_id=1753508578]
 position = Vector2(2300, 388)
@@ -184,10 +181,10 @@ position = Vector2(2300, 388)
 shape = SubResource("Shape_PlatNarrow")
 
 [node name="Fill" type="Sprite2D" parent="LedgeParry3" unique_id=2064953442]
-texture = ExtResource("5_tex_plat")
-centered = false
 position = Vector2(-75, -8)
 scale = Vector2(9.375, 1)
+texture = ExtResource("5_tex_plat")
+centered = false
 
 [node name="LedgeParry4" type="StaticBody2D" parent="." unique_id=153118377]
 position = Vector2(2480, 308)
@@ -196,10 +193,10 @@ position = Vector2(2480, 308)
 shape = SubResource("Shape_PlatNarrow")
 
 [node name="Fill" type="Sprite2D" parent="LedgeParry4" unique_id=19179788]
-texture = ExtResource("5_tex_plat")
-centered = false
 position = Vector2(-75, -8)
 scale = Vector2(9.375, 1)
+texture = ExtResource("5_tex_plat")
+centered = false
 
 [node name="ClimbableWall" type="StaticBody2D" parent="." unique_id=1237078132 groups=["Climbable"]]
 position = Vector2(2636, 350)
@@ -208,10 +205,10 @@ position = Vector2(2636, 350)
 shape = SubResource("Shape_ClimbWall")
 
 [node name="Fill" type="Sprite2D" parent="ClimbableWall" unique_id=461893756]
-texture = ExtResource("7_tex_climb")
-centered = false
 position = Vector2(-16, -150)
 scale = Vector2(2, 18.75)
+texture = ExtResource("7_tex_climb")
+centered = false
 
 [node name="ClimbableWallTop" type="StaticBody2D" parent="." unique_id=759485160]
 position = Vector2(2736, 208)
@@ -220,10 +217,10 @@ position = Vector2(2736, 208)
 shape = SubResource("Shape_PlatStd")
 
 [node name="Fill" type="Sprite2D" parent="ClimbableWallTop" unique_id=786379665]
-texture = ExtResource("5_tex_plat")
-centered = false
 position = Vector2(-100, -8)
 scale = Vector2(12.5, 1)
+texture = ExtResource("5_tex_plat")
+centered = false
 
 [node name="SmoothWall" type="StaticBody2D" parent="." unique_id=1947627994]
 position = Vector2(2916, 375)
@@ -232,10 +229,10 @@ position = Vector2(2916, 375)
 shape = SubResource("Shape_SmoothWall")
 
 [node name="Fill" type="Sprite2D" parent="SmoothWall" unique_id=1556549053]
-texture = ExtResource("8_tex_smooth")
-centered = false
 position = Vector2(-16, -125)
 scale = Vector2(2, 15.625)
+texture = ExtResource("8_tex_smooth")
+centered = false
 
 [node name="SqueezeCeiling" type="StaticBody2D" parent="." unique_id=1445472156]
 position = Vector2(3300, 434)
@@ -244,10 +241,10 @@ position = Vector2(3300, 434)
 shape = SubResource("Shape_SqueezeCeil")
 
 [node name="Fill" type="Sprite2D" parent="SqueezeCeiling" unique_id=2044836504]
-texture = ExtResource("9_tex_squeeze")
-centered = false
 position = Vector2(-100, -34)
 scale = Vector2(6.25, 4.25)
+texture = ExtResource("9_tex_squeeze")
+centered = false
 
 [node name="SqueezeTrigger" type="Area2D" parent="." unique_id=366660085 groups=["SqueezeTrigger"]]
 position = Vector2(3300, 485)
@@ -263,10 +260,10 @@ position = Vector2(500, 490)
 shape = SubResource("Shape_RigidBox")
 
 [node name="Fill" type="Sprite2D" parent="CollisionBox1" unique_id=103243585]
-texture = ExtResource("10_tex_crate")
-centered = false
 position = Vector2(-16, -16)
 scale = Vector2(1.6, 1.6)
+texture = ExtResource("10_tex_crate")
+centered = false
 
 [node name="CollisionBox2" type="RigidBody2D" parent="." unique_id=1292291541]
 position = Vector2(620, 490)
@@ -275,10 +272,10 @@ position = Vector2(620, 490)
 shape = SubResource("Shape_RigidBox")
 
 [node name="Fill" type="Sprite2D" parent="CollisionBox2" unique_id=684845999]
-texture = ExtResource("10_tex_crate")
-centered = false
 position = Vector2(-16, -16)
 scale = Vector2(1.6, 1.6)
+texture = ExtResource("10_tex_crate")
+centered = false
 
 [node name="CollisionBox3" type="RigidBody2D" parent="." unique_id=1607145980]
 position = Vector2(740, 490)
@@ -287,10 +284,10 @@ position = Vector2(740, 490)
 shape = SubResource("Shape_RigidBox")
 
 [node name="Fill" type="Sprite2D" parent="CollisionBox3" unique_id=1675140876]
-texture = ExtResource("10_tex_crate")
-centered = false
 position = Vector2(-16, -16)
 scale = Vector2(1.6, 1.6)
+texture = ExtResource("10_tex_crate")
+centered = false
 
 [node name="EndWall" type="StaticBody2D" parent="." unique_id=2126116370]
 position = Vector2(3840, 200)
@@ -299,7 +296,7 @@ position = Vector2(3840, 200)
 shape = SubResource("Shape_EndWall")
 
 [node name="Fill" type="Sprite2D" parent="EndWall" unique_id=2140322467]
-texture = ExtResource("6_tex_wall")
-centered = false
 position = Vector2(-20, -300)
 scale = Vector2(2.5, 37.5)
+texture = ExtResource("6_tex_wall")
+centered = false

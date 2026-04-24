@@ -15,5 +15,6 @@ feeding_threshold = 0.75
 comfort_receptivity_floor = 0.15
 comfort_receptivity_default = 0.55
 can_flee = false
+chaos_overwhelm_threshold = 8
 los_nose_bridge_local = Vector2(0, -18)
 los_chest_from_nose_local = Vector2(0, 24)
