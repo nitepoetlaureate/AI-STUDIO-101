@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:0066150063cc7d5b7adce3c5bd5a0c3f2513e044
+edge targets-path path:src/gameplay/social/SocialSystem.gd
+
+Proximity charm + interact(F) charm near NPCs; _npc_id and _bonnie_state underscored unused-param pattern.
