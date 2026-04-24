@@ -1,0 +1,5 @@
+kind summary
+edge applies-to blob:90bde2cc32461c040d138ca65ffd3220e246a8ae
+edge targets-path path:src/gameplay/npc/NpcController.gd
+
+NPC emotional/goodwill timers, FED/overwhelm; apply_emotional_spike _source_id unused-prefix; reacts to chaos meter group.
