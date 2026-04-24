@@ -1,0 +1,5 @@
+kind observation
+edge applies-to blob:e8fc6d2fb33141f822a2ee88dfb01434f542cafb
+edge targets-path path:docs/architecture/ADR-001-production-architecture.md
+
+ADR-001 production architecture; main scene and system boundaries.
